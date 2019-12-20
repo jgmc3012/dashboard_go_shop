@@ -1,0 +1,1 @@
+web: gunicorn dashboard_go_shop.wsgi --log-file -
