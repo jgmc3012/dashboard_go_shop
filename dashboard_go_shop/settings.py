@@ -84,9 +84,6 @@ WSGI_APPLICATION = 'dashboard_go_shop.wsgi.application'
 #     }
 # }
 
-import dj_database_url
-from decouple import config
-
 DATABASES = {
     'default': dj_database_url.config(
         default=env('DATABASE_URL')
@@ -132,8 +129,8 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-STATICSFILES_DIR = (
+STATICFILES_DIR = (
     os.path.join(BASE_DIR, 'static')
 )
 
-STATIC_STORAGE = 'whitenoise.storege.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
