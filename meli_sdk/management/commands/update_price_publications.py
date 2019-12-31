@@ -17,7 +17,6 @@ class Command(BaseCommand):
 
         with open(f'csv/products.csv', 'r') as csvfile:
             products_draw = list(csv.reader(csvfile, delimiter=','))
-            breakpoint()
             products = [{
                 'mlv': product[0],
                 'mco': product[1],

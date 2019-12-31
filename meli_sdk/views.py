@@ -212,8 +212,9 @@ def get_mcos(category):
 
 ###################### ACTUALIZAR PRECIOS ###################################
 
-def update_publication(item_id, index,kwargs):
-    
+def update_publication(item_id, index, total, kwargs):
+    global event
+
     body = dict()
 
     for key in kwargs.keys():
@@ -230,8 +231,10 @@ def update_publication(item_id, index,kwargs):
     
     if response.status_code == 200:
         print(f'Producto {item_id} actualizado')
-        if (index+1)%100:
-            print(f'{index} publicaciones actualizadas')
+        if (index+1) % 100 == 0:
+            print(f'{index+1} publicaciones actualizadas')
+        if (index+1) == total:
+            event.set()
     else:
         raise f'Error in Request {response.status_code}'
     
@@ -241,5 +244,5 @@ def update_produtcs(products:list):
     ids = [product.get('mlv') for product in products]
     price = [{'price': product.get('price')} for product in products]
 
-    executor.map(update_publication, ids, range(len(products)), price)
-    print('Finish')
+    executor.map(update_publication, ids, range(len(products)), [len(products)]*len(products),price)
+    event.wait()
