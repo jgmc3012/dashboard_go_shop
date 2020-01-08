@@ -6,7 +6,7 @@ class Provider(models.Model):
 
 class Product(models.Model):
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
-    mco = models.CharField(max_length=20)
+    sku = models.CharField(max_length=20)
     title = models.CharField(max_length=60)
     price = models.IntegerField()
     available_quantify= models.IntegerField(default=0)
