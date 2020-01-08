@@ -1,4 +1,5 @@
 from django.shortcuts import render
+
 from .sdk.meli import Meli
 import logging
 import csv
@@ -10,6 +11,8 @@ import json
 from urllib.parse import urlencode
 from decouple import config
 
+def login(request):
+    return render(request, 'meli_sdk/auth.html')
 
 results = list()
 event = threading.Event()

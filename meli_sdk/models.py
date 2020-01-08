@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+class Token(models.Model):
+    token = models.CharField(max_length=255)
+    refresh_token = models.CharField(max_length=255)
+    expiration = models.IntegerField()
