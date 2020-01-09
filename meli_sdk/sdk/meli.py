@@ -6,15 +6,14 @@ import os
 import re
 import requests
 import ssl
-from decouple import config
 from meli_sdk.models import Token
 from datetime import datetime, timedelta
 
 
 class Meli(object):
-    def __init__(self):
-        self.client_id = config('MELI_APP_ID')
-        self.client_secret = config('MELI_SECRET_KEY')
+    def __init__(self, client_id, client_secret):
+        self.client_id = client_id
+        self.client_secret = client_secret
         self.access_token = None
         self.refresh_token = None
         self.expiration = None
@@ -105,7 +104,14 @@ class Meli(object):
             headers.update(extra_headers)
         uri = self.make_path(path)
         response = self._requests.get(uri, params=urlencode(params), headers=headers)
-        return response
+        if response.status_code == 200:
+            data = res.json()
+            return data
+        elif response.status_code == 401:
+            self.refresh_token()
+            return self.get(path,params, extra_headers)
+        else:
+            raise Exception('Error en peticion personalizar mensaje')
 
     def post(self, path, body=None, params=None, extra_headers=None):
         params = params or {}
