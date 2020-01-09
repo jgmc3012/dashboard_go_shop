@@ -1,6 +1,3 @@
- #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from configparser import SafeConfigParser
 from .ssl_helper import SSLAdapter
 from urllib.parse import urlencode
@@ -9,14 +6,18 @@ import os
 import re
 import requests
 import ssl
+from decouple import config
+from meli_sdk.models import Token
+from datetime import datetime, timedelta
+
 
 class Meli(object):
-    def __init__(self, client_id, client_secret, access_token=None, refresh_token=None):
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.access_token = access_token
-        self.refresh_token = refresh_token
-        self.expires_in = None
+    def __init__(self):
+        self.client_id = config('MELI_APP_ID')
+        self.client_secret = config('MELI_SECRET_KEY')
+        self.access_token = None
+        self.refresh_token = None
+        self.expiration = None
 
 
         parser = SafeConfigParser()
@@ -35,8 +36,10 @@ class Meli(object):
         self.OAUTH_URL = parser.get('config', 'oauth_url')
 
     #AUTH METHODS
-    def auth_url(self,redirect_URI):
-        params = {'client_id':self.client_id,'response_type':'code','redirect_uri':redirect_URI}
+    def auth_url(self,redirect_URI=None):
+        params = {'client_id':self.client_id,'response_type':'code'}
+        if redirect_URI:
+            params['redirect_uri'] = redirect_URI
         url = self.AUTH_URL  + '/authorization' + '?' + urlencode(params)
         return url
 
@@ -54,8 +57,15 @@ class Meli(object):
                 self.refresh_token = response_info['refresh_token']
             else:
                 self.refresh_token = '' # offline_access not set up
-                self.expires_in = response_info['expires_in']
-
+            
+            seg = response_info['expires_in']
+            self.expiration = datetime.now() + timedelta(seg)
+            token = Token(
+                access_token = self.access_token,
+                refresh_token = self.refresh_token,
+                expiration = datetime.now() + timedelta(seg)
+            )
+            token.save()
             return self.access_token
         else:
             # response code isn't a 200; raise an exception
@@ -73,8 +83,14 @@ class Meli(object):
                 response_info = response.json()
                 self.access_token = response_info['access_token']
                 self.refresh_token = response_info['refresh_token']
-                self.expires_in = response_info['expires_in']
-                return self.access_token
+                self.expiration = response_info['expires_in']
+                token = Token(
+                    access_token = self.access_token,
+                    refresh_token = self.refresh_token,
+                    expiration = datetime.now() + timedelta(seg)
+                )
+                token.save()
+
             else:
                 # response code isn't a 200; raise an exception
                 response.raise_for_status()
@@ -143,3 +159,12 @@ class Meli(object):
             path = path + "?" + urlencode(params)
 
         return path
+
+    @property
+    def access_token(self):
+        if self.access_token:
+            if self.expiration < (datetime.now()+timedelta(seconds=10)):
+                self.get_refresh_token()
+            return self.access_token
+        else:
+            raise Exception('Debe Autentificarse manualmente en el portal')

@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .sdk.meli import Meli
 
 from .sdk.meli import Meli
 import logging
@@ -12,7 +13,16 @@ from urllib.parse import urlencode
 from decouple import config
 
 def login(request):
-    return render(request, 'meli_sdk/auth.html')
+    meli = Meli()
+    url = meli.auth_url()
+    return redirect(url)
+
+def get_token(request):
+    query = request.GET
+    meli = Meli()
+    code = query.get('code')
+    url = meli.authorize(code, 'http://localhost:8000/meli/auth')
+    return redirect(url)
 
 results = list()
 event = threading.Event()

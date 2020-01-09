@@ -1,6 +1,3 @@
- #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
 
