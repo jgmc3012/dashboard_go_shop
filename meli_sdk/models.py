@@ -4,3 +4,4 @@ class Token(models.Model):
     access_token = models.CharField(max_length=255)
     refresh_token = models.CharField(max_length=255)
     expiration = models.DateTimeField()
+    app_id = models.BigIntegerField(default=0)

@@ -12,18 +12,6 @@ import json
 from urllib.parse import urlencode
 from decouple import config
 
-def login(request):
-    meli = Meli()
-    url = meli.auth_url()
-    return redirect(url)
-
-def get_token(request):
-    query = request.GET
-    meli = Meli()
-    code = query.get('code')
-    url = meli.authorize(code, 'http://localhost:8000/meli/auth')
-    return redirect(url)
-
 results = list()
 event = threading.Event()
 API_MELI = "https://api.mercadolibre.com"
