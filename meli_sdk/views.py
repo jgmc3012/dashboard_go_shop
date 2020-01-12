@@ -54,7 +54,7 @@ def request_meli(path, params):
 
         return data
     else:
-        raise f'Error en la peticion a MercadoLibre {res}'
+        raise f'Error en la peticion a MercadoLibre {res.status_code}'
 
 def push_items(items):
     global results

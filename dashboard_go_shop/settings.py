@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'meli_sdk.apps.MeliSdkConfig',
-    'store.apps.StoreConfig'
+    'store.apps.StoreConfig',
+    'dollar_for_life.apps.DollarForLifeConfig',
+    'shipping.apps.ShippingConfig',
 ]
 
 MIDDLEWARE = [
