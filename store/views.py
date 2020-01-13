@@ -11,5 +11,5 @@ def get_token(request):
     query = request.GET
     store = Store()
     code = query.get('code')
-    store.authorize(code, 'http://localhost:8000/store/auth')
+    store.authorize(code, Store.URI_CALLBACK)
     return HttpResponse('Autenticacion Exitosa!')

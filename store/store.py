@@ -6,6 +6,7 @@ from .models import Product
 
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
+    URI_CALLBACK = config('MELI_URI_CALLBACK')
     SELLER_ID = config('MELI_ME_ID')
     client_secret = config('MELI_SECRET_KEY')
     app_id = config('MELI_APP_ID')
