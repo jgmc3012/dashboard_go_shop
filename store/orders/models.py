@@ -42,7 +42,7 @@ class Order(models.Model):
     )
     store_order_id=models.PositiveIntegerField(unique=True)
     provider_order_id=models.PositiveIntegerField(unique=True, null=True)
-    date_offer = models.DateTimeField(default=timezone.now)
+    date_offer = models.DateTimeField(default=timezone.localtime)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
