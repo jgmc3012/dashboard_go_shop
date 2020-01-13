@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+{% block head %}
+<style>
+    .text-black{
+        color:black
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <!-- Content Row -->
+        <div class="row">
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Mensajes</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">No disponible</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-comments fa-2x text-gray-300   "></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Preguntas</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">No disponible</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Reclamos</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">No disponible</div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Por correguir</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">No disponible</div>
+                            </div>
+                            <div class="col-auto">
+                            <i class="fas fa-edit fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <div class='panel'>
+                <div class="row">
+                    <h3 class="ml-2 font-weight-bold text-primary">Ordenes</h3>
+                    <form class="d-none d-sm-inline-block form-inline ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                        <input type="text" class="form-control bg-white shadow border-1 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                        </div>
+                    </form>
+            
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <h4>Estado</h4>
+                    </div>
+                    <div class="col-7">
+                        <h4>Producto</h4>
+                    </div>
+                    <div class="col-2">
+                        <h4>Comprador</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <ul class="list-group">
+                    <li class="list-group-item mb-2 shadow">
+                        <div class='row'>
+                            <!-- Aqui comienza cada item -->
+                            <div class='col-2'>
+                                <div class="bg-black">
+                                    <div class="row">
+                                        <span class="text-black">Estado Actual:</span> 
+                                    </div>
+                                    <div class="row">
+                                        <p>Ofertado</p> 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Pasar a:</span> 
+                                </div>
+                                <div class="row mb-1">
+                                    <div class='btn btn-success ml-0 col-9'>Procesando Pago</div>
+                                </div>
+                            </div>
+                            <div class='col-7'>
+                                <h5>Bateria Samsung Rf710 Rf711 Rv408 Rv411 Rv415 Rv508 Rv509</h5>
+                                <div class="d-flex">
+                                    <div class='flex-fill'>
+                                        <img
+                                            class="rounded"
+                                            src="http://mco-s1-p.mlstatic.com/943993-MCO31005498393_062019-I.jpg"
+                                            alt="Imagen de Bateria Samsung Rf710 Rf711 Rv408 Rv411 Rv415 Rv508 Rv509"
+                                        >
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="row">
+                                            <span class="text-black">Numero de Order:</span>
+                                            <p>1234567789</p>
+                                        </div>
+                                        <div class="row">
+                                            <span class="text-black">Guia del Envio:</span>
+                                            <p>1234567789</p>
+                                        </div>
+                                        <div class="row">
+                                            <span class="text-black">Publicacion del proveedor:</span>
+                                            <a
+                                                target="_blank"
+                                                href="https://articulo.mercadolibre.com.co/MCO-472376522-carro-moto-recargables-electrico-montables-ninos-ninas-ctrl-_JM"
+                                            >Link</a>
+                                        </div>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <div class='btn btn-info ml-0 align-content-center align-items-center'>Detalles del Producto</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-2'>
+                                <div class="row">
+                                    <span class="text-black">Nombre Completo:</span>
+                                    <p>Jesus Millan</p>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Telefono:</span>
+                                    <p>424-1502054</p>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Nickname:</span>
+                                    <p>jgmc3012</p>
+                                </div>
+                            </div>
+                            <!-- Final de cada item -->
+                        </div>
+                    </li>
+                    <li class="list-group-item mb-2 shadow">
+                        <div class='row'>
+                            <!-- Aqui comienza cada item -->
+                            <div class='col-2'>
+                                <div class="bg-black">
+                                    <div class="row">
+                                        <span class="text-black">Estado Actual:</span> 
+                                    </div>
+                                    <div class="row">
+                                        <p>Ofertado</p> 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Pasar a:</span> 
+                                </div>
+                                <div class="row mb-1">
+                                    <div class='btn btn-success ml-0 col-9'>Procesando Pago</div>
+                                </div>
+                            </div>
+                            <div class='col-7'>
+                                <h5>Bateria Samsung Rf710 Rf711 Rv408 Rv411 Rv415 Rv508 Rv509</h5>
+                                <div class="d-flex">
+                                    <div class='flex-fill'>
+                                        <img
+                                            class="rounded"
+                                            src="http://mco-s1-p.mlstatic.com/943993-MCO31005498393_062019-I.jpg"
+                                            alt="Imagen de Bateria Samsung Rf710 Rf711 Rv408 Rv411 Rv415 Rv508 Rv509"
+                                        >
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="row">
+                                            <span class="text-black">Numero de Order:</span>
+                                            <p>1234567789</p>
+                                        </div>
+                                        <div class="row">
+                                            <span class="text-black">Guia del Envio:</span>
+                                            <p>1234567789</p>
+                                        </div>
+                                        <div class="row">
+                                            <span class="text-black">Publicacion del proveedor:</span>
+                                            <a
+                                                target="_blank"
+                                                href="https://articulo.mercadolibre.com.co/MCO-472376522-carro-moto-recargables-electrico-montables-ninos-ninas-ctrl-_JM"
+                                            >Link</a>
+                                        </div>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <div class='btn btn-info ml-0 align-content-center align-items-center'>Detalles del Producto</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-2'>
+                                <div class="row">
+                                    <span class="text-black">Nombre Completo:</span>
+                                    <p>Jesus Millan</p>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Telefono:</span>
+                                    <p>424-1502054</p>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Nickname:</span>
+                                    <p>jgmc3012</p>
+                                </div>
+                            </div>
+                            <!-- Final de cada item -->
+                        </div>
+                    </li>
+                    <li class="list-group-item mb-2 shadow">
+                        <div class='row'>
+                            <!-- Aqui comienza cada item -->
+                            <div class='col-2'>
+                                <div class="bg-black">
+                                    <div class="row">
+                                        <span class="text-black">Estado Actual:</span> 
+                                    </div>
+                                    <div class="row">
+                                        <p>Ofertado</p> 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Pasar a:</span> 
+                                </div>
+                                <div class="row mb-1">
+                                    <div class='btn btn-success ml-0 col-9'>Procesando Pago</div>
+                                </div>
+                            </div>
+                            <div class='col-7'>
+                                <h5>Bateria Samsung Rf710 Rf711 Rv408 Rv411 Rv415 Rv508 Rv509</h5>
+                                <div class="d-flex">
+                                    <div class='flex-fill'>
+                                        <img
+                                            class="rounded"
+                                            src="http://mco-s1-p.mlstatic.com/943993-MCO31005498393_062019-I.jpg"
+                                            alt="Imagen de Bateria Samsung Rf710 Rf711 Rv408 Rv411 Rv415 Rv508 Rv509"
+                                        >
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="row">
+                                            <span class="text-black">Numero de Order:</span>
+                                            <p>1234567789</p>
+                                        </div>
+                                        <div class="row">
+                                            <span class="text-black">Guia del Envio:</span>
+                                            <p>1234567789</p>
+                                        </div>
+                                        <div class="row">
+                                            <span class="text-black">Publicacion del proveedor:</span>
+                                            <a
+                                                target="_blank"
+                                                href="https://articulo.mercadolibre.com.co/MCO-472376522-carro-moto-recargables-electrico-montables-ninos-ninas-ctrl-_JM"
+                                            >Link</a>
+                                        </div>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <div class='btn btn-info ml-0 align-content-center align-items-center'>Detalles del Producto</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-2'>
+                                <div class="row">
+                                    <span class="text-black">Nombre Completo:</span>
+                                    <p>Jesus Millan</p>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Telefono:</span>
+                                    <p>424-1502054</p>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Nickname:</span>
+                                    <p>jgmc3012</p>
+                                </div>
+                            </div>
+                            <!-- Final de cada item -->
+                        </div>
+                    </li>
+
+                </ul> 
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}

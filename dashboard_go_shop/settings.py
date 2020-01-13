@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'store.apps.StoreConfig',
     'dollar_for_life.apps.DollarForLifeConfig',
     'shipping.apps.ShippingConfig',
+    'dashboard.apps.DashboardConfig'
 ]
 
 MIDDLEWARE = [
