@@ -30,7 +30,7 @@ class Order(models.Model):
         (OFFERED, 'Ofertado en MercadoLibre'),
         (PAID_OUT, 'Pagado'),
         (PROCESSING, 'Procesando'),
-        (RECEIVED_STORAGE, 'Recivido en Bodega'),
+        (RECEIVED_STORAGE, 'Recibido en Bodega'),
         (INTERNATIONAL_DEPARTURE, 'Salida internacional'),
         (RECEIVED_STORE, 'Recivido en Tienda'),
         (COMPLETED, 'Completado'),
