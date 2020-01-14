@@ -18,7 +18,7 @@ from django.urls import path, include
 
 from django.conf import settings
 from django.conf.urls.static import static
-
+from .views import redirect_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +27,5 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
 
     path('accounts/', include('django.contrib.auth.urls')),
+    path('', redirect_view)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
