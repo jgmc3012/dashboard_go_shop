@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '164.68.124.160', '.goshop27.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '164.68.124.160', '.threepersonteam.com']
 
 
 # Application definition
