@@ -1,4 +1,5 @@
 {% extends 'dashboard/dashboard.html' %}
+{% load static %}
 {% block head %}
 <style>
     .text-black{
@@ -93,17 +94,23 @@
                 </div>
                 <div class="row mb-1 p-2 bg-gray-300 rounded shadow">
                   <div class="col-3 input-group">
-                    <select name="state_order" class="form-control custom-select shadow small">
-                      <option selected value="-1">Estado de orden</option>
-                      {% for state in status_orders %}
-                        <option value="{{state.value}}">{{state.name}}</option>
-  
+                    <select id='select_state_order' name="state_order" class="form-control custom-select shadow small">
+                      <option
+                        {% if selected == -1 %}
+                          selected
+                        {% endif %}
+                        value="-1"
+                      >Todos</option>
+                      {% for value, name in status_orders %}
+                        <option
+                          {% if selected == value %}
+                            selected
+                          {% endif %}
+                          value="{{ value }}"
+                        >{{ name }}</option>
                       {% endfor %}
                     </select>
                     <div class="input-group-append">
-                      <button class="btn btn-primary" type="button">
-                      <i class="fas fa-search fa-sm"></i>
-                      </button>
                     </div>
                   </div>
                     <div class="d-none d-sm-inline-block form-inline ml-auto my-2 my-md-0 mw-100 navbar-search">
@@ -142,7 +149,7 @@
                                         <span class="text-black">Estado Actual:</span> 
                                     </div>
                                     <div class="row">
-                                        <p>{{ order.state }}</p> 
+                                        <p>{{ order.get_state_display }}</p> 
                                     </div>
                                 </div>
                                 <div class="row">
@@ -413,4 +420,5 @@
       </div>
     </div>
   </div>
+  <script src="{% static 'js/dashboard/search_orders.js' %}"></script>
 {% endblock %}

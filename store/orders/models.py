@@ -53,3 +53,10 @@ class Order(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True)
     shipping = models.ForeignKey(Shipping, on_delete=models.CASCADE, null=True)
     destination_place = models.CharField(max_length=255, default=Store.DIRECTION)
+
+    def next_state(self):
+        self.state += 1
+        if self.state <= self.COMPLETED:
+            return Order.get_state_display(self)
+        else:
+            return 'Orden completada'
