@@ -9,7 +9,9 @@ def login(request):
 
 def get_token(request):
     query = request.GET
-    store = Store()
     code = query.get('code')
+    jwt_split = code.split('-')
+    seller_id = jwt_split[2]
+    store = Store(seller_id)
     store.authorize(code, Store.URI_CALLBACK)
     return HttpResponse('Autenticacion Exitosa!')

@@ -7,16 +7,17 @@ from .models import Product
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
     URI_CALLBACK = config('MELI_URI_CALLBACK')
-    SELLER_ID = config('MELI_ME_ID')
-    client_secret = config('MELI_SECRET_KEY')
-    app_id = config('MELI_APP_ID')
     inventary = []
     sales = []
     pools = []
     queues = []
 
-    def __init__(self):
-        super().__init__(self.app_id, self.client_secret)
+    def __init__(self, seller_id=None):
+        if seller_id:
+            self.SELLER_ID = seller_id
+        else:
+            self.SELLER_ID = config('MELI_ME_ID')
+        super().__init__(self.SELLER_ID)
 
     def get_inventory_by_api(self)->list:
         """

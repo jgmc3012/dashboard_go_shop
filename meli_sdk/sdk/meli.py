@@ -9,21 +9,22 @@ import ssl
 from meli_sdk.models import Token
 from datetime import timedelta
 from django.utils import timezone
-import queue
 from concurrent.futures import ThreadPoolExecutor
 import threading
 import math
 import logging
+from decouple import config
 
 
 class Meli(object):
-    def __init__(self, client_id, client_secret):
+    def __init__(self, seller_id):
+        self.client_secret = config('MELI_SECRET_KEY')
+        self.client_id = config('MELI_APP_ID')
         self.limit_ids_per_request = 20
         self.max_workers = 5
-        self.client_id = client_id
-        self.client_secret = client_secret
+        self.seller_id = seller_id
         try:
-            self.token = Token.objects.get(app_id=client_id)
+            self.token = Token.objects.get(seller_id=seller_id)
         except Token.DoesNotExist:
             self.token = None
 
@@ -85,7 +86,7 @@ class Meli(object):
                     access_token=access_token,
                     refresh_token=refresh_token,
                     expiration=expiration,
-                    app_id=self.client_id
+                    seller_id=self.seller_id
                 )
             self.token.save()
         else:
