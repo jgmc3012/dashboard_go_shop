@@ -8,6 +8,10 @@ from shipping.models import Shipping
 from store.store import Store
 
 
+class News(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+
 class Pay(models.Model):
     amount = models.FloatField()
     reference = models.BigIntegerField(unique=True)
@@ -40,12 +44,12 @@ class Order(models.Model):
         choices=STATES_CHOICES,
         default=OFFERED
     )
-    store_order_id=models.PositiveIntegerField(unique=True)
-    provider_order_id=models.PositiveIntegerField(unique=True, null=True)
+    store_order_id=models.BigIntegerField(unique=True)
+    provider_order_id=models.BigIntegerField(unique=True, null=True)
     date_offer = models.DateTimeField(default=timezone.localtime)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
-    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True)
     shipping = models.ForeignKey(Shipping, on_delete=models.CASCADE, null=True)
     destination_place = models.CharField(max_length=255, default=Store.DIRECTION)

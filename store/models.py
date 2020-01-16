@@ -51,4 +51,4 @@ class Buyer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone = models.PositiveIntegerField(default=None)
-    email = models.EmailField(max_length=70, default=None)
+    email = models.EmailField(max_length=70, null=True)
