@@ -36,7 +36,7 @@ class Order(models.Model):
         (PROCESSING, 'Procesando'),
         (RECEIVED_STORAGE, 'Recibido en Bodega'),
         (INTERNATIONAL_DEPARTURE, 'Salida internacional'),
-        (RECEIVED_STORE, 'Recivido en Tienda'),
+        (RECEIVED_STORE, 'Recibido en Tienda'),
         (COMPLETED, 'Completado'),
     ]
 
