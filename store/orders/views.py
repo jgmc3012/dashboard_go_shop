@@ -3,6 +3,8 @@ from django.views.generic import View
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.http import Http404
+import json
 
 from meli_sdk.models import BulkCreateManager
 
@@ -15,33 +17,47 @@ from shipping.views import new_shipping, shipment_completed
 
 class OrderView(LoginRequiredMixin, View):
 
-    def new_pay(request, order_id):
-        query = request.GET
-        pay_reference = query.get('pay_ref')
-        quantity = query.get('quantity')
+    def new_pay(self, request, order_id):
+        if request.method != 'POST':
+            raise Http404
+        json_data=json.loads(request.body)
+        pay_reference = int(json_data.get('pay_reference'))
+        quantity = int(json_data.get('quantity'))
+
+        if not (pay_reference and quantity):
+            return JsonResponse({
+                'ok': False,
+                'msg': f'{user_name} Haz ingresado un dato incorrecto, verifica e intenta de nuevo'
+            })
+
         store = Store()
         user_name = request.user.first_name
         params = {
             'attributes': 'date_created,buyer,order_items'
         }
-        path = f'/orders/{offer_id}'
-        result = store.get(path,params, auth=True)
-        order = Order.objects.get(provider_id=offer_id)
-        if order.state == Order.PAID_OUT:
+        
+        order = Order.objects.filter(store_order_id=order_id).select_related('product').select_related('buyer').first()
+        if order.state >= Order.PROCESSING:
             return JsonResponse({
                 'ok': False,
                 'msg': f'{user_name} ya esta orden fue procesada. Contacta con un supervisor si deseas hacer cambios en ella.'
             })
 
-        buyer_api = result.get('buyer')
-        buyer = Buyer.objects.filter(id=buyer_api.get('id')).first()
+        if order.invoice:
+            return JsonResponse({
+                'ok': False,
+                'msg': f'{user_name} ya esta orden contine un pago relacionado'
+            })
 
+
+        path = f'/orders/{order_id}'
+        result = store.get(path,params, auth=True)
+        buyer = order.buyer
         product_api = result.get('order_items')[0]
-        sku = product_api.get('item').get('id')
-        product = Product.objects.get(sku=sku)
+        product = order.product
 
         USD = History.objects.order_by('-datetime').first()
-        if product.sale_price*USD > product_api.get('unit_price'):
+        if product.sale_price*USD.rate > product_api.get('unit_price'):
             return JsonResponse({
                 'ok': False,
                 'msg': f'{user_name}, el producto ha subido de precio, Contacta con tu supervisor.',
@@ -58,7 +74,7 @@ class OrderView(LoginRequiredMixin, View):
         if pay:
             return JsonResponse({
                 'ok': False,
-                'msg': f'{user_name}. Ese pago ya fue registrado.'
+                'msg': f'{user_name}. El numero de referencia de ese pago ya fue registrado anteriormente.'
         })
 
         pay = Pay.objects.create(
@@ -67,15 +83,14 @@ class OrderView(LoginRequiredMixin, View):
         )
         invoice = Invoice.objects.create(pay=pay)
 
-        order = Order(
-            provider_id=offer_id,
-            quantity=quantity,
-            invoice=invoice
-        )
+        order.quantity = quantity
+        order.invoice = invoice
+        order.state = Order.PAID_OUT
         order.save()
+
         return JsonResponse({
             'ok': True,
-            'msg': f'Orden agregada correctamente. Buen Trabajo {user_name}.'
+            'msg': f'Orden agregada correctamente.  {user_name}.'
         })
 
 
@@ -100,7 +115,7 @@ class OrderView(LoginRequiredMixin, View):
         if pay.confirmed:
             return JsonResponse({
                 'ok': False,
-                'msg': f'{user_name}. Este pago ya fue procesado por alguien mas, Si esto es un error contacta con tu supervis or.'
+                'msg': f'{user_name}. Este pago ya fue procesado por alguien mas, Si esto es un error contacta con tu supervisor.'
             })
 
         invoice = Invoice.objects.filter(pay=pay).first()
@@ -128,7 +143,7 @@ class OrderView(LoginRequiredMixin, View):
         order.save()
         return JsonResponse({
             'ok': True,
-            'msg': f'Buen Trabajo {user_name}. Transaccion exitosa. La orden a pasado al departamento de compras.'
+            'msg': f' {user_name}. Transaccion exitosa. La orden a pasado al departamento de compras.'
         })
 
     def show_orders_to_buy(request):
@@ -289,5 +304,5 @@ class OrderView(LoginRequiredMixin, View):
 
         return JsonResponse({
                 'okey':True,
-                'msg': f'Entrega exitosa. Buen trabajo {user_name}'
+                'msg': f'Entrega exitosa.  {user_name}'
             })

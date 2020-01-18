@@ -88,7 +88,7 @@
         </div>
         
         <div class="mb-4">
-            <div class='panel'>
+              <div class='panel'>
                 <div class="row">
                   <h1 class="ml-2 font-weight-bold text-primary">Ordenes</h1>
                 </div>
@@ -123,20 +123,22 @@
                         </div>
                       </div>
                     </div>
-            
                 </div>
-                <div class="row">
-                    <div class="col-2">
-                        <h4>Estado</h4>
-                    </div>
-                    <div class="col-7">
-                        <h4>Producto</h4>
-                    </div>
-                    <div class="col-2">
-                        <h4>Comprador</h4>
-                    </div>
-                </div>
-            </div>
+              </div>
+              <div id='InfoMsg'>
+                <div></div>
+              </div>
+              <div class="row">
+                  <div class="col-2">
+                      <h4>Estado</h4>
+                  </div>
+                  <div class="col-7">
+                      <h4>Producto</h4>
+                  </div>
+                  <div class="col-2">
+                      <h4>Comprador</h4>
+                  </div>
+              </div>
             <div class="table-responsive">
                 <ul class="list-group">
                   {% for order in orders %}
@@ -160,6 +162,7 @@
                                       class='btn btn-primary mb-1 ml-0 col-9'
                                       data-toggle="modal"
                                       data-target="#stateModal"
+                                      state='{{ order.state }}'
                                     >{{ order.next_state }}</div>
                                     <div id='{{ order.store_order_id }}'
                                       class='btn btn-secondary ml-0 col-9'
@@ -241,23 +244,13 @@
                   <span aria-hidden="true">×</span>
               </button>
             </div>
-            <div class="modal-body" id='bodyModalState'>
-              <form>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Referencia de Pago</span>
-                  </div>
-                  <input type="text" class="form-control" placeholder="123456789">
-                </div>
-              </form>
+            <div id='formContainer'>
+              <p>Hola Mundo! :D</p>
             </div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-              <a class="btn btn-primary" href="">Enviar</a>
             </div>
-        </div>
       </div>
     </div>
 
   <script src="{% static 'js/dashboard/search_orders.js' %}"></script>
+  <script src="{% static 'js/dashboard/next_state.js' %}"></script>
 {% endblock %}
