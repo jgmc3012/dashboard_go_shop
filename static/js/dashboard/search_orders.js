@@ -1,5 +1,4 @@
 select = document.getElementById('select_state_order')
-console.log(select)
 select.addEventListener('change', (event) => {
     options = event.target.options
     i = event.target.selectedIndex
