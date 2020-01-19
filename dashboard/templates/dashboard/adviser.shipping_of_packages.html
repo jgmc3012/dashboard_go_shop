@@ -1,0 +1,129 @@
+{% extends 'dashboard/adviser.base.html' %}
+{% load static %}
+{% block title %}
+    Dash-Asesor
+{% endblock %}
+
+{% block title_section %}
+    Centro de Control
+{% endblock %}
+
+{% block content_seccion %}
+    <div class="mb-4">
+            <div class='panel'>
+            <div class="row">
+                <h1 class="ml-2 font-weight-bold text-primary">Paquetes por enviar</h1>
+            </div>
+            <div class="row mb-1 p-2 bg-gray-300 rounded shadow">
+                <div
+                class='btn btn-primary mb-1 ml-2 col-2'
+                data-toggle="modal"
+                data-target="#shippingModal"
+                >Anexar Paquete</div>
+                <div class="d-none d-sm-inline-block form-inline ml-auto my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                    <input type="text" class="form-control bg-white shadow border-1 small" placeholder="Buscar por N° Pendido" aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div id='InfoMsg'>
+                <div></div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <h4>Producto</h4>
+                </div>
+                <div class="col-3">
+                    <h4>Comprador</h4>
+                </div>
+            </div>
+        <div class="table-responsive">
+            <ul class="list-group">
+                {% for order in orders %}
+                <li class="list-group-item mb-2 list-group-item-action"
+                    api="product-item"
+                    title="{{ order.product.title }}"
+                    order_id="{{ order.store_order_id }}"
+                >
+                    <div class='row'>
+                        <!-- Aqui comienza cada item -->
+                        <div class='col-8'>
+                            <h5>{{ order.product.title }}</h5>
+                            <div class="d-flex">
+                                <div class='flex-fill'>
+                                    <img
+                                        class="rounded"
+                                        src="{{ order.product.image }}"
+                                        alt="{{ order.product.title }}"
+                                    >
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="row">
+                                        <span class="text-black">Numero de Pedido:</span>
+                                        <p>{{ order.store_order_id }}</p>
+                                    </div>
+                                    <div class="row">
+                                        <span class="text-black">Guia del Envio:</span>
+                                        <p>{{ order.shipping.guide }}</p>
+                                    </div>
+                                    <div class="row">
+                                        <span class="text-black">Publicacion del proveedor:</span>
+                                        <a
+                                            target="_blank"
+                                            href="{{ order.product.order }}"
+                                        >Link</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class='col-3'>
+                            <div class="row">
+                                <span class="text-black">Nombre Completo:</span>
+                                <p>{{ order.buyer.first_name }} {{ order.buyer.last_name }}</p>
+                            </div>
+                            <div class="row">
+                                <span class="text-black">Telefono:</span>
+                                <p>{{ order.buyer.phone }}</p>
+                            </div>
+                            <div class="row">
+                                <span class="text-black">Nickname:</span>
+                                <p>{{ order.buyer.nickname }}</p>
+                            </div>
+                            <div class="row">
+                                <span class="text-black">Direccion:</span>
+                                <p>{{ order.buyer.direction }}</p>
+                            </div>
+                        </div>
+                        <!-- Final de cada item -->
+                    </div>
+                </li>
+                {% endfor %}  
+            </ul> 
+        </div>
+    </div>
+
+    <!-- State Modal-->
+    <div class="modal fade" id="shippingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Formulario de Envio de paquetes</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div id='formContainer'>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </div>      
+    <script src="{% static 'js/dashboard/shipping_packages.js' %}"></script>
+{% endblock %}
