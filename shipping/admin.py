@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import Shipping
+from .models import Shipper
 
-admin.site.register(Shipping)
+admin.site.register(Shipper)

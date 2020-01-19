@@ -5,12 +5,12 @@ from .models import Shipping,Shipper
 
 
 def new_shipping(guide:int, amount:int, shipper_name:str, destination:str):
-    shipper = Shipper.objects.filter(nickname=shipper).first()
+    shipper = Shipper.objects.filter(nickname=shipper_name).first()
     if not shipper:
         return {
             'ok': False,
             'msg': 'La trasportadora no esta registra.'
-        }  
+        }
     shipping = Shipping.objects.filter(guide=guide).first()
     if shipping:
         return {
@@ -26,7 +26,7 @@ def new_shipping(guide:int, amount:int, shipper_name:str, destination:str):
     )
     return {
             'ok': True,
-            'msg': '',
+            'msg': 'Envio registrado',
             'data': shipping
     }
 
