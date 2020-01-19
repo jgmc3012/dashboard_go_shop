@@ -93,25 +93,15 @@ class OrderView(LoginRequiredMixin, View):
             'msg': f'Orden agregada correctamente.  {user_name}.'
         })
 
-
-    def validate_payment(request, pay_reference):
-        user=request.user
-        user_name = user.first_name
-        amount = float(request.GET.get('amount'))
-        pay = Pay.objects.filter(reference=pay_reference).first()
-        if not pay:
+    def order_purchased(request, order_id):
+        provider_order = int(json_data.get('provider_order'))
+        order = Order.objects.filter(store_order_id=order_id).select_related('invoice').select_related('pay').first()
+        if not order:
             return JsonResponse({
-                'ok': False,
-                'msg': f'{user_name}. Este pago no esta asociado con ningun pedido en nuestra base de datos.'
+                'ok':False,
+                'msg': f'{user_name}, ese numero de orden no existe. Verificalo. Si el error persiste, comunicate con su supervisor.'
             })
-        if not pay.amount == amount:
-            return JsonResponse({
-                'ok': False,
-                'msg': f'{user_name}. El monto que indicas no corresponde con el del \
-    pedido en nuestra base de datos. Verificalo \n si persiste \
-    el error contacta con un supervisor o con el desarrollador a cargo.'
-            })
-
+        breakpoint()
         if pay.confirmed:
             return JsonResponse({
                 'ok': False,
@@ -146,34 +136,6 @@ class OrderView(LoginRequiredMixin, View):
             'msg': f' {user_name}. Transaccion exitosa. La orden a pasado al departamento de compras.'
         })
 
-    def show_orders_to_buy(request):
-        orders = Order.objects.filter(state=Order.PAID_OUT).select_related('product')
-
-        products = [{
-            'img':order.product.image,
-            'quantity': order.quantity,
-            'sku_provider':order.product.provider_sku,
-            'price': f'{order.product.cost_price} USD',
-            'link': f'https://articulo.mercadolibre.com.co/{order.product.provider_sku[:3]}-{order.product.provider_sku[3:]}-carro-moto-recargables-electrico-montables-ninos-ninas-ctrl-_JM',
-            'title':order.product.title,
-            'order_id': order.provider_id,
-            } for order in orders]
-        data = {
-            'products':products
-        }
-        return JsonResponse({
-            'ok': True,
-            'msg': '',
-            'data': data
-        })
-
-    def order_purchased(request, order_id, provider_order):
-        order = Order.objects.filter(store_order_id=order_id).first()
-        if not order:
-            return JsonResponse({
-                'ok':False,
-                'msg': f'{user_name}, ese numero de orden no existe. Verificalo. Si el error persiste, comunicate con su supervisor.'
-            })
 
         order.provider_order_id = provider_order
         order.state=Order.PROCESSING
@@ -183,7 +145,7 @@ class OrderView(LoginRequiredMixin, View):
                 'msg': f'{user_name}, Se cambio el estado a de la orden a Procesando'
             })
 
-    def provider_deliveries(request, order_id): #Esto debe ser por lotes
+    def provider_deliveries(request, order_id):
         order = Order.objects.filter(provider_order_id=order_id).first()
         if not order:
             order = Order.objects.filter(store_order_id=order_id).first()
@@ -210,6 +172,9 @@ class OrderView(LoginRequiredMixin, View):
             ]
         }]
 
+        json_data=json.loads(request.body)
+
+        shippings_draw = json_data['shippings']
         data = list()
         bulk_mgr = BulkCreateManager()
         for shipping_draw in shippings_draw:
@@ -244,13 +209,13 @@ class OrderView(LoginRequiredMixin, View):
     ser enviadas a direcciones distintas. Contacta urgentemente a un supervisor.'
                 })
                 continue
-            
+
             request_shipping = new_shipping(guide_shipping,amount,shipper,destination)
 
             if not request_shipping.get('ok'):
                 data.append(request_shipping)
                 continue
-            
+
             shipping=request_shipping.get('data')
             for orden in orders:
                 order.state=Order.INTERNATIONAL_DEPARTURE,
@@ -271,26 +236,31 @@ class OrderView(LoginRequiredMixin, View):
         result = shipment_completed(guide_shipping)
         if not result.get('ok'):
             return JsonResponse(result)
-        
+
         shipping = result.get('data')
 
         orders = Order.objects.filter(shipping=shipping)
 
         bulk_mgr = BulkCreateManager()
+        number_products = 0
         for order in orders:
             order.state=Order.RECEIVED_STORE
+            number_products + order.quantity
             bulk_mgr.update(order, {'state'})
 
         bulk_mgr.done()
 
+        message = f'Solicitud Exitosa. El paquete contenia {number_products} producto(s).\n \
+A continuacion se listan los numeros de pedidos de dichos productos:'
+        for order in orders:
+            message += f'\nPedido: {order.store_order_id} -> {order.quantity} producto(s).'
         return JsonResponse({
             'okey':True,
-            'msg': 'Transaccion Exitosa'
+            'msg': message
         })
 
     def complete_order(request,order_id):
         user_name=request.user.first_name
-        shipping = result.get('data')
 
         order = Order.objects.filter(store_order_id=order_id).first()
         if not order:
@@ -298,11 +268,9 @@ class OrderView(LoginRequiredMixin, View):
                 'okey':False,
                 'msg': 'Numero de orden invalido'
             })
-
         order.state = Order.COMPLETED
         order.save()
-
         return JsonResponse({
                 'okey':True,
-                'msg': f'Entrega exitosa.  {user_name}'
+                'msg': f'{user_name}, entrega exitosa.'
             })

@@ -1,6 +1,7 @@
-const formsNextStates = (state, orderId ) => {
+const formNextState = (state, orderId ) => {
     switch (state+1) {
-        case 1: return (`
+        case 1:
+            return (`
             <div>
                 <div class="modal-body" id='bodyModalState'>
                     <form>
@@ -23,15 +24,16 @@ const formsNextStates = (state, orderId ) => {
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 </div>
             </div>
-        `)
-        case 2: return (`
+            `)
+        case 2: 
+            return (`
             <div class="modal-body" id='bodyModalState'>
                 <form>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                         <span class="input-group-text">N° de Orden de Compra</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="1234">
+                        <input type="text" class="form-control" api='nextState' name="provider_order" placeholder="1234">
                     </div>
                 </form>
             </div>
@@ -39,40 +41,36 @@ const formsNextStates = (state, orderId ) => {
             <div class="btn btn-primary" state='${state}' orderId='${orderId}'>Enviar</div>
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
             </div>
-        `)
-        case 3: console.log('Recibido en Bodega')
+            `)
+        case 3:
+            sendData(state, orderId)
             break
-        case 4: return (`
-            <div class="modal-body" id='bodyModalState'>
-                <form>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                        <span class="input-group-text">Referencia de Pago</span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="123456789">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-            <a class="btn btn-primary" href="">Enviar</a>
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-            </div>
-        `)
-        case 5: console.log('Recibido en Oficina')
+        case 4:
+            window.location = `${window.location}/shipping_packages`
             break
-        case 6: console.log('Orden Completada')
+        case 5:
+            window.location = `${window.location}/received_package`
+            break
+        case 6:
+            sendData(state, orderId)
             break
     }
-
 }
+
+alertInfoHTML = (message, type, mtype) => `
+<div class="alert alert-${type} fade in alert-dismissible show">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:20px">×</span>
+    </button>
+    <strong>${mtype}</strong>   ${message}
+</div>
+`
 
 function createTemplate(HTMLString) {
     const html = document.implementation.createHTMLDocument();
     html.body.innerHTML = HTMLString;
     return html.body.children[0];
     }
-
-btnsNextState = document.querySelectorAll('[data-target="#stateModal"]')
 
 function insertElement(Selectorcontaner, HTMLString) {
     let container = document.querySelector(Selectorcontaner)
@@ -81,41 +79,38 @@ function insertElement(Selectorcontaner, HTMLString) {
     container.append(element)
 }
 
-btnsNextState.forEach( (btn) => {
-    btn.addEventListener('click', (event) => {
-        let orderId = event.target.getAttribute('id')
-        let state = parseInt(parseInt(event.target.getAttribute('state')))
-        const HTMLString = formsNextStates(state,orderId)
-        insertElement('#formContainer', HTMLString)
-
-        btnRequest = document.getElementById('btnRequestNextState')
-        btnRequest.addEventListener( 'click' , (event) => {
-            nextstate = parseInt(event.target.getAttribute('state')) + 1
-            orderId = event.target.getAttribute('orderId')
-            sendData(orderId)
-        })
-    })
-})
-
-function sendData(orderId) {
-    url = `${window.location.origin}/orders/api/new_pay/${orderId}`
-    method = 'POST'
-    headers = {
+function sendData(state, orderId) {
+    const method = 'POST'
+    const headers = {
         "X-CSRFToken": getCookie('csrftoken'),
         'Content-Type': 'application/json',
         "X-Requested-With": "XMLHttpRequest",
     }
-    body = JSON.stringify(getJsonFromForm("[api='nextState']"))
+    const body = JSON.stringify(getJsonFromForm("[api='nextState']"))
+    let url
+    switch (state + 1) {
+        case 1:
+            url = `${window.location.origin}/orders/api/new_pay/${orderId}`
+            break;
+        case 2:
+            url = `${window.location.origin}/orders/api/buys/done/${orderId}`
+            break;
+        case 3:
+            url = `${window.location.origin}/orders/api/provider_deliveries/${orderId}`
+        case 6:
+            url = `${window.location.origin}/orders/api/complete_order/${orderId}`
+    }
+
+    const modal = document.getElementById('stateModal')
+    modal.click()
     fetch(url,{method,headers,body})
     .then( response => response.json())
     .then( data => {
-        modal = document.getElementById('stateModal')
-        modal.click()
-        type = data.ok ? 'success':'danger'
-        mtype = data.ok ? 'Buen Trabajo':'Error'
-        HTMLString = alertInfoHTML(data.msg, type, mtype)
+        const type = data.ok ? 'success':'danger'
+        const mtype = data.ok ? 'Buen Trabajo':'Error'
+        const HTMLString = alertInfoHTML(data.msg, type, mtype)
         insertElement('#InfoMsg', HTMLString)
-    } )
+    })
 }
 
 function getJsonFromForm(selector) {
@@ -127,13 +122,25 @@ function getJsonFromForm(selector) {
         data[key] = value
     } )
     return data
-}
+} 
 
-alertInfoHTML = (message, type, mtype) => `
-<div class="alert alert-${type} fade in alert-dismissible show">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="font-size:20px">×</span>
-    </button>
-    <strong>${mtype}</strong>   ${message}
-</div>
-`
+// BEGIN
+
+btnsNextState = document.querySelectorAll('[data-target="#stateModal"]')
+
+btnsNextState.forEach( (btn) => {
+    btn.addEventListener('click', (event) => {
+        let orderId = event.target.getAttribute('id')
+        let state = parseInt(parseInt(event.target.getAttribute('state')))
+        const HTMLString = formNextState(state,orderId)
+        insertElement('#formContainer', HTMLString)
+
+        btnRequest = document.getElementById('btnRequestNextState')
+        btnRequest.addEventListener( 'click' , (event) => {
+            state = parseInt(event.target.getAttribute('state'))
+            orderId = event.target.getAttribute('orderId')
+            sendData(state ,orderId)
+        })
+    })
+})
+
