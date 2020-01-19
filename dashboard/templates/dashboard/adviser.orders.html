@@ -109,6 +109,10 @@
                                         <p>{{ order.store_order_id }}</p>
                                     </div>
                                     <div class="row">
+                                        <span class="text-black">Numero de Orden:</span>
+                                        <p>{{ order.provider_order_id }}</p>
+                                    </div>
+                                    <div class="row">
                                         <span class="text-black">Guia del Envio:</span>
                                         <p>{{ order.shipping.guide }}</p>
                                     </div>
@@ -119,13 +123,17 @@
                                             href="{{ order.product.order }}"
                                         >Link</a>
                                     </div>
+                                    <div class="row">
+                                        <span class="text-black">Referencia de Pago:</span>
+                                        <p>{{ order.invoice.pay.reference }}</p>
+                                    </div>
                                 </div>
                                 <div class="flex-fill">
                                     <div
                                         class='btn btn-info ml-0 align-content-center align-items-center'
                                         data-toggle="modal"
                                         data-target="#modalDetailProduct"
-                                    >Detalles del Producto</div>
+                                    >Novedades</div>
                                 </div>
                             </div>
                         </div>
@@ -137,10 +145,6 @@
                             <div class="row">
                                 <span class="text-black">Telefono:</span>
                                 <p>{{ order.buyer.phone }}</p>
-                            </div>
-                            <div class="row">
-                                <span class="text-black">Nickname:</span>
-                                <p>{{ order.buyer.nickname }}</p>
                             </div>
                             <div class="row">
                                 <span class="text-black">Direccion:</span>
