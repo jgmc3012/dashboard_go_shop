@@ -93,59 +93,53 @@ class OrderView(LoginRequiredMixin, View):
             'msg': f'Orden agregada correctamente.  {user_name}.'
         })
 
-    def order_purchased(request, order_id):
+    def order_purchased(self, request, order_id):
+        json_data=json.loads(request.body)
+
+        user = request.user
+        user_name = user.first_name
+
         provider_order = int(json_data.get('provider_order'))
-        order = Order.objects.filter(store_order_id=order_id).select_related('invoice').select_related('pay').first()
+        order = Order.objects.filter(store_order_id=order_id).select_related('invoice').first()
         if not order:
             return JsonResponse({
                 'ok':False,
                 'msg': f'{user_name}, ese numero de orden no existe. Verificalo. Si el error persiste, comunicate con su supervisor.'
             })
-        breakpoint()
-        if pay.confirmed:
-            return JsonResponse({
-                'ok': False,
-                'msg': f'{user_name}. Este pago ya fue procesado por alguien mas, Si esto es un error contacta con tu supervisor.'
-            })
 
-        invoice = Invoice.objects.filter(pay=pay).first()
+        invoice = order.invoice
         if not invoice:
             return JsonResponse({
                 'ok': False,
                 'msg': f'{user_name}. No pudimos encontrar el recibo asociado al pago. Por favor,\
     contacta al desarrollador.'
             })
-        
 
-        order = Order.objects.filter(invoice=invoice).first()
-        if not order:
+        pay = invoice.pay
+        if pay.confirmed:
             return JsonResponse({
                 'ok': False,
-                'msg': f'{user_name}. No pudimos encontrar la orden asociado al pago. Por favor,\
-    contacta al desarrollador.'
+                'msg': f'{user_name}. Este pago ya fue procesado por alguien mas, Si esto es un error contacta con tu supervisor.'
             })
+
         invoice.user = user
         invoice.datetime = timezone.now()
+        invoice.save()
+
         pay.confirmed = True
         pay.save()
-        invoice.save()
-        order.state = order.PAID_OUT
-        order.save()
-        return JsonResponse({
-            'ok': True,
-            'msg': f' {user_name}. Transaccion exitosa. La orden a pasado al departamento de compras.'
-        })
 
-
-        order.provider_order_id = provider_order
         order.state=Order.PROCESSING
+        order.provider_order_id = provider_order
         order.save()
+
         return JsonResponse({
                 'ok':True,
-                'msg': f'{user_name}, Se cambio el estado a de la orden a Procesando'
+                'msg': f'{user_name}, Se cambio el estado de la orden a Procesando'
             })
 
-    def provider_deliveries(request, order_id):
+    def provider_deliveries(self, request, order_id):
+        user_name = request.user.first_name
         order = Order.objects.filter(provider_order_id=order_id).first()
         if not order:
             order = Order.objects.filter(store_order_id=order_id).first()
@@ -155,13 +149,14 @@ class OrderView(LoginRequiredMixin, View):
                 'msg': f'{user_name}, ese numero de orden no existe. Verificalo. Si el error persiste, comunicate con su supervisor.'
             })
 
-        order.state = Order.RECEIVED_STORE
+        order.state = Order.RECEIVED_STORAGE
+        order.save()
         return JsonResponse({
                 'ok':True,
                 'msg': f'{user_name}, Se cambio el estado a de la orden a Recibido en Bodega'
             })
 
-    def shipping_of_packet(request, shipper):
+    def shipping_of_packet(self, request, shipper):
         shippings_draw = [{ #MANDADO POR POST
             'amount':0,
             'guide_shipping':123456,
@@ -232,7 +227,7 @@ class OrderView(LoginRequiredMixin, View):
             'data': data
         })
 
-    def received_packet(request,guide_shipping):
+    def received_packet(self, request, guide_shipping):
         result = shipment_completed(guide_shipping)
         if not result.get('ok'):
             return JsonResponse(result)
@@ -259,7 +254,7 @@ A continuacion se listan los numeros de pedidos de dichos productos:'
             'msg': message
         })
 
-    def complete_order(request,order_id):
+    def complete_order(self, request, order_id):
         user_name=request.user.first_name
 
         order = Order.objects.filter(store_order_id=order_id).first()

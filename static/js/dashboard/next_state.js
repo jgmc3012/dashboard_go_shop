@@ -27,19 +27,21 @@ const formNextState = (state, orderId ) => {
             `)
         case 2: 
             return (`
-            <div class="modal-body" id='bodyModalState'>
-                <form>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                        <span class="input-group-text">N° de Orden de Compra</span>
+            <div>
+                <div class="modal-body" id='bodyModalState'>
+                    <form>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">N° de Orden de Compra</span>
+                            </div>
+                            <input type="text" class="form-control" api='nextState' name="provider_order" placeholder="1234">
                         </div>
-                        <input type="text" class="form-control" api='nextState' name="provider_order" placeholder="1234">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-            <div class="btn btn-primary" state='${state}' orderId='${orderId}'>Enviar</div>
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <div class="btn btn-primary" state='${state}' orderId='${orderId}' id='btnRequestNextState' >Enviar</div>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                </div>
             </div>
             `)
         case 3:
@@ -97,12 +99,14 @@ function sendData(state, orderId) {
             break;
         case 3:
             url = `${window.location.origin}/orders/api/provider_deliveries/${orderId}`
+            break;
         case 6:
             url = `${window.location.origin}/orders/api/complete_order/${orderId}`
+            break;
     }
 
     const modal = document.getElementById('stateModal')
-    modal.click()
+    modal.classList.remove('show')
     fetch(url,{method,headers,body})
     .then( response => response.json())
     .then( data => {
@@ -110,6 +114,10 @@ function sendData(state, orderId) {
         const mtype = data.ok ? 'Buen Trabajo':'Error'
         const HTMLString = alertInfoHTML(data.msg, type, mtype)
         insertElement('#InfoMsg', HTMLString)
+        if (data.ok) {
+            itemlistElement = document.querySelector(`[order_id='${orderId}']`)
+            itemlistElement.remove()
+        }
     })
 }
 
@@ -133,14 +141,16 @@ btnsNextState.forEach( (btn) => {
         let orderId = event.target.getAttribute('id')
         let state = parseInt(parseInt(event.target.getAttribute('state')))
         const HTMLString = formNextState(state,orderId)
-        insertElement('#formContainer', HTMLString)
-
-        btnRequest = document.getElementById('btnRequestNextState')
-        btnRequest.addEventListener( 'click' , (event) => {
-            state = parseInt(event.target.getAttribute('state'))
-            orderId = event.target.getAttribute('orderId')
-            sendData(state ,orderId)
-        })
+        if (HTMLString) {
+            insertElement('#formContainer', HTMLString)
+    
+            btnRequest = document.getElementById('btnRequestNextState')
+            btnRequest.addEventListener( 'click' , (event) => {
+                state = parseInt(event.target.getAttribute('state'))
+                orderId = event.target.getAttribute('orderId')
+                sendData(state ,orderId)
+            })
+        }
     })
 })
 

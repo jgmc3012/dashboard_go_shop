@@ -142,7 +142,7 @@
             <div class="table-responsive">
                 <ul class="list-group">
                   {% for order in orders %}
-                    <li class="list-group-item mb-2 shadow">
+                    <li class="list-group-item mb-2 shadow" order_id="{{ order.store_order_id }}" >
                         <div class='row'>
                             <!-- Aqui comienza cada item -->
                             <div class='col-2'>
