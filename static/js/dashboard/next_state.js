@@ -106,7 +106,7 @@ function sendData(state, orderId) {
     }
 
     const modal = document.getElementById('stateModal')
-    modal.classList.remove('show')
+    modal.click()
     fetch(url,{method,headers,body})
     .then( response => response.json())
     .then( data => {
