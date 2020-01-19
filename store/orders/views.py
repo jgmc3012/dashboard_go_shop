@@ -196,7 +196,7 @@ ser enviadas a direcciones distintas. Contacta urgentemente a un supervisor.'
         shipping=request_shipping.get('data')
         bulk_mgr = BulkCreateManager()
         for orden in orders:
-            order.state=Order.INTERNATIONAL_DEPARTURE,
+            order.state=Order.INTERNATIONAL_DEPARTURE
             order.shipping = shipping
             bulk_mgr.update(order,{'state','shipping'})
         
@@ -204,7 +204,7 @@ ser enviadas a direcciones distintas. Contacta urgentemente a un supervisor.'
 
         return JsonResponse({
             'ok':True,
-            'msg':f'Envio {guide}, Registrado con exito.'
+            'msg':f'Envio {guide_shipping}, Registrado con exito.'
         })
 
     def received_packet(self, request, guide_shipping):
