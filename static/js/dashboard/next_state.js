@@ -1,64 +1,3 @@
-const formNextState = (state, orderId ) => {
-    switch (state+1) {
-        case 1:
-            return (`
-            <div>
-                <div class="modal-body" id='bodyModalState'>
-                    <form>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">Referencia de Pago</span>
-                            </div>
-                            <input type="text" class="form-control" api='nextState' name='pay_reference' placeholder="Ejem: 73192731">
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">Cantidad de Articulos</span>
-                            </div>
-                            <input type="number" class="form-control" api='nextState' name='quantity' value="1">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <div class="btn btn-primary" state='${state}' orderId='${orderId}' id='btnRequestNextState' >Enviar</div>
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                </div>
-            </div>
-            `)
-        case 2: 
-            return (`
-            <div>
-                <div class="modal-body" id='bodyModalState'>
-                    <form>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">N° de Orden de Compra</span>
-                            </div>
-                            <input type="text" class="form-control" api='nextState' name="provider_order" placeholder="1234">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                <div class="btn btn-primary" state='${state}' orderId='${orderId}' id='btnRequestNextState' >Enviar</div>
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                </div>
-            </div>
-            `)
-        case 3:
-            sendData(state, orderId)
-            break
-        case 4:
-            window.location = `${window.location}/shipping_packages`
-            break
-        case 5:
-            window.location = `${window.location}/received_package`
-            break
-        case 6:
-            sendData(state, orderId)
-            break
-    }
-}
-
 alertInfoHTML = (message, type, mtype) => `
 <div class="alert alert-${type} fade in alert-dismissible show">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -131,6 +70,71 @@ function getJsonFromForm(selector) {
     } )
     return data
 } 
+
+
+///////////////////////////HASTA AQUI CODIGO REPETIDO///////////////////////////////////
+
+const formNextState = (state, orderId ) => {
+    switch (state+1) {
+        case 1:
+            return (`
+            <div>
+                <div class="modal-body" id='bodyModalState'>
+                    <form>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">Referencia de Pago</span>
+                            </div>
+                            <input type="text" class="form-control" api='nextState' name='pay_reference' placeholder="Ejem: 73192731">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">Cantidad de Articulos</span>
+                            </div>
+                            <input type="number" class="form-control" api='nextState' name='quantity' value="1">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn btn-primary" state='${state}' orderId='${orderId}' id='btnRequestNextState' >Enviar</div>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+            `)
+        case 2: 
+            return (`
+            <div>
+                <div class="modal-body" id='bodyModalState'>
+                    <form>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">N° de Orden de Compra</span>
+                            </div>
+                            <input type="text" class="form-control" api='nextState' name="provider_order" placeholder="1234">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <div class="btn btn-primary" state='${state}' orderId='${orderId}' id='btnRequestNextState' >Enviar</div>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+            `)
+        case 3:
+            sendData(state, orderId)
+            break
+        case 4:
+            window.location = `${window.location.origin}/dashboard/shipping_packages`
+            break
+        case 5:
+            window.location = `${window.location.origin}/dashboard/received_package`
+            break
+        case 6:
+            sendData(state, orderId)
+            break
+    }
+}
+
 
 // BEGIN
 

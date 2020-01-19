@@ -156,75 +156,55 @@ class OrderView(LoginRequiredMixin, View):
                 'msg': f'{user_name}, Se cambio el estado a de la orden a Recibido en Bodega'
             })
 
-    def shipping_of_packet(self, request, shipper):
-        shippings_draw = [{ #MANDADO POR POST
-            'amount':0,
-            'guide_shipping':123456,
-            'orders': [
-                12345,
-                54321,
-                2268501061,
-            ]
-        }]
-
+    def shipping_of_packet(self, request):
+        shipper = 'MRW'
         json_data=json.loads(request.body)
+        orders_draw = json_data.get('orders')
+        amount=json_data.get('amount')
+        guide_shipping = json_data.get('guide_shipping')
+        orders = Order.objects.filter(store_order_id__in=orders_draw)
 
-        shippings_draw = json_data['shippings']
-        data = list()
-        bulk_mgr = BulkCreateManager()
-        for shipping_draw in shippings_draw:
-            orders_draw = shipping_draw.get('orders')
-            amount=shipping_draw.get('amount')
-            guide = shipping_draw.get('shide_shipping')
-
-            orders = Order.objects.filter(store_order_id__in=orders_draw)
-
-            if len(orders) != len(orders_draw):
-                bad_orders = set(orders_draw)
-                for order in orders:
-                    bad_orders.discard(order.store_order_id)
-
-                data.append({
-                    'ok':False,
-                    'msg': f'El envio {guide}. No se pudo registrar porque la(s) siguiente(s) \
-    ordene(s) no corresponden con nuestra base de datos. \n{bad_orders}'
-                })
-                continue
-            
-            destination = orders[0].destination_place
+        if len(orders) != len(orders_draw):
+            bad_orders = set(orders_draw)
             for order in orders:
-                if destination != order.destination_place:
-                    destination = ''
-                    break
-            
-            if not destination:
-                data.append({
-                    'ok':False,
-                    'msg': f'ERROR: La guia {guide_shipping} contiene ordenes que debian\
-    ser enviadas a direcciones distintas. Contacta urgentemente a un supervisor.'
-                })
-                continue
+                bad_orders.discard(order.store_order_id)
 
-            request_shipping = new_shipping(guide_shipping,amount,shipper,destination)
-
-            if not request_shipping.get('ok'):
-                data.append(request_shipping)
-                continue
-
-            shipping=request_shipping.get('data')
-            for orden in orders:
-                order.state=Order.INTERNATIONAL_DEPARTURE,
-                order.shipping = shipping
-                bulk_mgr.update(order,{'state','shipping'})
-            data.append({
-                'ok':True,
-                'msg':f'Envio {guide}, Registrado con exito.'
+            return JsonResponse({
+                'ok':False,
+                'msg': f'El envio {guide}. No se pudo registrar porque la(s) siguiente(s) \
+ordene(s) no corresponden con nuestra base de datos. \n{bad_orders}'
             })
+
+        destination = orders[0].destination_place
+        for order in orders:
+            if destination != order.destination_place:
+                destination = ''
+                break
+        
+        if not destination:
+            return JsonResponse({
+                'ok':False,
+                'msg': f'ERROR: La guia {guide_shipping} contiene ordenes que debian\
+ser enviadas a direcciones distintas. Contacta urgentemente a un supervisor.'
+            })
+
+        request_shipping = new_shipping(guide_shipping,amount,shipper,destination)
+
+        if not request_shipping.get('ok'):
+            return JsonResponse(request_shipping)
+
+        shipping=request_shipping.get('data')
+        bulk_mgr = BulkCreateManager()
+        for orden in orders:
+            order.state=Order.INTERNATIONAL_DEPARTURE,
+            order.shipping = shipping
+            bulk_mgr.update(order,{'state','shipping'})
+        
         bulk_mgr.done()
 
         return JsonResponse({
-            'ok': True,
-            'data': data
+            'ok':True,
+            'msg':f'Envio {guide}, Registrado con exito.'
         })
 
     def received_packet(self, request, guide_shipping):
