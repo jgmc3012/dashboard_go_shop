@@ -10,7 +10,7 @@ function createTemplate(HTMLString) {
     const html = document.implementation.createHTMLDocument();
     html.body.innerHTML = HTMLString;
     return html.body.children[0];
-    }
+}
 
 function insertElement(Selectorcontaner, HTMLString) {
     let container = document.querySelector(Selectorcontaner)
@@ -20,6 +20,7 @@ function insertElement(Selectorcontaner, HTMLString) {
 }
 
 function sendData(data, url, selectorModal) {
+    toggleLoading()
     const method = 'POST'
     const headers = {
         "X-CSRFToken": getCookie('csrftoken'),
@@ -33,6 +34,7 @@ function sendData(data, url, selectorModal) {
     fetch(url,{method,headers,body})
     .then( response => response.json())
     .then( data => {
+        toggleLoading()
         const type = data.ok ? 'success':'danger'
         const mtype = data.ok ? 'Buen Trabajo':'Error'
         const HTMLString = alertInfoHTML(data.msg, type, mtype)
