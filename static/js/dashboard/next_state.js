@@ -62,7 +62,7 @@ const formNextState = (state, orderId ) => {
             </div>
             `)
         case 3:
-            sendData(state, orderId)
+            sendData({}, selectUrl(state, orderId), '#stateModal')
             break
         case 4:
             window.location = `${window.location.origin}/dashboard/shipping_packages`
@@ -71,7 +71,7 @@ const formNextState = (state, orderId ) => {
             window.location = `${window.location.origin}/dashboard/received_package`
             break
         case 6:
-            sendData(state, orderId)
+            sendData({}, selectUrl(state, orderId), '#stateModal')
             break
     }
 }
