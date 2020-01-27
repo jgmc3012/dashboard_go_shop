@@ -11,10 +11,11 @@ class Command(BaseCommand):
         meli = Meli()
 
         path = '/sites/MLV/categories'
-        result = get.(path)
+        result = meli.get(path)
         for category_draw in result:
             category = Category(
-                id=category_draw['id'][3:]
+                id=category_draw['id'][3:],
                 name=category_draw['name']
             )
+            bulk_mgr.add(category)
         bulk_mgr.done()
