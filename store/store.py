@@ -2,7 +2,7 @@ from meli_sdk.sdk.meli import Meli
 from decouple import config
 import math
 import logging
-from .models import Product
+from .products.models import Product
 
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')

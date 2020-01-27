@@ -2,21 +2,12 @@ from django.db import models
 
 
 class Seller(models.Model):
-    nickname = models.CharField(max_length=60, unique=True)
+    nickname = models.CharField(max_length=60, unique=True, null=True)
     id = models.PositiveIntegerField(
         help_text="Identificador unico del vendedor en la WEB/API del proveeedor",
         primary_key=True
     )
     bad_seller = models.BooleanField(default=False)
-
-class Product(models.Model):
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
-    title = models.CharField(max_length=60)
-    cost_price = models.FloatField(null=True)
-    sale_price = models.FloatField(null=True)
-    provider_sku = models.CharField(max_length=50)
-    sku = models.CharField(max_length=20, unique=True)
-    image = models.CharField(max_length=255)
 
 class BusinessModel(models.Model):
     """

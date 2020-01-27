@@ -2,7 +2,8 @@ from django.db import models
 from django.utils import timezone
 
 from django.contrib.auth.models import User
-from store.models import Buyer, Product
+from store.models import Buyer
+from store.products.models import Product
 from shipping.models import Shipping
 
 from store.store import Store

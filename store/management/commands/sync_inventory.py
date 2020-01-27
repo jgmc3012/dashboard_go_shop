@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
 
 from store.store import Store
-from store.models import Product, Seller, BusinessModel
+from store.models import Seller, BusinessModel
+from store.products.models import Product
 from meli_sdk.models import BulkCreateManager
 import logging
 from math import ceil
