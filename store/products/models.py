@@ -30,6 +30,6 @@ class Picture(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
 class Attribute(models.Model):
-    id_meli = models.CharField(max_length=20)
+    id_meli = models.CharField(max_length=50)
     value = models.CharField(max_length=200)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
