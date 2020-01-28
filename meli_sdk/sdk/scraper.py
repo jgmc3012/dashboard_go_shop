@@ -1,7 +1,7 @@
 from store.store import Store
 from meli_sdk.sdk.meli import Meli
 
-from store.products.models import Product, Category, Attribute
+from store.products.models import Product, Category, Attribute, Picture
 from store.models import Seller, BusinessModel
 
 from meli_sdk.models import BulkCreateManager
@@ -100,7 +100,6 @@ class Scraper(Meli):
             'ids': ids,
             'attributes': 'id,pictures',
         } for ids in self.split_ids(list_ids)]
-
         result_draw = self.map_pool_get(
             [path]*len(params),
             params
@@ -111,7 +110,7 @@ class Scraper(Meli):
             results += result
         products_draw = {product['body']['id']:product for product in results}
 
-        products = Product.objects.filter(sku__in=products_draw.keys())
+        products = Product.objects.filter(provider_sku__in=products_draw.keys())
 
         bulk_mgr = BulkCreateManager()
         for product in products:

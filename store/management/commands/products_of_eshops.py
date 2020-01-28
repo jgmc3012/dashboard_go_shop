@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from store.models import Seller
+from store.products.models import Product
 from meli_sdk.sdk.scraper import Scraper
 import logging
 
