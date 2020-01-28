@@ -26,7 +26,7 @@ class Product(models.Model):
     quantity = models.IntegerField()
 
 class Picture(models.Model):
-    src =  models.CharField(max_length=255)
+    src =  models.CharField(max_length=255, unique=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
 class Attribute(models.Model):

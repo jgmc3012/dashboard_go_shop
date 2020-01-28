@@ -6,6 +6,7 @@ from store.models import Seller, BusinessModel
 
 from meli_sdk.models import BulkCreateManager
 from math import ceil
+import logging
 
 class Scraper(Meli):
 
@@ -115,7 +116,9 @@ class Scraper(Meli):
         bulk_mgr = BulkCreateManager()
         for product in products:
             sku = product.provider_sku
-
+            if not products_draw[sku]['body'].get('pictures'):
+                logging.warning(f'Al producto {sku} no se le encontraron imagenes')
+                continue
             for image in products_draw[sku]['body']['pictures']:
                 picture = Picture(
                     src=image['secure_url'],
