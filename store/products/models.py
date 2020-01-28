@@ -7,6 +7,8 @@ class Category(models.Model):
         help_text="Identificador unico de la categoria en mercadolibre sin el prefijo MLV",
         primary_key=True
     )
+    father = models.PositiveIntegerField()
+    approved = models.BooleanField(default=False)
     name = models.CharField(max_length=60)
 
 class Product(models.Model):
@@ -14,8 +16,8 @@ class Product(models.Model):
     title = models.CharField(max_length=60)
     cost_price = models.FloatField(null=True)
     sale_price = models.FloatField(null=True)
-    provider_sku = models.CharField(max_length=50)
-    provider_link = models.CharField(max_length=255)
+    provider_sku = models.CharField(max_length=50, unique=True)
+    provider_link = models.CharField(max_length=255, unique=True)
     sku = models.CharField(max_length=20, unique=True, null=True, default=None)
     image = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -29,5 +31,5 @@ class Picture(models.Model):
 
 class Attribute(models.Model):
     id_meli = models.CharField(max_length=20)
-    value = models.CharField(max_length=20)
+    value = models.CharField(max_length=50)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

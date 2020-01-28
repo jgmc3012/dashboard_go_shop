@@ -17,7 +17,7 @@ from decouple import config
 
 
 class Meli(object):
-    def __init__(self, seller_id):
+    def __init__(self, seller_id=None):
         self.client_secret = config('MELI_SECRET_KEY')
         self.client_id = config('MELI_APP_ID')
         self.limit_ids_per_request = 20
@@ -154,6 +154,9 @@ class Meli(object):
             else:
                 self.refresh_token()
             return self.get(path,params, extra_headers)
+
+        elif response.status_code == 404:
+            return None
         else:
             raise Exception('Error en peticion personalizar mensaje')
 
@@ -266,14 +269,16 @@ class Meli(object):
             ids_list.append(','.join(slice_products))
 
         return ids_list
-        
-    def map_pool_get(self, paths, params=None, extra_headers=None):
+
+    def map_pool_get(self, paths:list, params=None, extra_headers=None):
+        extra_headers = extra_headers if extra_headers else [extra_headers]*len(paths)
+        params = params if params else [params]*len(paths)
         logging.info(f'Se estan realizando {len(paths)} peticiones.')
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             results = executor.map(self.get, paths, params, extra_headers)
         response = list()
         for result in results:
-            response +=result
+            response.append(result)
         return response
 
     def map_pool_put(self, paths, body=None, params=None, extra_headers=None):
@@ -282,7 +287,7 @@ class Meli(object):
             results = executor.map(self.put, paths,body, params, extra_headers)        
         response = list()
         for result in results:
-            response +=result
+            response.append(result)
         return response
 
     def search_items(self, ids_list, path, params=dict(), extra_headers=None):
