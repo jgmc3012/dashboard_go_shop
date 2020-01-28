@@ -79,7 +79,8 @@ class Scraper(Meli):
                 category = categories.array[key_category],
                 quantity=product_['available_quantity']
             )
-            if type(product) != tuple:
+            if product[1]:
+                product = product[0]
                 ids_products.append(product_['id'])
                 for _attribute in product_['attributes']:
                     if _attribute['value_name']:
