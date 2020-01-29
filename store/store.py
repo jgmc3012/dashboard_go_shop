@@ -145,7 +145,7 @@ class Store(Meli):
                 'data': product
             }
         if product.quantity < 3:
-            msg = f'Producto no publicado. Poca cantidad disponible, Cantidad: {product.quantity}'
+            msg = f'{product.title} no publicado. Solo hay {product.quantity} item(s) disponible.'
             logging.warning(msg)
             return {
                 'ok': False,
