@@ -183,8 +183,10 @@ class Meli(object):
 
         return response.json()
 
-    def put(self, path, body=None, params=None, extra_headers=None):
+    def put(self, path, body=None, params=None, extra_headers=None, auth=True):
         params = params or {}
+        if auth:
+            params['access_token']=self.access_token
         headers = {
             'Accept': 'application/json',
             'User-Agent':self.SDK_VERSION,

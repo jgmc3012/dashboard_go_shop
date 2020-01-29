@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from store.products.models import Product
 from store.store import Store
+from concurrent.futures import ThreadPoolExecutor
 
 
 class Command(BaseCommand):
@@ -11,5 +12,5 @@ class Command(BaseCommand):
         store = Store()
         products = Product.objects.filter(available=False)
 
-        for product in products:
-            store.publish(product)
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            results = executor.map(store.publish, products)

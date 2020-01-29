@@ -138,7 +138,7 @@ class Store(Meli):
                 'ok':True,
                 'msg': 'Todo okey!'
             }
-    def publish(self, product):
+    def publish(self, product, paused=True):
         if product.sku:
             return {
                 'ok': True,
@@ -185,7 +185,6 @@ class Store(Meli):
             "condition":"new",
             "currency_id": "VES",
             "listing_type_id":"gold_special",
-            "status":"paused",
             "description":{
                 "plain_text": description
             },
@@ -200,8 +199,17 @@ class Store(Meli):
         res = self.post(path, body=body, auth=True)
         if res.get('id'):
             product.sku = res.get('id')
+            product.save()
             logging.info(f'{product.title}. Agregado con exito a la tienda')
             logging.debug(res)
+            if paused:
+                body = {
+                   'status':'paused'
+                }
+                self.put(
+                    path=f'{path}/{product.sku}',
+                    body=body,
+                )
             return {
                 'ok': True,
                 'data': product
