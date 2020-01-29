@@ -121,6 +121,8 @@ class Scraper(Meli):
                 continue
 
             if not products_draw[sku]['body'].get('pictures'):
+                logging.warning(f'Al producto {sku} no se le encontraron imagenes')
+                continue
             for image in products_draw[sku]['body']['pictures']:
                 if 'resources/frontend/statics/processing' in image['secure_url']:
                     logging.warning('Imagen Procesando por Meli')
