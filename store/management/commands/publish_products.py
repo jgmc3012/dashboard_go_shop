@@ -11,5 +11,5 @@ class Command(BaseCommand):
         store = Store()
         products = Product.objects.filter(available=False)
 
-        for product in products:
+        for product in products[:50]:
             store.publish(product)

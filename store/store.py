@@ -144,6 +144,13 @@ class Store(Meli):
                 'ok': True,
                 'data': product
             }
+        if product.quantity < 3:
+            msg = f'Producto no publicado. Poca cantidad disponible, Cantidad: {product.quantity}'
+            logging.warning(msg)
+            return {
+                'ok': False,
+                'msg': msg
+            }
         USD = History.objects.order_by('-datetime').first()
         BM = BusinessModel.objects.get(pk=self.SELLER_ID)
         price_usd = USD.rate + BM.usd_variation
@@ -178,6 +185,7 @@ class Store(Meli):
             "condition":"new",
             "currency_id": "VES",
             "listing_type_id":"gold_special",
+            "status":"paused",
             "description":{
                 "plain_text": description
             },
@@ -192,6 +200,8 @@ class Store(Meli):
         res = self.post(path, body=body, auth=True)
         if res.get('id'):
             product.sku = res.get('id')
+            logging.info(f'{product.title}. Agregado con exito a la tienda')
+            logging.debug(res)
             return {
                 'ok': True,
                 'data': product

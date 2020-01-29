@@ -178,7 +178,7 @@ class Meli(object):
         response = self._requests.post(
             uri, data=body, params=urlencode(params), headers=headers
         )
-        if response.status_code != 200:
+        if response.status_code >= 300:
             logging.warning(f'Status Code:{response.status_code} en {uri}')
 
         return response.json()
