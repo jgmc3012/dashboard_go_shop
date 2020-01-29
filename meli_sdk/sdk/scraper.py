@@ -120,15 +120,14 @@ class Scraper(Meli):
                 logging.warning(f'Al producto {sku} no se le encontraron imagenes')
                 continue
             for image in products_draw[sku]['body']['pictures']:
-                if image['secure_url'] != 'https://http2.mlstatic.com/resources/frontend/statics/processing':
-                    picture = Picture(
-                        src=image['secure_url'],
-                        product=product
-                    )
-                    bulk_mgr.add(picture)
-                else:
-                    logging.warning('Image de procesando Meli')
-
+                if 'resources/frontend/statics/processing' in image['secure_url']:
+                    logging.warning('Imagen Procesando por Meli')
+                    continue
+                picture = Picture(
+                    src=image['secure_url'],
+                    product=product
+                )
+                bulk_mgr.add(picture)
         bulk_mgr.done()
 
 class ScraperCategory(Meli):
