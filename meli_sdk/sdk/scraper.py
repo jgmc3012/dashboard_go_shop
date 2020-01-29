@@ -116,9 +116,11 @@ class Scraper(Meli):
         bulk_mgr = BulkCreateManager()
         for product in products:
             sku = product.provider_sku
-            if not products_draw[sku]['body'].get('pictures'):
-                logging.warning(f'Al producto {sku} no se le encontraron imagenes')
+            if not products_draw[sku].get('body'):
+                logging.warning(f'Error en la peticion del {sku}')
                 continue
+
+            if not products_draw[sku]['body'].get('pictures'):
             for image in products_draw[sku]['body']['pictures']:
                 if 'resources/frontend/statics/processing' in image['secure_url']:
                     logging.warning('Imagen Procesando por Meli')
