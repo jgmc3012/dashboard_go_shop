@@ -2,7 +2,12 @@ from meli_sdk.sdk.meli import Meli
 from decouple import config
 import math
 import logging
-from .products.models import Product
+from .products.models import Product, Picture, Attribute
+import os
+import re
+
+from dollar_for_life.models import History
+from store.models import BusinessModel
 
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
@@ -133,3 +138,82 @@ class Store(Meli):
                 'ok':True,
                 'msg': 'Todo okey!'
             }
+    def publish(self, product):
+        if product.sku:
+            return {
+                'ok': True,
+                'data': product
+            }
+        USD = History.objects.order_by('-datetime').first()
+        BM = BusinessModel.objects.get(pk=self.SELLER_ID)
+        price_usd = USD.rate + BM.usd_variation
+
+        pictures = Picture.objects.filter(product=product)
+        if not pictures:
+            msg = f'El producto {product} no tiene imagenes asociadas'
+            logging.warning(msg)
+            return {
+                'ok' : False,
+                'msg': msg
+            }
+
+        attributes = Attribute.objects.filter(product=product)
+
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        with open(f'{dir_path}/templates/goshop.txt') as file:
+            description= file.read()
+        category = self.predict_category(
+            title=product.title,
+            category_from=f'MLV{product.category.id}',
+            price=product.sale_price*price_usd
+        )
+        pattern = r'[\w/,]?\d+[\w/,]?'
+
+        body = {
+            "title": re.sub(pattern,'',product.title),
+            "category_id": category,
+            "price":product.sale_price*price_usd,
+            "available_quantity": 5 if product.quantity > 5 else product.quantity,
+            "buying_mode":"buy_it_now",
+            "condition":"new",
+            "currency_id": "VES",
+            "listing_type_id":"gold_special",
+            "description":{
+                "plain_text": description
+            },
+            "pictures": [{"source": picture.src} for picture in pictures],
+            "attributes": [{
+                'id': attribute.id_meli,
+                'value_name':attribute.value,
+                'value_id':attribute.value_id
+                } for attribute in attributes]
+        }
+        path = '/items'
+        res = self.post(path, body=body, auth=True)
+        if res.get('id'):
+            product.sku = res.get('id')
+            return {
+                'ok': True,
+                'data': product
+            }
+        else:
+            return {
+                'ok': False,
+                'msg': 'Error en la peticion a mercadolibre',
+                'data': res
+            }
+        
+    def predict_category(self, title, category_from=None,price=None):
+        path = '/sites/MLV/category_predictor/predict'
+        params = {
+            'title': title
+        }
+        if self.seller_id:
+            params['seller_id'] = self.seller_id
+        if category_from:
+            params['category_from'] = category_from
+        if price:
+            params['price'] = price
+
+        category = self.get(path, params)
+        return category['id']

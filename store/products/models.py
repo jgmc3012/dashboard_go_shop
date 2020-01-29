@@ -32,4 +32,5 @@ class Picture(models.Model):
 class Attribute(models.Model):
     id_meli = models.CharField(max_length=50)
     value = models.CharField(max_length=200)
+    value_id = models.CharField(max_length=50, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

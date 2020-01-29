@@ -156,12 +156,14 @@ class Meli(object):
             return self.get(path,params, extra_headers)
 
         elif response.status_code == 404:
-            return None
+            return response.json()
         else:
             raise Exception('Error en peticion personalizar mensaje')
 
-    def post(self, path, body=None, params=None, extra_headers=None):
+    def post(self, path, body=None, params=None, extra_headers=None, auth=False):
         params = params or {}
+        if auth:
+            params['access_token']=self.access_token
         headers = {
             'Accept': 'application/json',
             'User-Agent':self.SDK_VERSION,

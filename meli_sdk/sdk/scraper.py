@@ -88,6 +88,7 @@ class Scraper(Meli):
                         bulk_mgr.add(Attribute(
                             id_meli=_attribute['id'],
                             value=_attribute['value_name'],
+                            value_id=_attribute.get('value_id'),
                             product=product
                         ))
         bulk_mgr.done()
