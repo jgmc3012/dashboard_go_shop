@@ -16,14 +16,13 @@ class Command(BaseCommand):
         BM = BusinessModel.objects.get(pk=store.SELLER_ID)
         price_usd = USD.rate + BM.usd_variation
 
-        products = Product.objects.filter(sale_price__gt=0)
+        products = Product.objects.exclude(sale_price=0,sku=None)
 
         ids = list()
         bodys= list()
         for product in products:
             ids.append(product.sku)
             bodys.append({
-            'status':'active',
             'price': products.sale_price*price_usd
             })
 
