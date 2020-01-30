@@ -6,6 +6,11 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 import logging
 
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
 class Command(BaseCommand):
     help = 'Publica nuevos producto en las cuenta de mercado libre'
 
@@ -16,5 +21,9 @@ class Command(BaseCommand):
         products = Product.objects.filter(sku=None,quantity__gt=2)
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
-        with ThreadPoolExecutor(max_workers=5) as executor:
-            results = executor.map(store.publish, products)
+        total = len(products)
+        slices = 100
+        for lap, _products in enumerate(chunks(products, slices)):
+            logging.info(f'PUBLICACIONES {lap+1}/{total/100}')
+            with ThreadPoolExecutor(max_workers=5) as executor:
+                executor.map(store.publish, _products)
