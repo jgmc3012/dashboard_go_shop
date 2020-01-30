@@ -155,10 +155,8 @@ class Meli(object):
                 self.refresh_token()
             return self.get(path,params, extra_headers)
 
-        elif response.status_code == 404:
-            return response.json()
         else:
-            raise Exception('Error en peticion personalizar mensaje')
+            raise Exception(f'Error en la peticion {response.json()}')
 
     def post(self, path, body=None, params=None, extra_headers=None, auth=False):
         params = params or {}
@@ -309,7 +307,7 @@ class Meli(object):
         )
         return items
 
-    def uptade_items(self, ids_list:list, bodys:list, extra_headers=None):
+    def update_items(self, ids_list:list, bodys:list, extra_headers=None):
         path = '/items'
         paths = [f'{path}/{id}' for id in ids_list]
         params =  {'access_token': self.access_token}

@@ -7,6 +7,7 @@ from store.models import Seller, BusinessModel
 from meli_sdk.models import BulkCreateManager
 from math import ceil
 import logging
+from django.utils import timezone
 
 class Scraper(Meli):
 
@@ -50,7 +51,7 @@ class Scraper(Meli):
 
         BM = BusinessModel.objects.get(pk=self.store.SELLER_ID)
         bulk_mgr = BulkCreateManager()
-        
+
         ids_products = list()
         for product_ in products_draw:
             if (
@@ -78,7 +79,7 @@ class Scraper(Meli):
                 provider_link=product_['permalink'],
                 image=product_['thumbnail'].replace('http','https'),
                 category = categories.array[key_category],
-                quantity=product_['available_quantity']
+                quantity=product_['initial_quantity']
             )
             if product[1]:
                 product = product[0]
@@ -94,7 +95,6 @@ class Scraper(Meli):
         bulk_mgr.done()
 
         return ids_products
-
 
     def scan_product(self, list_ids):
         path = '/items'
@@ -135,6 +135,39 @@ class Scraper(Meli):
                 bulk_mgr.add(picture)
         bulk_mgr.done()
 
+    def update_products(self, products):
+        logging.info(f'Actualizando {len(products)} productos. \n')
+        list_ids = products.values_list('provider_sku', flat=True)
+        path = '/items'
+        params = [{
+            'ids': ids,
+            'attributes': 'id,price,initial_quantity',
+        } for ids in self.split_ids(list_ids)]
+        result_draw = self.map_pool_get(
+            [path]*len(params),
+            params
+        )
+
+        results = list()
+        for result in result_draw:
+            results += result
+        products_draw = {product['body']['id']:product['body'] for product in results}
+        BM = BusinessModel.objects.get(pk=self.store.SELLER_ID)
+        bulk_mgr = BulkCreateManager()
+        for product in products:
+            id = product.provider_sku
+            if id in products_draw:
+                logging.info(f"{product.sku}: quantity: {product.quantity} \
+-> {products_draw[id]['initial_quantity']}")
+                product.quantity = products_draw[id]['initial_quantity']
+                cost_price = ceil(products_draw[id]['price']/BM.trm)
+                sale_cost = ceil( (cost_price+BM.shipping_vzla)*(1+BM.meli_tax/100)*(1+BM.utility/100) )
+                product.cost_price = cost_price
+                product.sale_price = sale_cost
+                product.last_update = timezone.localtime()
+                bulk_mgr.update(product, {'quantity', 'cost_price', 'sale_price', 'last_update'})
+        bulk_mgr.done()
+
 class ScraperCategory(Meli):
 
     def __init__(self):
@@ -173,7 +206,7 @@ class ScraperCategory(Meli):
                 approved=approved
             )
             self._ids.append(id)
-    
+
     def update(self, id):
         if not int(id[3:]) in self.ids:
             path = f'/categories/{id}'

@@ -1,6 +1,6 @@
 from django.db import models
 from store.models import Seller
-
+from django.utils import timezone
 
 class Category(models.Model):
     id = models.PositiveIntegerField(
@@ -24,6 +24,7 @@ class Product(models.Model):
     description = models.TextField(null=True, default=None)
     available = models.BooleanField(default=False)
     quantity = models.IntegerField()
+    last_update = models.DateTimeField(default=timezone.localtime)
 
 class Picture(models.Model):
     src =  models.CharField(max_length=255)
