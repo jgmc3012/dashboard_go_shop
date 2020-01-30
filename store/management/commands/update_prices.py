@@ -3,8 +3,8 @@ from django.core.management.base import BaseCommand, CommandError
 from meli_sdk.views import update_produtcs
 
 from dollar_for_life.models import History
-from store.models import Product
-
+from store.products.models import Product
+from store.models import BusinessModel
 from store.store import Store
 
 class Command(BaseCommand):
@@ -26,4 +26,4 @@ class Command(BaseCommand):
             'price': products.sale_price*price_usd
             })
 
-        store.uptade_items(ids,bodys)
+        store.update_items(ids,bodys)
