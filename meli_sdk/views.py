@@ -33,7 +33,7 @@ bad_sellers = {
     'AMYTECHIMPORTACIONES':246148347
     }
 
-access_token = config('access_token_meli')
+access_token = None
 
 product_items = dict()
 bad_products = list()
