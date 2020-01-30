@@ -157,6 +157,9 @@ class Scraper(Meli):
         for product in products:
             id = product.provider_sku
             if id in products_draw:
+                if not products_draw[id].get('initial_quantity'):
+                    logging.warning(f'Producto {id} NO ACTUALIZADO')
+                    continue
                 logging.info(f"{product.sku}: quantity: {product.quantity} \
 -> {products_draw[id]['initial_quantity']}")
                 product.quantity = products_draw[id]['initial_quantity']
