@@ -10,7 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         store = Store()
-        products = Product.objects.filter(sku=None)
+        products = Product.objects.filter(sku=None,quantity__gt=2)
 
         with ThreadPoolExecutor(max_workers=5) as executor:
             results = executor.map(store.publish, products)
