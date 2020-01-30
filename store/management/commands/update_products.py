@@ -7,6 +7,6 @@ class Command(BaseCommand):
     help = 'Publica nuevos producto en las cuenta de mercado libre'
 
     def handle(self, *args, **options):
-        products = Product.objects.all()[:100]
+        products = Product.objects.all()
 
         Scraper().update_products(products)
