@@ -24,6 +24,6 @@ class Command(BaseCommand):
         total = len(products)
         slices = 100
         for lap, _products in enumerate(chunks(products, slices)):
-            logging.info(f'PUBLICACIONES {lap+1}/{total/100}')
+            logging.info(f'PUBLICACIONES {(lap+1)*100}/{total}')
             with ThreadPoolExecutor(max_workers=5) as executor:
                 executor.map(store.publish, _products)
