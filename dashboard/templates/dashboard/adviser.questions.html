@@ -1,0 +1,43 @@
+{% extends 'dashboard/adviser.base.html' %}
+{% load static %}
+{% block title %}
+    Dash-Asesor
+{% endblock %}
+
+{% block title_section %}
+    Centro de Control
+{% endblock %}
+
+{% block content_seccion %}
+    <div class="mb-4">
+        <div class='panel'>
+            <div class="row">
+                <h1 class="ml-2 font-weight-bold text-primary">Productos</h1>
+            </div>
+        </div>
+        <form class='mb-3' id='formMLV'>
+            <div class="d-none d-sm-inline-block form-inline ml-auto my-2 my-md-0 mw-100 navbar-search">
+                <div class="input-group">
+                <input 
+                    type="text"
+                    class="form-control bg-white shadow border-1 small"
+                    placeholder="Inserte el MLV del producto"
+                    aria-label="Search"
+                    aria-describedby="basic-addon2"
+                    id="valueMLV"
+                >
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+                </div>
+            </div>
+        </form>
+        <div id='InfoMsg'>
+            <div></div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/dashboard/questions.js' %}"></script>
+{% endblock %}
