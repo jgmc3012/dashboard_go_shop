@@ -103,7 +103,7 @@ class Store(Meli):
                 'title': product.get('title'),
                 'image': product.get('thumbnail'),
             }
-            
+
             if not product.get('price'):
                 products.get('bad').append(sku)
             else:

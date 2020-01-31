@@ -5,6 +5,7 @@ from datetime import timedelta
 from store.orders.models import Order, Buyer, Product
 from store.store import Store
 from dollar_for_life.models import History
+import logging
 
 class Command(BaseCommand):
     help = 'Sincroniza los pedido ingresados en la ultima hora'
@@ -47,19 +48,22 @@ class Command(BaseCommand):
             sku = product_api.get('item').get('id')
             product = Product.objects.filter(sku=sku).first()
             if not product:
-                pass # LEVANTAR NOVEDAD
-                # 'msg': f'{user_name}, el producto no se encuentra en nuestra base de datos. Contacta con tu supervisor.'
+                msg = f'El producto con sku={sku} no se encuentra en nuestra base de datos y fue orfertado bajo el pedido {offer_id} del comprador buyer_api'
+                # LEVANTAR NOVEDAD
+                logging.warning(msg)
+                continue
 
-# COMENTADO MOMENTANEAMENTE
-            # USD = History.objects.order_by('-datetime').first()
-            # if product.sale_price*USD > product_api.get('unit_price'):
-                # pass # LEVANTAR NOVEDAD
-                # 'msg': f'{user_name}, el producto ha subido de precio, Contacta con tu supervisor.',
+            USD = History.objects.order_by('-datetime').first()
+            if product.sale_price*USD > product_api.get('unit_price'):
+                # LEVANTAR NOVEDAD
+                msg = f'El precio acortado por el producto con sku={sku} no es rentable.'
+                logging.warning(msg)
 
             res = store.verify_existence(product)
             if not res.get('ok'):
-                pass # LEVANTAR NOVEDAD
-                # 'msg': f'{user_name}, {res.get("msg")}',
+                # LEVANTAR NOVEDAD
+                msg =  f'El producto con sku={sku} ha esta agotado'
+                logging.warning(msg)
             
             order = Order.objects.filter(store_order_id=offer_id)
             if order:

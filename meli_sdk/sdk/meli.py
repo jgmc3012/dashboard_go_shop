@@ -300,11 +300,14 @@ class Meli(object):
             params_send.append(params.copy())
         
         logging.info(f'Cargando {len(ids_list)} items.')
-        items = self.map_pool_get(
+        items_draw = self.map_pool_get(
             [path]*len(stack_ids),
             params_send,
             [extra_headers]*len(stack_ids),
         )
+        items = list()
+        for item in items_draw:
+            items += item
         return items
 
     def update_items(self, ids_list:list, bodys:list, extra_headers=None):
