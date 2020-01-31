@@ -32,7 +32,13 @@ class Command(BaseCommand):
             buyer = Buyer.objects.filter(id=buyer_api.get('id')).first()
             if not buyer:
                 phone_draw = buyer_api.get('phone')
-                phone = int(f"{phone_draw.get('area_code')}{phone_draw.get('number').replace('-','')}")
+                phone = ''
+                if phone_draw.get('area_code'):
+                    phone += phone_draw.get('area_code')
+                if phone_draw.get('number'):
+                    phone +=phone_draw.get('number').replace('-','')
+                if len(phone) > 5:
+                    phone = int(phone)
                 buyer = Buyer(
                     id = buyer_api.get('id'),
                     nickname = buyer_api.get('nickname'),
@@ -54,7 +60,7 @@ class Command(BaseCommand):
                 continue
 
             USD = History.objects.order_by('-datetime').first()
-            if product.sale_price*USD > product_api.get('unit_price'):
+            if product.sale_price*USD.rate > product_api.get('unit_price'):
                 # LEVANTAR NOVEDAD
                 msg = f'El precio acortado por el producto con sku={sku} no es rentable.'
                 logging.warning(msg)
