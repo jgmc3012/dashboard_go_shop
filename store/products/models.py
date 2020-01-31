@@ -25,6 +25,7 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     quantity = models.IntegerField()
     last_update = models.DateTimeField(default=timezone.localtime)
+    modifiable = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title

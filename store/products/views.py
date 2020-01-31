@@ -37,7 +37,7 @@ def filter_bad_products():
     for product in products:
         match = re.search(store.pattern_bad_words, product.title.upper())
         if match:
-            msg = f'{product}. Contiene palabras prohibidas. {match.group()}'
+            msg = f'{product.sku}:{product}. Contiene palabras prohibidas. {match.group()}'
             logging.warning(msg)
             product.available = False
             bulk_mgr.update(product, {'available'})
