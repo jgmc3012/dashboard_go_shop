@@ -22,9 +22,12 @@ class Product(models.Model):
     image = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField(null=True, default=None)
-    available = models.BooleanField(default=False)
+    available = models.BooleanField(default=True)
     quantity = models.IntegerField()
     last_update = models.DateTimeField(default=timezone.localtime)
+
+    def __str__(self):
+        return f'<Product: {self.title}>'
 
 class Picture(models.Model):
     src =  models.CharField(max_length=255)
@@ -35,3 +38,6 @@ class Attribute(models.Model):
     value = models.CharField(max_length=200)
     value_id = models.CharField(max_length=50, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'<Attribute: {self.id_meli}>'
