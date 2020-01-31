@@ -24,7 +24,7 @@ class Store(Meli):
             self.SELLER_ID = config('MELI_ME_ID')
         super().__init__(self.SELLER_ID)
         words = BadWord.objects.all().values_list('word', flat=True)
-        words = [ f'({word})' for word in words]
+        words = [ f'({word.upper()})' for word in words]
         self.pattern_bad_words = '|'.join(words)
 
     def get_inventory_by_api(self)->list:
@@ -148,7 +148,7 @@ class Store(Meli):
                 'data': product
             }
 
-        if re.search(self.pattern_bad_words, product.title):
+        if re.search(self.pattern_bad_words, product.title.upper()):
             msg = f'{product.title} no publicado. Contiene palabras prohibidas.'
             logging.warning(msg)
             product.available = False
