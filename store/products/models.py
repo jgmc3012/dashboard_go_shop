@@ -27,7 +27,7 @@ class Product(models.Model):
     last_update = models.DateTimeField(default=timezone.localtime)
 
     def __str__(self):
-        return f'<Product: {self.title}>'
+        return self.title
 
 class Picture(models.Model):
     src =  models.CharField(max_length=255)
@@ -40,4 +40,4 @@ class Attribute(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'<Attribute: {self.id_meli}>'
+        return self.id_meli
