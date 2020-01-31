@@ -7,7 +7,7 @@ import os
 import re
 
 from dollar_for_life.models import History
-from store.models import BusinessModel
+from store.models import BusinessModel, BadWord
 
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
@@ -23,6 +23,9 @@ class Store(Meli):
         else:
             self.SELLER_ID = config('MELI_ME_ID')
         super().__init__(self.SELLER_ID)
+        words = BadWord.objects.all().values_list('word', flat=True)
+        words = [ f'({word})' for word in words]
+        self.pattern_bad_words = '|'.join(words)
 
     def get_inventory_by_api(self)->list:
         """
@@ -144,9 +147,12 @@ class Store(Meli):
                 'ok': True,
                 'data': product
             }
-        if product.quantity < 3:
-            msg = f'{product.title} no publicado. Solo hay {product.quantity} item(s) disponible.'
+
+        if re.search(self.pattern_bad_words, product.title):
+            msg = f'{product.title} no publicado. Contiene palabras prohibidas.'
             logging.warning(msg)
+            product.available = False
+            product.save()
             return {
                 'ok': False,
                 'msg': msg

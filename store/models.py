@@ -43,3 +43,6 @@ class Buyer(models.Model):
     last_name = models.CharField(max_length=50)
     phone = models.PositiveIntegerField(default=None)
     email = models.EmailField(max_length=70, null=True)
+
+class BadWord(models.Model):
+    word= models.CharField(max_length=50, unique=True)

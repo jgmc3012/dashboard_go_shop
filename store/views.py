@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from store.store import Store
+from store.models import BadWord
 
 def login(request):
     store = Store()
@@ -15,3 +16,7 @@ def get_token(request):
     store = Store(seller_id)
     store.authorize(code, Store.URI_CALLBACK)
     return HttpResponse('Autenticacion Exitosa!')
+
+def new_bad_word(word):
+    word = word.strip().upper()
+    BadWord.objects.get_or_create(word=word)
