@@ -13,7 +13,7 @@ def get_url_provider(request, sku):
     if not product:
         return JsonResponse({
             'ok': False,
-            'msg': f'No se encontro ningun Product con el sku: {sku}'
+            'msg': f'No se encontro ningun producto con el sku: {sku}'
         })
 
     return JsonResponse({

@@ -29,3 +29,6 @@ class DashView(LoginRequiredMixin, View):
         }
 
         return render(request,'dashboard/adviser.shipping_of_packages.html', context)
+
+    def questions(self, request):
+        return render(request,'dashboard/adviser.questions.html')
