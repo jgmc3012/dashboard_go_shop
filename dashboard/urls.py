@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .views import DashView
+from . import views
 
 urlpatterns = [
-    path('', DashView().index, name='dashboard.index'),
-    path('questions', DashView().questions, name='dashboard.questions'),
-    path('shipping_packages', DashView().shipping_packages, name='dashboard.shipping_packages'),
+    path('', views.index, name='dashboard.index'),
+    path('questions', views.questions, name='dashboard.questions'),
+    path('shipping_packages', views.shipping_packages, name='dashboard.shipping_packages'),
 ]
