@@ -280,7 +280,7 @@ class Meli(object):
             results = executor.map(self.get, paths, params, extra_headers)
         response = list()
         for result in results:
-            response.append(result)
+            response += result
         return response
 
     def map_pool_put(self, paths, body=None, params=None, extra_headers=None):
@@ -300,14 +300,11 @@ class Meli(object):
             params_send.append(params.copy())
         
         logging.info(f'Cargando {len(ids_list)} items.')
-        items_draw = self.map_pool_get(
+        items = self.map_pool_get(
             [path]*len(stack_ids),
             params_send,
             [extra_headers]*len(stack_ids),
         )
-        items = list()
-        for item in items_draw:
-            items += item
         return items
 
     def update_items(self, ids_list:list, bodys:list, extra_headers=None):
