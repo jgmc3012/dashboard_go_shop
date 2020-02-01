@@ -14,12 +14,22 @@ function createTemplate(HTMLString) {
 
 function insertElement(Selectorcontaner, HTMLString) {
     let container = document.querySelector(Selectorcontaner)
-    container.children[0].remove();
+    if (container.children.length > 0) {
+        container.children[0].remove();
+        insertElement(Selectorcontaner, HTMLString)
+    } else if (HTMLString) {
+        element = createTemplate(HTMLString);
+        container.append(element)
+    }
+}
+
+function appendElement(Selectorcontaner, HTMLString) {
+    let container = document.querySelector(Selectorcontaner)
     element = createTemplate(HTMLString);
     container.append(element)
 }
 
-function sendData(data, url, selectorModal) {
+function sendData(data, url, selectorModal, callback, kwargs={}, show_response=true) {
     toggleLoading()
     const method = 'POST'
     const headers = {
@@ -28,20 +38,23 @@ function sendData(data, url, selectorModal) {
         "X-Requested-With": "XMLHttpRequest",
     }
     const body = JSON.stringify(data)
-
-    const modal = document.querySelector(selectorModal)
-    modal.click()
+    if (selectorModal) {
+        const modal = document.querySelector(selectorModal)
+        modal.click()
+    }
     fetch(url,{method,headers,body})
     .then( response => response.json())
     .then( data => {
         toggleLoading()
         const type = data.ok ? 'success':'danger'
         const mtype = data.ok ? 'Buen Trabajo':'Error'
-        const HTMLString = alertInfoHTML(data.msg, type, mtype)
-        insertElement('#InfoMsg', HTMLString)
+        if (show_response | (!data.ok)){
+            const HTMLString = alertInfoHTML(data.msg, type, mtype)
+            insertElement('#InfoMsg', HTMLString)
+        }
         if (data.ok) {
-            itemlistElement = document.querySelector(`[order_id='${orderId}']`)
-            itemlistElement.remove()
+            kwargs['data'] = data
+            callback(kwargs)
         }
     })
 }
@@ -56,3 +69,11 @@ function getJsonFromForm(selector) {
     } )
     return data
 } 
+
+const hideOrder = (kwargs) => {
+    const { data, orderId } = kwargs
+    if (data.ok) {
+        itemlistElement = document.querySelector(`[order_id='${orderId}']`)
+        itemlistElement.remove()
+    }
+}

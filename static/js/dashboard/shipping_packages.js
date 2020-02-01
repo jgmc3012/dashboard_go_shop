@@ -75,7 +75,7 @@ btnShowModal.addEventListener('click', (event) => {
             }
             data['orders'] = orders
             url = `${window.location.origin}/orders/api/shipping_package`
-            sendData(data, url, '#shippingModal')
+            sendData(data, url, '#shippingModal', hideOrder, {orderId})
         })
     }
 })

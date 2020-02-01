@@ -1,11 +1,13 @@
 from django.urls import path
 
-from .views import OrderView
+from . import views
 
 urlpatterns = [
-    path('api/new_pay/<int:order_id>', OrderView().new_pay, name='store.new_order'),
-    path('api/buys/done/<int:order_id>', OrderView().order_purchased, name='store.orders.buy_done'),
-    path('api/provider_deliveries/<int:order_id>', OrderView().provider_deliveries, name='store.provider_deliveries'),
-    path('api/shipping_package', OrderView().shipping_of_packet, name='store.shipping_package'),
-    path('api/complete_order/<int:order_id>', OrderView().complete_order, name='store.complete_order'),
+    path('api/new_pay/<int:order_id>', views.new_pay, name='store.new_order'),
+    path('api/buys/done/<int:order_id>', views.order_purchased, name='store.orders.buy_done'),
+    path('api/provider_deliveries/<int:order_id>', views.provider_deliveries, name='store.provider_deliveries'),
+    path('api/shipping_package', views.shipping_of_packet, name='store.shipping_package'),
+    path('api/complete_order/<int:order_id>', views.complete_order, name='store.complete_order'),
+    path('api/news/create', views.create_new, name='store.create_new'),
+    path('api/news/show', views.show_news, name='store.show_news'),
 ]

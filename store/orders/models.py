@@ -9,10 +9,6 @@ from shipping.models import Shipping
 from store.store import Store
 
 
-class News(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    message = models.CharField(max_length=255)
-
 class Pay(models.Model):
     amount = models.FloatField()
     reference = models.BigIntegerField(unique=True)
@@ -61,3 +57,9 @@ class Order(models.Model):
             return Order.get_state_display(self)
         else:
             return 'Orden completada'
+
+class New(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    message = models.CharField(max_length=255)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    created_date = models.DateTimeField(default=timezone.localtime)
