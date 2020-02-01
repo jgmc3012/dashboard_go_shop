@@ -264,8 +264,7 @@ def create_new(request):
     msg = json_data['message']
     order_id = json_data['orderId']
 
-    order = Order.objects.filter(id=order_id).firts()
-
+    order = Order.objects.filter(id=order_id).first()
     if not order:
         return JsonResponse({
             'ok': False,
@@ -274,7 +273,7 @@ def create_new(request):
 
     new = New.objects.create(
         order=order,
-        message=msg,
+        message=msg.strip(),
         user=request.user
     )
 
@@ -288,8 +287,7 @@ def create_new(request):
 def show_news(request):
     json_data=json.loads(request.body)
     order_id = json_data['orderId']
-
-    order = Order.objects.filter(id=order_id).firts()
+    order = Order.objects.filter(id=order_id).first()
     if not order:
         return JsonResponse({
             'ok': False,
@@ -299,7 +297,7 @@ def show_news(request):
 
     news_objects = New.objects.filter(order=order).select_related('user')
     news = [{
-        'datetime' : new.created_date.strftime('%Y/%m/&d %H:%M'),
+        'datetime' : new.created_date.strftime('%Y/%m/%d %H:%M'),
         'user': f'{new.user.first_name} {new.user.last_name}',
         'message': new.message
     } for new in news_objects]

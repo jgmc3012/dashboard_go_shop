@@ -29,7 +29,7 @@ function appendElement(Selectorcontaner, HTMLString) {
     container.append(element)
 }
 
-function sendData(data, url, selectorModal, show_response=true) {
+function sendData(data, url, selectorModal, callback, kwargs={}, show_response=true) {
     toggleLoading()
     const method = 'POST'
     const headers = {
@@ -52,7 +52,10 @@ function sendData(data, url, selectorModal, show_response=true) {
             const HTMLString = alertInfoHTML(data.msg, type, mtype)
             insertElement('#InfoMsg', HTMLString)
         }
-        return data
+        if (data.ok) {
+            kwargs['data'] = data
+            callback(kwargs)
+        }
     })
 }
 
@@ -67,7 +70,8 @@ function getJsonFromForm(selector) {
     return data
 } 
 
-const hideOrder = (data) => {
+const hideOrder = (kwargs) => {
+    const { data, orderId } = kwargs
     if (data.ok) {
         itemlistElement = document.querySelector(`[order_id='${orderId}']`)
         itemlistElement.remove()
