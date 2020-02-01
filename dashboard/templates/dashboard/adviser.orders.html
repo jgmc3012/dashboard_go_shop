@@ -130,9 +130,10 @@
                                 </div>
                                 <div class="flex-fill">
                                     <div
+                                        api='show_news'
                                         class='btn btn-info ml-0 align-content-center align-items-center'
-                                        data-toggle="modal"
-                                        data-target="#modalDetailProduct"
+                                        order='{{ order.id }}'
+                                        show-news=''
                                     >Novedades</div>
                                 </div>
                             </div>
@@ -150,10 +151,15 @@
                                 <span class="text-black">Direccion:</span>
                                 <p>{{ order.buyer.direction }}</p>
                             </div>
+                            <div class="row">
+                                <span class="text-black">Precio de Venta:</span>
+                                <p>{{ order.invoice.pay.amount }}</p>
+                            </div>
                         </div>
                         <!-- Final de cada item -->
                     </div>
                 </li>
+                <div id="containerNews-{{order.id}}" class="container"></div>
                 {% endfor %}  
             </ul> 
         </div>
@@ -243,5 +249,6 @@
     </div>
 
     <script src="{% static 'js/dashboard/search_orders.js' %}"></script>
-    <script src="{% static 'js/dashboard/next_state.js' %}"></script>      
+    <script src="{% static 'js/dashboard/next_state.js' %}"></script>
+    <script src="{% static 'js/dashboard/news.js' %}"></script>
 {% endblock %}
