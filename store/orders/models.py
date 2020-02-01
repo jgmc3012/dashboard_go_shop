@@ -51,6 +51,13 @@ class Order(models.Model):
     shipping = models.ForeignKey(Shipping, on_delete=models.CASCADE, null=True)
     destination_place = models.CharField(max_length=255, default=Store.DIRECTION)
 
+    def next_state(self):
+        self.state += 1
+        if self.state <= self.COMPLETED:
+            return Order.get_state_display(self)
+        else:
+            return 'Orden completada'
+
 class New(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     message = models.CharField(max_length=255)
