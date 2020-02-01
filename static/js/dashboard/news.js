@@ -33,6 +33,13 @@ const inputNewTemplate = (orderId) => (`
     </div>
 `)
 
+const insertNew = (kwargs) => {
+    const {selectorForm, orderId} = kwargs
+    data = getJsonFromForm(`#formNews-${orderId} [api='data-news']`)
+    clearForm(selectorForm)
+    appendElement(`#containerNews-${orderId}`, alertInfoHTML(data.message, 'success', 'Novedad agregada:'))
+}
+
 const displayNews = (news, orderId) => {
     insertElement(`#containerNews-${orderId}`, false)
     news.forEach((comment) => {
@@ -46,7 +53,8 @@ const displayNews = (news, orderId) => {
         data = getJsonFromForm(`#formNews-${orderId} [api='data-news']`)
     
         url = `${window.location.origin}/orders/api/news/create`
-        sendData(data, url, false, console.log)
+        let kwargs = {selectorForm:`#formNews-${orderId} [api='data-news']`, orderId}
+        sendData(data, url, false, insertNew,kwargs)
     })
 }
 

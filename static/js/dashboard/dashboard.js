@@ -70,6 +70,13 @@ function getJsonFromForm(selector) {
     return data
 } 
 
+function clearForm(selector) {
+    elements = document.querySelectorAll(selector)
+    elements.forEach( element => {
+        element.value = ''
+    } )
+} 
+
 const hideOrder = (kwargs) => {
     const { data, orderId } = kwargs
     if (data.ok) {
