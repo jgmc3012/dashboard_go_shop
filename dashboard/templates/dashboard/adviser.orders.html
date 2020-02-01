@@ -130,9 +130,10 @@
                                 </div>
                                 <div class="flex-fill">
                                     <div
+                                        api='show_news'
                                         class='btn btn-info ml-0 align-content-center align-items-center'
-                                        data-toggle="modal"
-                                        data-target="#modalDetailProduct"
+                                        order='{{ order.id }}'
+                                        show-news=''
                                     >Novedades</div>
                                 </div>
                             </div>
@@ -150,79 +151,17 @@
                                 <span class="text-black">Direccion:</span>
                                 <p>{{ order.buyer.direction }}</p>
                             </div>
+                            <div class="row">
+                                <span class="text-black">Precio de Venta:</span>
+                                <p>{{ order.invoice.pay.amount }}</p>
+                            </div>
                         </div>
                         <!-- Final de cada item -->
                     </div>
                 </li>
+                <div id="containerNews-{{order.id}}" class="container"></div>
                 {% endfor %}  
             </ul> 
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-1">
-                    <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
-                </div>
-                <div class="col-11">
-                    <div>
-                        <strong>Jesus Millan</strong>
-                        <span>Sep 29, 2014, 9:12 PM</span>
-                    </div>
-                    <div>
-                        <p>
-                            Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-1">
-                    <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
-                </div>
-                <div class="col-11">
-                    <div>
-                        <strong>Jesus Millan</strong>
-                        <span>Sep 29, 2014, 9:12 PM</span>
-                    </div>
-                    <div>
-                        <p>
-                            Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.                        
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-1">
-                    <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
-                </div>
-                <div class="col-11">
-                    <div>
-                        <strong>Jesus Millan</strong>
-                        <span>Sep 29, 2014, 9:12 PM</span>
-                    </div>
-                    <div>
-                        <p>
-                            Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet.Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <form id="formNew">
-                    <div class="p-2 d-flex  align-content-center align-items-center">
-                        <div class="form-group col-11 mb-0">
-                            <textarea class="form-control" rows="4" id="new"></textarea>
-                        </div> 
-                        <div class="col-1">
-                            <button class="btn btn-primary" type="button">
-                                Enviar<i class="fas fa-paper-plane fa-sm"></i>
-                            </button>            
-                        </div>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
     <!-- State Modal-->
@@ -243,5 +182,6 @@
     </div>
 
     <script src="{% static 'js/dashboard/search_orders.js' %}"></script>
-    <script src="{% static 'js/dashboard/next_state.js' %}"></script>      
+    <script src="{% static 'js/dashboard/next_state.js' %}"></script>
+    <script src="{% static 'js/dashboard/news.js' %}"></script>
 {% endblock %}

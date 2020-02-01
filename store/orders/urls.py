@@ -8,6 +8,6 @@ urlpatterns = [
     path('api/provider_deliveries/<int:order_id>', views.provider_deliveries, name='store.provider_deliveries'),
     path('api/shipping_package', views.shipping_of_packet, name='store.shipping_package'),
     path('api/complete_order/<int:order_id>', views.complete_order, name='store.complete_order'),
-    path('api/create_new', views.create_new, name='store.create_new'),
-    path('api/show_news', views.show_news, name='store.show_news'),
+    path('api/news/create', views.create_new, name='store.create_new'),
+    path('api/news/show', views.show_news, name='store.show_news'),
 ]

@@ -62,7 +62,8 @@ const formNextState = (state, orderId ) => {
             </div>
             `)
         case 3:
-            sendData({}, selectUrl(state, orderId), '#stateModal')
+            response = sendData({}, selectUrl(state, orderId), '#stateModal')
+            hideOrder(response)
             break
         case 4:
             window.location = `${window.location.origin}/dashboard/shipping_packages`
@@ -71,7 +72,8 @@ const formNextState = (state, orderId ) => {
             window.location = `${window.location.origin}/dashboard/received_package`
             break
         case 6:
-            sendData({}, selectUrl(state, orderId), '#stateModal')
+            response = sendData({}, selectUrl(state, orderId), '#stateModal')
+            hideOrder(response)
             break
     }
 }
@@ -92,9 +94,9 @@ btnsNextState.forEach( (btn) => {
                 orderId = event.target.getAttribute('orderId')
                 let url = selectUrl(state, orderId)
                 let data = getJsonFromForm("[api='nextState']")
-                sendData(data ,url, '#stateModal')
+                response = sendData(data ,url, '#stateModal')
+                hideOrder(response)
             })
         }
     })
 })
-

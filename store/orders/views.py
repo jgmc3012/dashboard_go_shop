@@ -261,10 +261,10 @@ def complete_order( request, order_id):
 @login_required
 def create_new(request):
     json_data=json.loads(request.body)
-    msg = json_data['msg']
+    msg = json_data['message']
     order_id = json_data['orderId']
 
-    order = Order.objects.filter(store_order_id=order_id).firts()
+    order = Order.objects.filter(id=order_id).firts()
 
     if not order:
         return JsonResponse({
@@ -289,12 +289,12 @@ def show_news(request):
     json_data=json.loads(request.body)
     order_id = json_data['orderId']
 
-    order = Order.objects.filter(store_order_id=order_id).firts()
+    order = Order.objects.filter(id=order_id).firts()
     if not order:
         return JsonResponse({
             'ok': False,
-            'msg': 'El numero de pedido no existen. Esto debe ser un error, consulte al desarrollador.',
-            'data': []
+            'msg': 'El numero de pedido no existe. Esto debe ser un error, consulte al desarrollador.',
+            'data': {}
         })
 
     news_objects = New.objects.filter(order=order).select_related('user')
@@ -307,5 +307,5 @@ def show_news(request):
     return JsonResponse({
         'ok': True,
         'msg': '',
-        'data': news
+        'data': {'news':news}
     })
