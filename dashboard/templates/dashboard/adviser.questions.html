@@ -10,34 +10,52 @@
 
 {% block content_seccion %}
     <div class="mb-4">
-        <div class='panel'>
-            <div class="row">
-                <h1 class="ml-2 font-weight-bold text-primary">Productos</h1>
-            </div>
-        </div>
-        <form class='mb-3' id='formMLV'>
-            <div class="d-none d-sm-inline-block form-inline ml-auto my-2 my-md-0 mw-100 navbar-search">
-                <div class="input-group">
-                <input 
-                    type="text"
-                    class="form-control bg-white shadow border-1 small"
-                    placeholder="Inserte el MLV del producto"
-                    aria-label="Search"
-                    aria-describedby="basic-addon2"
-                    id="valueMLV"
-                >
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                    </button>
+            <div class='panel'>
+                <div class="row">
+                    <h1 class="ml-2 font-weight-bold text-primary">Preguntas</h1>
                 </div>
+                <div class="row mb-1 p-2 bg-gray-300 rounded shadow">
                 </div>
             </div>
-        </form>
-        <div id='InfoMsg'>
-            <div></div>
+            <div id='InfoMsg' class="mb-2">
+            </div>
+        <div class="table-responsive">
+            <ul class="list-group">
+                {% for product in products %}
+                <li class="list-group-item mb-2 shadow" order_id="{{ order.store_order_id }}" >
+                    <div class='row mb-2'>
+                        <img src="{{ product.image }}" alt="Imagen de {{ product.title }}">
+                        <a href="{{ product.provider_link }}">{{ product.title }}</a> - <strong>Bs {{ product.local_currency_price }}</strong> x <span>{{ product.quantity }}</span>
+                    </div>
+                    {% for question in product.questions %}
+                    <div class='row mb-2'>
+                        <div>
+                            <i>Icon</i>
+                            <p>{{ question.text }}</p>
+                            <strong>{{ question.from_date }}</strong>
+                        </div>
+                        <div id="containerAnwers-{{order.id}}" style="display: none;">
+                            <form id="formAnwer-${orderId}">
+                                <input type="hidden" name="orderId" api='data-answer' value="${orderId}">
+                                <div class="p-2 d-flex  align-content-center align-items-center">
+                                    <div class="form-group col-11 mb-0">
+                                        <textarea class="form-control" rows="2" name="answer" api='data-answer'></textarea>
+                                    </div>
+                                    <div class="col-1">
+                                        <button class="btn btn-primary" type="submit">
+                                            Responder<i class="fas fa-paper-plane fa-sm"></i>
+                                        </button>            
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </li>
+                {% endfor %}  
+            </ul> 
         </div>
     </div>
 
-    <script src="{% static 'js/dashboard/questions.js' %}"></script>
+    <script src="{% static 'js/dashboard/news.js' %}"></script>
 {% endblock %}
