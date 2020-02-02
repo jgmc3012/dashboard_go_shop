@@ -38,11 +38,14 @@ class BusinessModel(models.Model):
 
 class Buyer(models.Model):
     id = models.PositiveIntegerField(primary_key=True)
-    nickname= models.CharField(max_length=30)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    phone = models.PositiveIntegerField(default=None)
+    nickname= models.CharField(max_length=30, null=True)
+    first_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
+    phone = models.PositiveIntegerField(default=None, null=True)
     email = models.EmailField(max_length=70, null=True)
+
+    def __str__(self):
+        return f'{self.id}:{self.nickname}'
 
 class BadWord(models.Model):
     word= models.CharField(max_length=50, unique=True)

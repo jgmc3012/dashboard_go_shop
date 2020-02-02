@@ -5,7 +5,6 @@ from django.views.generic import View
 
 from store.orders.models import Order
 
-
 @login_required
 def index(request):
     state = request.GET.get('state') if request.GET.get('state') else -1
@@ -34,3 +33,6 @@ def shipping_packages(request):
 @login_required
 def questions(request):
     return render(request,'dashboard/adviser.questions.html')
+
+def cualquiera(request):
+    return render(request,'dashboard/cualquiera.html')

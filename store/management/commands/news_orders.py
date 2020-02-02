@@ -6,6 +6,7 @@ from store.orders.models import Order, Buyer, Product
 from store.store import Store
 from dollar_for_life.models import History
 import logging
+from store.views import get_or_create_buyer
 
 class Command(BaseCommand):
     help = 'Sincroniza los pedido ingresados en la ultima hora'
@@ -29,24 +30,10 @@ class Command(BaseCommand):
             buyer_api = order_draw.get('buyer')
 
             # REGISTRAR COMPRADOR
-            buyer = Buyer.objects.filter(id=buyer_api.get('id')).first()
-            if not buyer:
-                phone_draw = buyer_api.get('phone')
-                phone = ''
-                if phone_draw.get('area_code'):
-                    phone += phone_draw.get('area_code')
-                if phone_draw.get('number'):
-                    phone +=phone_draw.get('number').replace('-','')
-                if len(phone) > 5:
-                    phone = int(phone)
-                buyer = Buyer(
-                    id = buyer_api.get('id'),
-                    nickname = buyer_api.get('nickname'),
-                    phone = phone,
-                    first_name = buyer_api.get('first_name'),
-                    last_name = buyer_api.get('last_name'),
-                )
-                buyer.save()
+            buyer = get_or_create_buyer(
+                int(buyer_api.get('id')),
+                buyer_api
+            )
 
             # VERIFICAR EXISTENCIA DEL PRODUCTO
             product_api = order_draw.get('order_items')[0]

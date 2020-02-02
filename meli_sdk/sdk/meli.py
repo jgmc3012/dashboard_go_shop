@@ -93,7 +93,7 @@ class Meli(object):
             # response code isn't a 200; raise an exception
             response.raise_for_status()
 
-    def get_refresh_token(self):
+    def update_token(self):
         if self.refresh_token:
             params = {
                 'grant_type' : 'refresh_token',
@@ -148,11 +148,12 @@ class Meli(object):
         
         #### Esto debe ser un decorador
         elif response.status_code == 401:
-            token = Token.objects.get(app_id=client_id)
+            token = Token.objects.get(seller_id=self.seller_id)
             if token.expiration > self.token.expiration:
                 self.token = token
             else:
-                self.refresh_token()
+                self.update_token()
+                params['access_token']=self.access_token
             return self.get(path,params, extra_headers)
 
         else:
@@ -247,7 +248,7 @@ class Meli(object):
     def access_token(self):
         if self.token:
             if self.token.expiration < (timezone.now()+timedelta(seconds=30)):
-                self.get_refresh_token()
+                self.update_token()
             return self.token.access_token
         else:
             raise Exception('Debe Autentificarse manualmente en el portal')
@@ -280,7 +281,10 @@ class Meli(object):
             results = executor.map(self.get, paths, params, extra_headers)
         response = list()
         for result in results:
-            response += result
+            if type(result) == list:
+                response += result
+            else:
+                response.append(result) 
         return response
 
     def map_pool_put(self, paths, body=None, params=None, extra_headers=None):
