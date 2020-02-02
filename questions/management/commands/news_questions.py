@@ -44,7 +44,7 @@ class Command(BaseCommand):
             if exist:
                 break
             else:
-                logging.info(f'Nueva Pregunta de {question.buyer.id}:{question.buyer.nickname} en \
+                logging.info(f'Nueva Pregunta de {question.buyer} en \
 {question.product.title} a las {question.date_created.strftime("%H:%M:%S")}')        
                 count +=1
 

@@ -44,5 +44,8 @@ class Buyer(models.Model):
     phone = models.PositiveIntegerField(default=None, null=True)
     email = models.EmailField(max_length=70, null=True)
 
+    def __str__(self):
+        return f'{self.id}:{self.nickname}'
+
 class BadWord(models.Model):
     word= models.CharField(max_length=50, unique=True)
