@@ -281,7 +281,10 @@ class Meli(object):
             results = executor.map(self.get, paths, params, extra_headers)
         response = list()
         for result in results:
-            response += result
+            if type(result) == list:
+                response += result
+            else:
+                response.append(result) 
         return response
 
     def map_pool_put(self, paths, body=None, params=None, extra_headers=None):
