@@ -10,6 +10,10 @@ import json
 
 @login_required
 def index(request):
+    return render(request,'dashboard/dashboard.html')
+
+@login_required
+def orders(request):
     state = request.GET.get('state') if request.GET.get('state') else -1
     state = int(state)
     if (state >= 0):

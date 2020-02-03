@@ -9,160 +9,107 @@
 {% endblock %}
 
 {% block content_seccion %}
-    <div class="mb-4">
-            <div class='panel'>
-            <div class="row">
-                <h1 class="ml-2 font-weight-bold text-primary">Ordenes</h1>
-            </div>
-            <div class="row mb-1 p-2 bg-gray-300 rounded shadow">
-                <div class="col-3 input-group">
-                <select id='select_state_order' name="state_order" class="form-control custom-select shadow small">
-                    <option
-                    {% if selected == -1 %}
-                        selected
-                    {% endif %}
-                    value="-1"
-                    >Todos</option>
-                    {% for value, name in status_orders %}
-                    <option
-                        {% if selected == value %}
-                        selected
-                        {% endif %}
-                        value="{{ value }}"
-                    >{{ name }}</option>
-                    {% endfor %}
-                </select>
-                <div class="input-group-append">
-                </div>
-                </div>
-                <div class="d-none d-sm-inline-block form-inline ml-auto my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                    <input type="text" class="form-control bg-white shadow border-1 small" placeholder="Buscar por N° Pendido" aria-label="Search" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                        </button>
+    <div class="table-responsive">
+        <ul class="list-group">
+            {% for order in orders %}
+            <li class="list-group-item mb-2 shadow" order_id="{{ order.store_order_id }}" >
+                <div class='row'>
+                    <!-- Aqui comienza cada item -->
+                    <div class='col-2'>
+                        <div class="bg-black">
+                            <div class="row">
+                                <span class="text-black">Estado Actual:</span> 
+                            </div>
+                            <div class="row">
+                                <p>{{ order.get_state_display }}</p> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <span class="text-black">Pasar a:</span> 
+                        </div>
+                        <div class="row mb-1">
+                            <div id='{{ order.store_order_id }}'
+                                class='btn btn-primary mb-1 ml-0 col-9'
+                                data-toggle="modal"
+                                data-target="#stateModal"
+                                state='{{ order.state }}'
+                            >{{ order.next_state }}</div>
+                            <div id='{{ order.store_order_id }}'
+                                class='btn btn-secondary ml-0 col-9'
+                                data-toggle="modal"
+                                data-target="#cancelOrderModal"
+                            >Cancelar</div>
+                        </div>
                     </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <div id='InfoMsg'>
-            <div></div>
-            </div>
-            <div class="row">
-                <div class="col-2">
-                    <h4>Estado</h4>
-                </div>
-                <div class="col-7">
-                    <h4>Producto</h4>
-                </div>
-                <div class="col-2">
-                    <h4>Comprador</h4>
-                </div>
-            </div>
-        <div class="table-responsive">
-            <ul class="list-group">
-                {% for order in orders %}
-                <li class="list-group-item mb-2 shadow" order_id="{{ order.store_order_id }}" >
-                    <div class='row'>
-                        <!-- Aqui comienza cada item -->
-                        <div class='col-2'>
-                            <div class="bg-black">
+                    <div class='col-7'>
+                        <h5>{{ order.product.title }}</h5>
+                        <div class="d-flex">
+                            <div class='flex-fill'>
+                                <img
+                                    class="rounded"
+                                    src="{{ order.product.image }}"
+                                    alt="{{ order.product.title }}"
+                                >
+                            </div>
+                            <div class="flex-grow-1">
                                 <div class="row">
-                                    <span class="text-black">Estado Actual:</span> 
+                                    <span class="text-black">Numero de Pedido:</span>
+                                    <p>{{ order.store_order_id }}</p>
                                 </div>
                                 <div class="row">
-                                    <p>{{ order.get_state_display }}</p> 
+                                    <span class="text-black">Numero de Orden:</span>
+                                    <p>{{ order.provider_order_id }}</p>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Guia del Envio:</span>
+                                    <p>{{ order.shipping.guide }}</p>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Publicacion del proveedor:</span>
+                                    <a
+                                        target="_blank"
+                                        href="{{ order.product.provider_link }}"
+                                    >Link</a>
+                                </div>
+                                <div class="row">
+                                    <span class="text-black">Referencia de Pago:</span>
+                                    <p>{{ order.invoice.pay.reference }}</p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <span class="text-black">Pasar a:</span> 
-                            </div>
-                            <div class="row mb-1">
-                                <div id='{{ order.store_order_id }}'
-                                    class='btn btn-primary mb-1 ml-0 col-9'
-                                    data-toggle="modal"
-                                    data-target="#stateModal"
-                                    state='{{ order.state }}'
-                                >{{ order.next_state }}</div>
-                                <div id='{{ order.store_order_id }}'
-                                    class='btn btn-secondary ml-0 col-9'
-                                    data-toggle="modal"
-                                    data-target="#cancelOrderModal"
-                                >Cancelar</div>
+                            <div class="flex-fill">
+                                <div
+                                    api='show_news'
+                                    class='btn btn-info ml-0 align-content-center align-items-center'
+                                    order='{{ order.id }}'
+                                    show-news=''
+                                >Novedades</div>
                             </div>
                         </div>
-                        <div class='col-7'>
-                            <h5>{{ order.product.title }}</h5>
-                            <div class="d-flex">
-                                <div class='flex-fill'>
-                                    <img
-                                        class="rounded"
-                                        src="{{ order.product.image }}"
-                                        alt="{{ order.product.title }}"
-                                    >
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div class="row">
-                                        <span class="text-black">Numero de Pedido:</span>
-                                        <p>{{ order.store_order_id }}</p>
-                                    </div>
-                                    <div class="row">
-                                        <span class="text-black">Numero de Orden:</span>
-                                        <p>{{ order.provider_order_id }}</p>
-                                    </div>
-                                    <div class="row">
-                                        <span class="text-black">Guia del Envio:</span>
-                                        <p>{{ order.shipping.guide }}</p>
-                                    </div>
-                                    <div class="row">
-                                        <span class="text-black">Publicacion del proveedor:</span>
-                                        <a
-                                            target="_blank"
-                                            href="{{ order.product.provider_link }}"
-                                        >Link</a>
-                                    </div>
-                                    <div class="row">
-                                        <span class="text-black">Referencia de Pago:</span>
-                                        <p>{{ order.invoice.pay.reference }}</p>
-                                    </div>
-                                </div>
-                                <div class="flex-fill">
-                                    <div
-                                        api='show_news'
-                                        class='btn btn-info ml-0 align-content-center align-items-center'
-                                        order='{{ order.id }}'
-                                        show-news=''
-                                    >Novedades</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class='col-2'>
-                            <div class="row">
-                                <span class="text-black">Nombre Completo:</span>
-                                <p>{{ order.buyer.first_name }} {{ order.buyer.last_name }}</p>
-                            </div>
-                            <div class="row">
-                                <span class="text-black">Telefono:</span>
-                                <p>{{ order.buyer.phone }}</p>
-                            </div>
-                            <div class="row">
-                                <span class="text-black">Direccion:</span>
-                                <p>{{ order.buyer.direction }}</p>
-                            </div>
-                            <div class="row">
-                                <span class="text-black">Precio de Venta:</span>
-                                <p>{{ order.invoice.pay.amount }}</p>
-                            </div>
-                        </div>
-                        <!-- Final de cada item -->
                     </div>
-                </li>
-                <div id="containerNews-{{order.id}}" class="container"></div>
-                {% endfor %}  
-            </ul> 
-        </div>
+                    <div class='col-2'>
+                        <div class="row">
+                            <span class="text-black">Nombre Completo:</span>
+                            <p>{{ order.buyer.first_name }} {{ order.buyer.last_name }}</p>
+                        </div>
+                        <div class="row">
+                            <span class="text-black">Telefono:</span>
+                            <p>{{ order.buyer.phone }}</p>
+                        </div>
+                        <div class="row">
+                            <span class="text-black">Direccion:</span>
+                            <p>{{ order.buyer.direction }}</p>
+                        </div>
+                        <div class="row">
+                            <span class="text-black">Precio de Venta:</span>
+                            <p>{{ order.invoice.pay.amount }}</p>
+                        </div>
+                    </div>
+                    <!-- Final de cada item -->
+                </div>
+            </li>
+            <div id="containerNews-{{order.id}}" class="container"></div>
+            {% endfor %}  
+        </ul> 
     </div>
     <!-- State Modal-->
     <div class="modal fade" id="stateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

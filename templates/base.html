@@ -1,47 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  {% block head %}
-  {% endblock %}
-  <title>
-  {% block title %}
-  {% endblock %}
-  </title>
-
-  <!-- Custom fonts for this template-->
-  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-  <!-- Custom styles for this template-->
-  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
-
-</head>
-<!--  -->
-<body id="page-top">
-  {% block body %}
-  {% endblock %}  
-  <!-- Bootstrap core JavaScript-->
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-  <!-- Core plugin JavaScript-->
-  <!-- <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script> -->
-
-  <!-- Custom scripts for all pages-->
-  <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
-
-  <!-- Page level plugins -->
-  <!-- <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script> -->
-    
-  <!-- Globales scripts -->
-  <script src="{% static 'js/index.js' %}"></script>
-
-</body>
-
+<html lang="es">
+    {% load static %}
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>
+            {% block title %}
+            {% endblock %}
+        </title>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!--shortcut-->
+        <link rel="shortcut icon" href="https://icon-icons.com/icons2/2130/PNG/96/zest_cryptocurrency_logo_icon_131375.png">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="{% static 'vendor/adminLTE/plugins/fontawesome-free/css/all.min.css' %}">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <!-- Tempusdominus Bbootstrap 4 -->
+        <link rel="stylesheet" href="{% static 'vendor/adminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+        <!-- iCheck -->
+        <link rel="stylesheet" href="{% static 'vendor/adminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css'%}">
+        <!-- JQVMap -->
+        <link rel="stylesheet" href="{% static 'vendor/adminLTE/plugins/jqvmap/jqvmap.min.css'%}">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="{% static 'vendor/adminLTE/dist/css/adminlte.min.css'%}">
+        <!-- overlayScrollbars -->
+        <link rel="stylesheet" href="{% static 'vendor/adminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css'%}">
+        <!-- Daterange picker -->
+        <link rel="stylesheet" href="{% static 'vendor/adminLTE/plugins/daterangepicker/daterangepicker.css'%}">
+        <!-- summernote -->
+        <link rel="stylesheet" href="{% static 'vendor/adminLTE/plugins/summernote/summernote-bs4.css'%}">
+        <!-- Google Font: Source Sans Pro -->
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+        {% block head %}
+        {% endblock %}
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        {% block body %}
+        {% endblock %}  
+        <!-- jQuery -->
+        <script src="{% static 'vendor/adminLTE/plugins/jquery/jquery.min.js'%}"></script>
+        <!-- jQuery UI 1.11.4 -->
+        <script src="{% static 'vendor/adminLTE/plugins/jquery-ui/jquery-ui.min.js'%}"></script>
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+        $.widget.bridge('uibutton', $.ui.button)
+        </script>
+        <!-- Bootstrap 4 -->
+        <script src="{% static 'vendor/adminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+        <!-- ChartJS -->
+        <script src="{% static 'vendor/adminLTE/plugins/chart.js/Chart.min.js'%}"></script>
+        <!-- Sparkline -->
+        <script src="{% static 'vendor/adminLTE/plugins/sparklines/sparkline.js'%}"></script>
+        <!-- JQVMap -->
+        <script src="{% static 'vendor/adminLTE/plugins/jqvmap/jquery.vmap.min.js'%}"></script>
+        <script src="{% static 'vendor/adminLTE/plugins/jqvmap/maps/jquery.vmap.usa.js'%}"></script>
+        <!-- jQuery Knob Chart -->
+        <script src="{% static 'vendor/adminLTE/plugins/jquery-knob/jquery.knob.min.js'%}"></script>
+        <!-- daterangepicker -->
+        <script src="{% static 'vendor/adminLTE/plugins/moment/moment.min.js' %}"></script>
+        <script src="{% static 'vendor/adminLTE/plugins/daterangepicker/daterangepicker.js' %}"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script src="{% static 'vendor/adminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+        <!-- Summernote -->
+        <script src="{% static 'vendor/adminLTE/plugins/summernote/summernote-bs4.min.js' %}"></script>
+        <!-- overlayScrollbars -->
+        <script src="{% static 'vendor/adminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+        <!-- AdminLTE App -->
+        <script src="{% static 'vendor/adminLTE/dist/js/adminlte.js' %}"></script>
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <script src="{% static 'vendor/adminLTE/dist/js/pages/dashboard.js' %}"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="{% static 'vendor/adminLTE/dist/js/demo.js' %}"></script>
+    </body>
 </html>
