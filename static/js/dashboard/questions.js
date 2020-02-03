@@ -1,13 +1,16 @@
-const $form = document.getElementById('formMLV');
+const $formsAnswers = document.querySelectorAll('[api="formAnswer"]')
 
-$form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    toggleLoading()
+$formsAnswers.forEach( form => form.addEventListener('submit', event => {
+    event.preventDefault()
+    questionId = event.target.getAttribute('question')
+    data = getJsonFromForm(`#containerAnwers-${questionId} [api="data-answer-${questionId}"]`)
+    const url = `${window.location.origin}/questions/api/answer`
+    sendData(data, url, false, removeQuestion, {questionId})
+}))
 
-    const MLV = document.getElementById('valueMLV').value;
-    const url = `${window.location.origin}/products/api/mlv/${MLV}`
-    response = sendData({}, url, false, false)
-    if (response.ok) {
-        window.open(data.data.provider_url, '_blank');
-    }
-})
+const removeQuestion = (kwargs) => {
+    const {questionId} = kwargs
+
+    const $question = document.getElementById(`question-${questionId}`)
+    $question.remove()
+}

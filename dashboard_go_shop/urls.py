@@ -26,7 +26,7 @@ urlpatterns = [
     path('orders/', include('store.orders.urls')),
     path('products/', include('store.products.urls')),
     path('dashboard/', include('dashboard.urls')),
-
+    path('questions/', include('questions.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', redirect_view)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
