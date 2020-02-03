@@ -29,6 +29,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def store_link(self):
+        return f'https://articulo.mercadolibre.com.ve/{self.sku[:3]}-{self.sku[3:]}-colchon-inflable-queen-coleman-bomba-inflador-de-pie-_JM'
 
 class Picture(models.Model):
     src =  models.CharField(max_length=255)

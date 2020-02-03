@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 
 from store.orders.models import Order
+from questions.models import Question
+import json
+
 
 @login_required
 def index(request):
@@ -31,8 +34,9 @@ def shipping_packages(request):
     return render(request,'dashboard/adviser.shipping_of_packages.html', context)
 
 @login_required
-def questions(request):
-    return render(request,'dashboard/adviser.questions.html')
-
-def cualquiera(request):
-    return render(request,'dashboard/cualquiera.html')
+def show_questions(request):
+    questions = Question.objects.all().filter(answer=None).select_related('product').select_related('buyer')
+    context = {
+        'questions': questions,
+    }
+    return render(request,'dashboard/adviser.questions.html', context)

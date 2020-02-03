@@ -21,27 +21,48 @@
             </div>
         <div class="table-responsive">
             <ul class="list-group">
-                {% for product in products %}
-                <li class="list-group-item mb-2 shadow" order_id="{{ order.store_order_id }}" >
-                    <div class='row mb-2'>
-                        <img src="{{ product.image }}" alt="Imagen de {{ product.title }}">
-                        <a href="{{ product.provider_link }}">{{ product.title }}</a> - <strong>Bs {{ product.local_currency_price }}</strong> x <span>{{ product.quantity }}</span>
-                    </div>
-                    {% for question in product.questions %}
-                    <div class='row mb-2'>
-                        <div>
-                            <i>Icon</i>
-                            <p>{{ question.text }}</p>
-                            <strong>{{ question.from_date }}</strong>
+                {% for question in questions %}
+                <li class="list-group-item mb-2 shadow container" id="question-{{ question.id }}" >
+                    <div class='row mb-2 d-flex align-items-center'>
+                        <div class="col-2 flex-fill">
+                            <img
+                                class="img-profile rounded"
+                                src="{{ question.product.image }}"
+                                alt="link-> {{question.product.image}}"
+                            >
                         </div>
-                        <div id="containerAnwers-{{order.id}}" style="display: none;">
-                            <form id="formAnwer-${orderId}">
-                                <input type="hidden" name="orderId" api='data-answer' value="${orderId}">
-                                <div class="p-2 d-flex  align-content-center align-items-center">
-                                    <div class="form-group col-11 mb-0">
-                                        <textarea class="form-control" rows="2" name="answer" api='data-answer'></textarea>
+                        <div class="flex-fill d-flex flex-column">
+                            <div>
+                                <a href="{{ question.product.provider_link }}" target="_blank">{{ question.product.title }}</a> - <strong>USD {{ question.product.sale_price }}</strong>
+                            </div>
+                            <div>   
+                                <a href="{{ question.product.store_link }}" target="_blank">Nuestra publicacion</a>
+                            </div>
+                            <span>{{ question.product.quantity }} disponibles</span>
+                        </div>
+                    </div>
+                    <div class='mb-2'>
+                        <div class="d-flex flex-column">
+                            <div class="flex-fill">
+                                <i class="fas fa-comments text-gray-300"></i>
+                                <span>Hace <strong>{{ question.from_date }}</strong> por <strong>{{question.buyer.nickname}}</strong></span>
+                            </div>
+                            <div class="flex-fill">
+                                <p>¿{{ question.text }}</p>
+                            </div>
+                        </div>
+                        <div id="containerAnwers-{{question.id}}">
+                            <form question="{{question.id}}" api='formAnswer'>
+                                <input type="hidden" name="questionId" api='data-answer-{{question.id}}' value="{{question.id}}">
+                                <div class="p-2 d-flex  align-content-center flex-column">
+                                    <div class="form-group col-12 mb-1">
+                                        <textarea
+                                            class="form-control"
+                                            rows="2" name="answer"
+                                            api='data-answer-{{question.id}}'
+                                        >Buenas {{question.buyer.nickname}}</textarea>
                                     </div>
-                                    <div class="col-1">
+                                    <div class="mr-4">
                                         <button class="btn btn-primary" type="submit">
                                             Responder<i class="fas fa-paper-plane fa-sm"></i>
                                         </button>            
@@ -50,12 +71,11 @@
                             </form>
                         </div>
                     </div>
-                    {% endfor %}
                 </li>
                 {% endfor %}  
             </ul> 
         </div>
     </div>
 
-    <script src="{% static 'js/dashboard/news.js' %}"></script>
+    <script src="{% static 'js/dashboard/questions.js' %}"></script>
 {% endblock %}

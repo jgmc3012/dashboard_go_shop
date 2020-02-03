@@ -84,3 +84,15 @@ const hideOrder = (kwargs) => {
         itemlistElement.remove()
     }
 }
+
+const show_total_questions = () => {
+    const url = `${window.location.origin}/questions/api/total`
+    fetch(url)
+    .then( response => response.json())
+    .then( data => {
+        $cardQuestion = document.getElementById('card-questions')
+        $cardQuestion.innerText = data.data.total_questions
+    })
+}
+
+show_total_questions()
