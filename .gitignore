@@ -132,3 +132,5 @@ dmypy.json
 #IDES/Edit-Code
 .vscode
 csv
+
+static/vendor
