@@ -29,12 +29,15 @@ class Command(BaseCommand):
         
         posts_deleted = list()
         posts_active = list()
+        posts_paused = list()
         for product in results:
             if product['code'] == 200:
                 if product['body']['status'] == 'closed':
                     posts_deleted.append(product['body']['id'])
                 elif product['body']['status'] == 'active':
                     posts_active.append(product['body']['id'])
+                elif product['body']['status'] == 'paused':
+                    posts_paused.append(product['body']['id'])
             else:
                 logging.info(product)
 
@@ -46,4 +49,8 @@ class Command(BaseCommand):
         Product.objects.filter(sku__in=posts_active).update(
             status=Product.ACTIVE
         )
-        logging.info(f'{len(posts_deleted)} Productos Eliminados. {len(posts_active)} Productos Activos')
+        Product.objects.filter(sku__in=posts_active).update(
+            status=Product.PAUSED
+        )
+        logging.info(f'{len(posts_deleted)} Productos Eliminados.\
+ {len(posts_active)} Productos Activos. {len(posts_paused)} Pausados')

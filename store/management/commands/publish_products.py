@@ -5,6 +5,8 @@ from store.products.views import filter_bad_products
 from store.store import Store
 import logging
 from datetime import datetime
+from meli_sdk.models import BulkCreateManager
+
 
 class Command(BaseCommand):
     help = 'Despausa producto en las cuenta de mercado libre'
@@ -17,11 +19,14 @@ class Command(BaseCommand):
         logging.info('Consultando la base de datos')
         products = Product.objects.exclude(sku=None).filter(quantity__gt=0,available=True, status=Product.PAUSED)[:1000]
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
-
         store = Store()
         ids = products.values_list('sku', flat=True)
         total = products.count()
         store.update_items(ids, [{'status': 'active'}]*total)
 
-        products.update(status=Product.ACTIVE)
+        bulk_maker = BulkCreateManager(200)
+        for product in products:
+            product.status = Product.ACTIVE
+            bulk_maker.update(product, {'status'})
+        bulk_maker.done()
         logging.info(f'Se Activaron {total} articulos en la tienda')
