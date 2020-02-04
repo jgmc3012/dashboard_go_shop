@@ -31,7 +31,7 @@ def get_url_provider(request, sku):
 def filter_bad_products():
     bulk_mgr = BulkCreateManager()
 
-    products = Product.objects.filter(available=True)
+    products = Product.objects.filter(available=True, modifiable=True)
 
     store = Store()
     for product in products:
