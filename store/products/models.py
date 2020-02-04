@@ -12,6 +12,22 @@ class Category(models.Model):
     name = models.CharField(max_length=60)
 
 class Product(models.Model):
+    PAUSED = 0
+    ACTIVE = 1
+    CLOSED = 2
+    INACTIVE = 3
+    UNDER_REVIEW = 4
+    PAYMENT_REQUIRED = 5
+    STATUS_CHOICES = [
+        (PAUSED, 'Pausada'),
+        (ACTIVE, 'Activa'),
+        (CLOSED, 'Cerrada'),
+        (INACTIVE, 'Inactiva'),
+        (UNDER_REVIEW, 'Bajo revision'),
+        (PAYMENT_REQUIRED, 'Pago Requerido'),
+    ]
+
+
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
     title = models.CharField(max_length=60)
     cost_price = models.FloatField(null=True)
@@ -26,6 +42,10 @@ class Product(models.Model):
     quantity = models.IntegerField()
     last_update = models.DateTimeField(default=timezone.localtime)
     modifiable = models.BooleanField(default=True)
+    status = models.IntegerField(
+        choices=STATUS_CHOICES,
+        default=PAUSED
+    )
 
     def __str__(self):
         return self.title
