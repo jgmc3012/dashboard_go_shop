@@ -21,7 +21,7 @@ class Command(BaseCommand):
         store = Store()
         ids = products.values_list('sku', flat=True)
         total = products.count()
-        store.update_items(ids, [{'status': 'active'}]*total, Node)
+        store.update_items(ids, [{'status': 'active'}]*total)
 
         products.update(status=Product.ACTIVE)
         logging.info(f'Se Activaron {total} articulos en la tienda')
