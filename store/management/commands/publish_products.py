@@ -4,7 +4,7 @@ from store.products.models import Product
 from store.products.views import filter_bad_products 
 from store.store import Store
 import logging
-
+from datetime import datetime
 
 class Command(BaseCommand):
     help = 'Despausa producto en las cuenta de mercado libre'
