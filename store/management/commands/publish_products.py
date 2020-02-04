@@ -21,14 +21,7 @@ class Command(BaseCommand):
         store = Store()
         ids = products.values_list('sku', flat=True)
         total = products.count()
-        body = {
-            'status': 'active',
-        }
-        path= 'items'
+        store.update_items(ids, [{'status': 'active'}]*total, Node)
 
-        store.map_pool_put(
-            [path]*total,
-            [body]*total
-        )
         products.update(status=Product.ACTIVE)
         logging.info(f'Se Activaron {total} articulos en la tienda')
