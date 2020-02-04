@@ -18,7 +18,7 @@ class Command(BaseCommand):
         ids = products.values_list('sku',flat=True)
         params = [{
             'ids': _ids,
-            'attributes': 'status, id'
+            'attributes': 'status,id'
         } for _ids in store.split_ids(ids)]
         path = 'items'
         
@@ -35,6 +35,8 @@ class Command(BaseCommand):
                     posts_deleted.append(product['body']['id'])
                 elif product['body']['status'] == 'active':
                     posts_active.append(product['body']['id'])
+            else:
+                logging.info(product)
 
         Product.objects.filter(sku__in=posts_deleted).update(
             status=Product.CLOSED,
