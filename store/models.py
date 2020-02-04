@@ -9,6 +9,9 @@ class Seller(models.Model):
     )
     bad_seller = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f'{self.id}:{self.nickname}'
+
 class BusinessModel(models.Model):
     """
     Aqui esta todas las variables que se le aplicaran a cada precio de costo por producto
@@ -49,3 +52,6 @@ class Buyer(models.Model):
 
 class BadWord(models.Model):
     word= models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.word
