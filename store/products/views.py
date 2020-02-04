@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .models import Product
 from meli_sdk.models import BulkCreateManager
 from store.products.models import Product
+from store.models import Seller
 import re
 from store.store import Store
 import logging
@@ -31,13 +32,15 @@ def get_url_provider(request, sku):
 def filter_bad_products():
     bulk_mgr = BulkCreateManager()
 
-    products = Product.objects.filter(available=True)
-
+    products = Product.objects.filter(available=True).select_related('seller')
     store = Store()
     for product in products:
         match = re.search(store.pattern_bad_words, product.title.upper())
-        if match:
-            msg = f'{product.provider_sku}:{product}. Contiene palabras prohibidas. {match.group()}'
+        if match or product.seller.bad_seller:
+            if match:
+                msg = f'{product.provider_sku}:{product}. Contiene palabras prohibidas. {match.group()}'
+            else:
+                msg = f'{product.provider_sku}:{product}. Es del vendedor {product.seller.id} que esta en la lista de malos vendedores.'
             logging.warning(msg)
             product.available = False
             bulk_mgr.update(product, {'available'})
