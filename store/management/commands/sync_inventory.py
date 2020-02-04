@@ -44,3 +44,4 @@ class Command(BaseCommand):
         Product.objects.filter(sku__in=posts_active).update(
             status=Product.ACTIVE
         )
+        logging.info(f'{len(posts_deleted)} Productos Eliminados. {len(posts_active)} Productos Activos')
