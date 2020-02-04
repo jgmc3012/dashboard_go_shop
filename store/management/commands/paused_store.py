@@ -8,5 +8,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         store = Store()
-        ids = Product.objects.exclude(sku=None).values_list('sku', flat=True)
-        store.update_items(ids, [{'status':'paused'}]*len(ids))
+        products = Product.objects.exclude(sku=None).exclude(status=Product.CLOSED)
+        ids = products.values_list('sku', flat=True)
+        total = len(ids)
+        store.update_items(ids, [{'status':'paused'}]*total)
+        products.update(status=Product.PAUSED)
+        logging.info(f'{total} Productos Pausados')

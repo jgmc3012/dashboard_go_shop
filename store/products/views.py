@@ -33,6 +33,7 @@ def filter_bad_products():
     bulk_mgr = BulkCreateManager()
 
     products = Product.objects.filter(available=True).select_related('seller')
+
     store = Store()
     for product in products:
         match = re.search(store.pattern_bad_words, product.title.upper())
