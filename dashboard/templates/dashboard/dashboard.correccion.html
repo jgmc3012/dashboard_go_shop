@@ -1,0 +1,3704 @@
+{% extends 'dashboard/dashboard.html' %} 
+
+{% load static %} 
+
+{% block content %}
+<div class="bootstrap-table">
+  <div class="fixed-table-toolbar">
+    <div class="columns columns-right btn-group pull-right">
+      <button class="btn btn-default" type="button" name="refresh" title="Refrescar">
+        <i class="glyphicon glyphicon-refresh icon-refresh"></i></button>
+        <button class="btn btn-default" type="button" name="toggle" title="Ocultar/Mostrar">
+        <i class="glyphicon glyphicon-list-alt icon-list-alt"></i>
+      </button>
+      <div class="keep-open btn-group" title="Columnas">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <i class="glyphicon glyphicon-th icon-th"></i>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <label><input type="checkbox" data-field="action" value="1" checked="checked"/>Acción</label>
+          </li>
+          <li>
+            <label><input type="checkbox" data-field="id" value="2" checked="checked"/>ID</label>
+          </li>
+          <li>
+            <label><input type="checkbox" data-field="secure_thumbnail" value="3" checked="checked"/>Imágen</label>
+          </li>
+          <li>
+            <label><input type="checkbox" data-field="all_pictures" value="4" checked="checked"/>Imágenes</label>
+          </li>
+          <li>
+            <label><input type="checkbox" data-field="title" value="5" checked="checked"/> Título</label>
+          </li>
+          <li>
+            <label><input type="checkbox" data-field="seller_custom_field" value="6" checked="checked"/>SKU</label>
+          </li>
+          <li>
+            <label><input type="checkbox" data-field="last_updated" value="7" checked="checked"/>Fecha</label>
+          </li>
+          <li>
+            <label><input type="checkbox" data-field="price" value="8" checked="checked"/>Precio</label>
+          </li>
+          <li>
+            <label><input type="checkbox" data-field="available_quantity" value="9" checked="checked"/>Cantidad</label>
+          </li>
+          <li>
+            <label><input type="checkbox" data-field="variation_number" value="10" checked="checked"/>Variaciones</label>
+          </li>
+        </ul>
+      </div>
+      <div class="export btn-group">
+        <button class="btn btn-default dropdown-toggle" aria-label="export type" title="Export data" data-toggle="dropdown" type="button">
+          <i class="glyphicon glyphicon-export icon-share"></i>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li role="menuitem" data-type="json">
+            <a href="javascript:void(0)">JSON</a>
+          </li>
+          <li role="menuitem" data-type="excel">
+            <a href="javascript:void(0)">MS-Excel</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="pull-right search">
+      <input class="form-control" type="text" placeholder="Buscar" />
+    </div>
+  </div>
+  <div class="fixed-table-container" style="padding-bottom: 0px;">
+    <div class="fixed-table-header" style="display: none;"><table></table></div>
+    <div class="fixed-table-body">
+      <div class="fixed-table-loading" style="top: 1px; display: none;">
+        Por favor espere...
+      </div>
+      <table
+        id="table_paused"
+        data-show-export="true"
+        data-search="true"
+        data-show-refresh="true"
+        data-show-toggle="true"
+        data-show-columns="true"
+        data-detail-view="true"
+        data-detail-formatter="detailFormatter"
+        data-minimum-count-columns="1"
+        data-show-pagination-switch="false"
+        data-pagination="true"
+        data-page-list="[5,10,20,50]"
+        data-page-size="50"
+        data-smart-display="true"
+        data-show-footer="false"
+        data-side-pagination="server"
+        data-url="/ajaxnosession/loaditems"
+        data-response-handler="responseHandlerPaused"
+        data-unique-id="id"
+        data-query-params="queryParamsPaused"
+        class="table table-hover"
+      >
+        <thead style="">
+          <tr>
+            <th class="detail" rowspan="1"><div class="fht-cell"></div></th>
+            <th
+              class="bs-checkbox "
+              style="width: 36px; "
+              data-field="selection"
+              tabindex="0"
+            >
+              <div class="th-inner ">
+                <input name="btSelectAll" type="checkbox" />
+              </div>
+              <div class="fht-cell"></div>
+            </th>
+            <th style="" data-field="action" tabindex="0">
+              <div class="th-inner ">Acción</div>
+              <div class="fht-cell"></div>
+            </th>
+            <th style="" data-field="secure_thumbnail" tabindex="0">
+              <div class="th-inner ">Imágen</div>
+              <div class="fht-cell"></div>
+            </th>
+            <th style="" data-field="title" tabindex="0">
+              <div class="th-inner ">Título</div>
+              <div class="fht-cell"></div>
+            </th>
+            <th style="" data-field="seller_custom_field" tabindex="0">
+              <div class="th-inner ">SKU</div>
+              <div class="fht-cell"></div>
+            </th>
+            <th style="" data-field="last_updated" tabindex="0">
+              <div class="th-inner ">Fecha</div>
+              <div class="fht-cell"></div>
+            </th>
+            <th style="" data-field="price" tabindex="0">
+              <div class="th-inner ">Precio</div>
+              <div class="fht-cell"></div>
+            </th>
+            <th style="" data-field="available_quantity" tabindex="0">
+              <div class="th-inner ">Cantidad</div>
+              <div class="fht-cell"></div>
+            </th>
+            <th style="" data-field="variation_number" tabindex="0">
+              <div class="th-inner ">Variaciones</div>
+              <div class="fht-cell"></div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-index="0" data-uniqueid="MLV555757593">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="0" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757593')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757593')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="{% url 'dashboard.editar' %}"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757593"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757593-tv-samsung-smart-led-full-hd-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/992194-MLV40650775007_022020-I.jpg"
+              />
+            </td>
+            <td style="">Tv Samsung Smart Led Full Hd</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$41.310.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="1" data-uniqueid="MLV555757592">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="1" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757592')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757592')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="{% url 'dashboard.editar' %}"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757592"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757592-nevera-mabe-lts-rmlcg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/902841-MLV40650775005_022020-I.jpg"
+              />
+            </td>
+            <td style="">Nevera Mabe Lts Rmlcg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$51.595.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="2" data-uniqueid="MLV555757586">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="2" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757586')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757586')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="{% url 'dashboard.editar' %}"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757586"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757586-led-tv-basico-famitecno-pulgadas-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/663971-MLV40650772432_022020-I.jpg"
+              />
+            </td>
+            <td style="">Led Tv Básico Famitecno Pulgadas</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$18.700.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="3" data-uniqueid="MLV555757591">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="3" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757591')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757591')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="{% url 'dashboard.editar' %}"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757591"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757591-nevera-mabe-lts-rmjcg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/708962-MLV40650774097_022020-I.jpg"
+              />
+            </td>
+            <td style="">Nevera Mabe Lts Rmjcg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$41.310.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="4" data-uniqueid="MLV555757590">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="4" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757590')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757590')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="{% url 'dashboard.editar' %}"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757590"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757590-portatil-acer-j-obsequio-parlantes-genius-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/696999-MLV40650771980_022020-I.jpg"
+              />
+            </td>
+            <td style="">Portátil Acer --j+ Obsequio Parlantes Genius</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$48.195.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="5" data-uniqueid="MLV555757589">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="5" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757589')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757589')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="{% url 'dashboard.editar' %}"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757589"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757589-freidora-imusa-easyfry-lts-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/900694-MLV40650771974_022020-I.jpg"
+              />
+            </td>
+            <td style="">Freidora Imusa Easyfry . Lts</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$15.895.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="6" data-uniqueid="MLV555757573">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="6" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757573')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757573')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="{% url 'dashboard.editar' %}"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757573"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757573-nevera-mabe-lts-rmacg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img src="https://mlv-s2-p.mlstatic.com/779352-MLV40650772416_022020-I.jpg"/>
+            </td>
+            <td style="">Nevera Mabe Lts Rmacg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$40.715.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="7" data-uniqueid="MLV555757572">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="7" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757572')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757572')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="{% url 'dashboard.editar' %}"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757572"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757572-plancha-blackdecker-i-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/668145-MLV40650772408_022020-I.jpg"
+              />
+            </td>
+            <td style="">Plancha Black+decker I</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$4.165.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="8" data-uniqueid="MLV555757585">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="8" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757585')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757585')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="{% url 'dashboard.editar' %}"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757585"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757585-celular-samsung-galaxy-gb-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/793127-MLV40650774062_022020-I.jpg"
+              />
+            </td>
+            <td style="">Celular Samsung Galaxy Gb</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$19.465.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="9" data-uniqueid="MLV555757582">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="9" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757582')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757582')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757582"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757582"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757582-cabina-de-sonido-famitecno-tp-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/602236-MLV40650772378_022020-I.jpg"
+              />
+            </td>
+            <td style="">Cabina De Sonido Famitecno Tp</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$8.925.000</td>
+            <td style="">2</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="10" data-uniqueid="MLV555757584">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="10" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757584')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757584')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757584"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757584"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757584-cabina-de-sonido-d-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/751803-MLV40650771933_022020-I.jpg"
+              />
+            </td>
+            <td style="">Cabina De Sonido D</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$8.585.000</td>
+            <td style="">2</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="11" data-uniqueid="MLV555757581">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="11" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757581')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757581')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757581"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757581"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757581-lg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/952708-MLV40650771943_022020-I.jpg"
+              />
+            </td>
+            <td style="">Lg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$23.120.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="12" data-uniqueid="MLV555757579">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="12" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757579')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757579')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757579"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757579"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757579-multifuncional-hp-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/687744-MLV40650771911_022020-I.jpg"
+              />
+            </td>
+            <td style="">Multifuncional Hp</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$5.610.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="13" data-uniqueid="MLV555757571">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="13" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757571')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757571')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757571"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757571"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757571-air-fryer-famitecno-l-freidora-sin-aceite-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/867750-MLV40650774045_022020-I.jpg"
+              />
+            </td>
+            <td style="">Air Fryer Famitecno L Freidora Sin Aceite</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$8.245.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="14" data-uniqueid="MLV555757577">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="14" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757577')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757577')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757577"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757577"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757577-televisor-lg-pulgadas-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/894680-MLV40650772339_022020-I.jpg"
+              />
+            </td>
+            <td style="">Televisor Lg Pulgadas</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$24.905.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="15" data-uniqueid="MLV555757576">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="15" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757576')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757576')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757576"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757576"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757576-nevera-mabe-lt-rmjcg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/869510-MLV40650774034_022020-I.jpg"
+              />
+            </td>
+            <td style="">Nevera Mabe Lt Rmjcg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$39.525.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="16" data-uniqueid="MLV555757575">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="16" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757575')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757575')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757575"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757575"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757575-portatil-hp-m-ca-morral-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/790162-MLV40650772334_022020-I.jpg"
+              />
+            </td>
+            <td style="">Portátil Hp M-ca + Morral</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$43.095.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="17" data-uniqueid="MLV555757574">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="17" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757574')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757574')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757574"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757574"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757574-nevera-samsung-lts-r-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/998128-MLV40650774025_022020-I.jpg"
+              />
+            </td>
+            <td style="">Nevera Samsung Lts R</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$50.915.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="18" data-uniqueid="MLV555757558">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="18" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757558')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757558')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757558"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757558"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757558-nevera-samsung-lts-rcl-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/815269-MLV40650771879_022020-I.jpg"
+              />
+            </td>
+            <td style="">Nevera Samsung Lts Rcl</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$67.490.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="19" data-uniqueid="MLV555757569">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="19" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757569')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757569')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757569"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757569"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757569-plancha-para-cabello-alliz-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/814054-MLV40650771867_022020-I.jpg"
+              />
+            </td>
+            <td style="">Plancha Para Cabello Alliz</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$5.610.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="20" data-uniqueid="MLV555757567">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="20" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757567')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757567')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757567"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757567"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757567-secador-profesional-alliz-mega-turbo-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/977813-MLV40650771871_022020-I.jpg"
+              />
+            </td>
+            <td style="">Secador Profesional Alliz Mega Turbo</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$6.035.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="21" data-uniqueid="MLV555757563">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="21" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757563')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757563')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757563"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757563"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757563-olla-arrocera-blackdecker-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/778450-MLV40650770996_022020-I.jpg"
+              />
+            </td>
+            <td style="">Olla Arrocera Black+decker</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$5.355.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="22" data-uniqueid="MLV555757562">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="22" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757562')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757562')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757562"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757562"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757562-lavadora-samsung-kg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/931120-MLV40650771851_022020-I.jpg"
+              />
+            </td>
+            <td style="">Lavadora Samsung Kg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$40.885.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="23" data-uniqueid="MLV555757557">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="23" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757557')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757557')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757557"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757557"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757557-computador-portatil-lenovo-gm-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/878214-MLV40650774014_022020-I.jpg"
+              />
+            </td>
+            <td style="">Computador Portátil Lenovo -gm</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$31.875.000</td>
+            <td style="">1</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="24" data-uniqueid="MLV555757566">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="24" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757566')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757566')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757566"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757566"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757566-lavadora-samsung-kg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/989370-MLV40650770967_022020-I.jpg"
+              />
+            </td>
+            <td style="">Lavadora Samsung Kg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$52.785.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="25" data-uniqueid="MLV555757565">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="25" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757565')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757565')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757565"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757565"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757565-lavadora-lg-kg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/998529-MLV40650772262_022020-I.jpg"
+              />
+            </td>
+            <td style="">Lavadora Lg Kg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$58.140.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="26" data-uniqueid="MLV555757564">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="26" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757564')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757564')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757564"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757564"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757564-televisor-samsung-pulgadas-hd-smart-tv-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/789363-MLV40650772252_022020-I.jpg"
+              />
+            </td>
+            <td style="">Televisor Samsung Pulgadas Hd Smart Tv</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$27.370.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="27" data-uniqueid="MLV555757561">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="27" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757561')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757561')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757561"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757561"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757561-control-magic-original-lg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/749889-MLV40650770977_022020-I.jpg"
+              />
+            </td>
+            <td style="">Control Magic Original Lg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$5.610.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="28" data-uniqueid="MLV555757560">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="28" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757560')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757560')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757560"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757560"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757560-lavadora-lg-kg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/809951-MLV40650770949_022020-I.jpg"
+              />
+            </td>
+            <td style="">Lavadora Lg Kg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$53.635.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="29" data-uniqueid="MLV555757556">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="29" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757556')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757556')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757556"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757556"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757556-lavadora-samsung-kg-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/755370-MLV40650772281_022020-I.jpg"
+              />
+            </td>
+            <td style="">Lavadora Samsung Kg</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$46.155.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="30" data-uniqueid="MLV555757559">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="30" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757559')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757559')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757559"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757559"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757559-televisor-lg-led-full-hd-smart-tv-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/788101-MLV40650772243_022020-I.jpg"
+              />
+            </td>
+            <td style="">Televisor Lg Led Full Hd Smart Tv</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$40.545.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="31" data-uniqueid="MLV555757554">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="31" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757554')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757554')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757554"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757554"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757554-televisor-lg-led-hd-smart-tv-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/934039-MLV40650771824_022020-I.jpg"
+              />
+            </td>
+            <td style="">Televisor Lg Led Hd Smart Tv</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$30.430.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="32" data-uniqueid="MLV555757552">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="32" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757552')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757552')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757552"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757552"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757552-televisor-lg-pulgadas-led-ultra-hd-smart-tv-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/666017-MLV40650771797_022020-I.jpg"
+              />
+            </td>
+            <td style="">Televisor Lg Pulgadas Led Ultra Hd Smart Tv</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$119.510.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="33" data-uniqueid="MLV555757551">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="33" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757551')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757551')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757551"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757551"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757551-kit-grival-aseo-bide-con-regulacion-doble-metalica-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/640010-MLV40650772223_022020-I.jpg"
+              />
+            </td>
+            <td style="">Kit Grival Aseo Bide Con Regulacion Doble Metalica</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$5.610.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="34" data-uniqueid="MLV555757547">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="34" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757547')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757547')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757547"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757547"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757547-tv-lg-led-uhd-obsequio-magic-control-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/629842-MLV40650771801_022020-I.jpg"
+              />
+            </td>
+            <td style="">Tv Lg Led Uhd + Obsequio Magic Control</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$66.810.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="35" data-uniqueid="MLV555757546">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="35" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757546')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757546')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757546"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757546"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757546-televisor-lg-pulgadas-led-ultra-hd-smart-tv-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/871293-MLV40650770912_022020-I.jpg"
+              />
+            </td>
+            <td style="">Televisor Lg Pulgadas Led Ultra Hd Smart Tv</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$81.345.000</td>
+            <td style="">4</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="36" data-uniqueid="MLV555757543">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="36" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757543')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757543')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757543"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757543"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757543-regadera-corona-teleducha-monet-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/965367-MLV40650770911_022020-I.jpg"
+              />
+            </td>
+            <td style="">Regadera Corona Teleducha Monet</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$3.825.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="37" data-uniqueid="MLV555757549">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="37" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757549')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757549')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757549"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757549"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757549-secador-corona-para-manos-slim-max-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/656096-MLV40650772207_022020-I.jpg"
+              />
+            </td>
+            <td style="">Secador Corona Para Manos Slim Max</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$38.590.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="38" data-uniqueid="MLV555757545">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="38" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757545')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757545')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757545"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757545"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757545-griferia-corona-lavamanos-monocontrol-media-draa-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/991367-MLV40650770903_022020-I.jpg"
+              />
+            </td>
+            <td style="">Griferia Corona Lavamanos Monocontrol Media Draa</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$11.985.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="39" data-uniqueid="MLV555757542">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="39" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757542')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757542')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757542"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757542"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757542-sifon-grival-metalico-cuadrado-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/629309-MLV40650770907_022020-I.jpg"
+              />
+            </td>
+            <td style="">Sifon Grival Metalico Cuadrado</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$3.910.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="40" data-uniqueid="MLV555757541">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="40" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757541')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757541')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757541"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757541"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757541-griferia-corona-lavamanos-monocontrol-alta-draa-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/928905-MLV40650770906_022020-I.jpg"
+              />
+            </td>
+            <td style="">Griferia Corona Lavamanos Monocontrol Alta Draa</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$15.385.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="41" data-uniqueid="MLV555757540">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="41" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757540')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757540')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757540"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757540"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757540-secador-corona-manos-libres-ehd-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/845255-MLV40650771776_022020-I.jpg"
+              />
+            </td>
+            <td style="">Secador Corona Manos Libres Ehd</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$65.620.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="42" data-uniqueid="MLV555757539">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="42" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757539')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757539')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757539"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757539"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757539-kit-grival-desague-push-sifon-botella-griflex-metalico-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/738421-MLV40650771770_022020-I.jpg"
+              />
+            </td>
+            <td style="">
+              Kit Grival Desague Push, Sifón Botella, Griflex Metálico
+            </td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$3.910.000</td>
+            <td style="">3</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="43" data-uniqueid="MLV555757538">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="43" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757538')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757538')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757538"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757538"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757538-teleducha-corona-draa-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/662120-MLV40650772188_022020-I.jpg"
+              />
+            </td>
+            <td style="">Teleducha Corona Draa</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$4.930.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="44" data-uniqueid="MLV555757533">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="44" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757533')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757533')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757533"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757533"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757533-griferia-corona-lavamanos-monocontrol-baja-arizona-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/627947-MLV40650770894_022020-I.jpg"
+              />
+            </td>
+            <td style="">Griferia Corona Lavamanos Monocontrol Baja Arizona</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$5.270.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="45" data-uniqueid="MLV555757528">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="45" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757528')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757528')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757528"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757528"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757528-griferia-corona-lavamanos-monocontrol-bajo-piura-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/948901-MLV40650770889_022020-I.jpg"
+              />
+            </td>
+            <td style="">Griferia Corona Lavamanos Monocontrol Bajo Piura</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$10.200.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="46" data-uniqueid="MLV555757527">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="46" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757527')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757527')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757527"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757527"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757527-griferia-corona-lavamanos-institucional-touch-afluenza-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/714598-MLV40650770885_022020-I.jpg"
+              />
+            </td>
+            <td style="">
+              Griferia Corona Lavamanos Institucional Touch Afluenza
+            </td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$24.905.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="47" data-uniqueid="MLV555757537">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="47" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757537')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757537')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757537"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757537"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757537-correa-textil-reflectante-fitbit-para-versa-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/983736-MLV40650771755_022020-I.jpg"
+              />
+            </td>
+            <td style="">Correa Textil Reflectante Fitbit Para Versa</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$7.820.000</td>
+            <td style="">5</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="48" data-uniqueid="MLV555757536">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="48" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757536')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757536')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757536"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757536"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757536-correa-deportiva-fitbit-para-versa-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s1-p.mlstatic.com/922769-MLV40650771749_022020-I.jpg"
+              />
+            </td>
+            <td style="">Correa Deportiva Fitbit Para Versa</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$6.205.000</td>
+            <td style="">2</td>
+            <td style="">0</td>
+          </tr>
+          <tr data-index="49" data-uniqueid="MLV555757531">
+            <td>
+              <a class="detail-icon" href="javascript:"
+                ><i class="glyphicon glyphicon-plus icon-plus"></i
+              ></a>
+            </td>
+            <td class="bs-checkbox ">
+              <input data-index="49" name="btSelectItem" type="checkbox" />
+            </td>
+            <td style="">
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown"
+                >
+                  Acciones<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <div
+                      onclick="itemActive('MLV555757531')"
+                      class="mydropelement1"
+                    >
+                      Activar
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      onclick="itemClose_frompaused('MLV555757531')"
+                      class="mydropelement1"
+                    >
+                      Finalizar
+                    </div>
+                  </li>
+                  <li>
+                    <a href="https://system.zoco.cl/editproduct/id/MLV555757531"
+                      >Editar</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://system.zoco.cl/editproduct/id/MLV555757531"
+                      target="_blank"
+                      >Editar en otra pestaña</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="https://articulo.mercadolibre.com.ve/MLV-555757531-cable-de-carga-fitbit-versa-_JM"
+                      onclick=""
+                      target="_blank"
+                      >Ver en Mercado Libre</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td style="">
+              <img
+                src="https://mlv-s2-p.mlstatic.com/876101-MLV40650770878_022020-I.jpg"
+              />
+            </td>
+            <td style="">Cable De Carga Fitbit Versa</td>
+            <td style="">-</td>
+            <td style="">4/2/2020</td>
+            <td style="">$4.505.000</td>
+            <td style="">2</td>
+            <td style="">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="fixed-table-footer" style="display: none;">
+      <table>
+        <tbody>
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="fixed-table-pagination" style="display: block;">
+      <div class="pull-left pagination-detail">
+        <span class="pagination-info"
+          >Mostrando desde 1 hasta 50 - En total 30640 resultados</span
+        ><span class="page-list"
+          ><span class="btn-group dropup"
+            ><button
+              type="button"
+              class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown"
+            >
+              <span class="page-size">50</span> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="javascript:void(0)">5</a></li>
+              <li><a href="javascript:void(0)">10</a></li>
+              <li><a href="javascript:void(0)">20</a></li>
+              <li class="active"><a href="javascript:void(0)">50</a></li>
+            </ul></span
+          >
+          resultados por página</span
+        >
+      </div>
+      <div class="pull-right pagination">
+        <ul class="pagination">
+          <li class="page-pre"><a href="javascript:void(0)">‹</a></li>
+          <li class="page-number active"><a href="javascript:void(0)">1</a></li>
+          <li class="page-number"><a href="javascript:void(0)">2</a></li>
+          <li class="page-number"><a href="javascript:void(0)">3</a></li>
+          <li class="page-number"><a href="javascript:void(0)">4</a></li>
+          <li class="page-number"><a href="javascript:void(0)">5</a></li>
+          <li class="page-last-separator disabled">
+            <a href="javascript:void(0)">...</a>
+          </li>
+          <li class="page-last"><a href="javascript:void(0)">613</a></li>
+          <li class="page-next"><a href="javascript:void(0)">›</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
