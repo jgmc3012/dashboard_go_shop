@@ -27,7 +27,6 @@ class Product(models.Model):
         (PAYMENT_REQUIRED, 'Pago Requerido'),
     ]
 
-
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
     title = models.CharField(max_length=60)
     cost_price = models.FloatField(null=True)
@@ -42,6 +41,7 @@ class Product(models.Model):
     quantity = models.IntegerField()
     last_update = models.DateTimeField(default=timezone.localtime)
     modifiable = models.BooleanField(default=True)
+    no_problem = models.BooleanField(default=False)
     status = models.IntegerField(
         choices=STATUS_CHOICES,
         default=PAUSED
