@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-
+from django.db.models import Q
 from store.products.models import Product
 from store.products.views import filter_bad_products 
 from store.store import Store
@@ -17,7 +17,8 @@ class Command(BaseCommand):
 
         start = datetime.now()
         logging.info('Consultando la base de datos')
-        products = Product.objects.exclude(sku=None).filter(quantity__gt=0,available=True, status=Product.PAUSED)[:1000]
+        sellers_bad = Product.objects.filter(Q(available=0)|Q(status=Product.CLOSED)).values_list('seller',flat=True)
+        products = Product.objects.exclude(sku=None).filter(quantity__gt=0,available=True, status=Product.PAUSED).exclude(seller__in=sellers_bad)[:1000]
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
         store = Store()
         ids = products.values_list('sku', flat=True)
