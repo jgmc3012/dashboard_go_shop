@@ -54,6 +54,7 @@
                     <div class='row'>
                         <!-- Aqui comienza cada item -->
                         <div class='col-8'>
+                            <!-- Datos del Product -->
                             <h5>{{ order.product.title }}</h5>
                             <div class="d-flex">
                                 <div class='flex-fill'>
@@ -69,6 +70,10 @@
                                         <p>{{ order.store_order_id }}</p>
                                     </div>
                                     <div class="row">
+                                        <span class="text-black">Numero de Orden:</span>
+                                        <p>{{ order.provider_order_id }}</p>
+                                    </div>
+                                    <div class="row">
                                         <span class="text-black">Guia del Envio:</span>
                                         <p>{{ order.shipping.guide }}</p>
                                     </div>
@@ -76,14 +81,27 @@
                                         <span class="text-black">Publicacion del proveedor:</span>
                                         <a
                                             target="_blank"
-                                            href="{{ order.product.order }}"
+                                            href="{{ order.product.provider_link }}"
                                         >Link</a>
                                     </div>
+                                    <div class="row">
+                                        <span class="text-black">Referencia de Pago:</span>
+                                        <p>{{ order.invoice.pay.reference }}</p>
+                                    </div>
                                 </div>
-
+                                <div class="flex-fill">
+                                    <div
+                                        api='show_news'
+                                        class='btn btn-info ml-0 align-content-center align-items-center'
+                                        order='{{ order.id }}'
+                                        show-news=''
+                                    >Novedades</div>
+                                </div>
                             </div>
+                            <!-- /Datos del Product -->
                         </div>
                         <div class='col-3'>
+                            <!-- Datos del Vendodor -->
                             <div class="row">
                                 <span class="text-black">Nombre Completo:</span>
                                 <p>{{ order.buyer.first_name }} {{ order.buyer.last_name }}</p>
@@ -93,19 +111,21 @@
                                 <p>{{ order.buyer.phone }}</p>
                             </div>
                             <div class="row">
-                                <span class="text-black">Nickname:</span>
-                                <p>{{ order.buyer.nickname }}</p>
-                            </div>
-                            <div class="row">
                                 <span class="text-black">Direccion:</span>
                                 <p>{{ order.buyer.direction }}</p>
                             </div>
+                            <div class="row">
+                                <span class="text-black">Precio de Venta: </span>
+                                <strong>{{ order.invoice.pay.amount }} Bs</strong>
+                            </div>
+                            <!-- /Datos del Vendodor -->
                         </div>
                         <!-- Final de cada item -->
                     </div>
                 </li>
+                <div id="containerNews-{{order.id}}" class="container"></div>
                 {% endfor %}  
-            </ul> 
+                </ul> 
         </div>
     </div>
 

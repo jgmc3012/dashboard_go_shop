@@ -30,12 +30,11 @@ def new_shipping(guide:int, amount:int, shipper_name:str, destination:str):
             'data': shipping
     }
 
-def shipment_completed(guide:int):
-    shipping = Shipping.objects.filter(guide=guide).first()
+def shipment_completed(shipping):
     if not shipping:
         return {
             'ok': False,
-            'msg': 'No existe ningun envio con esa numero de guia.'
+            'msg': 'Esta orden no tiene numero de guia.'
         }
     if shipping.date_completed:
         return {

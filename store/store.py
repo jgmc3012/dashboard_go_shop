@@ -1,18 +1,22 @@
-from meli_sdk.sdk.meli import Meli
-from decouple import config
+from django.contrib.auth import authenticate
+
 import math
 import logging
-from .products.models import Product, Picture, Attribute
 import os
 import re
+
+from decouple import config
+
+from meli_sdk.sdk.meli import Meli
+from .products.models import Product, Picture, Attribute
 
 from dollar_for_life.models import History
 from store.models import BusinessModel, BadWord
 
+
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
     URI_CALLBACK = config('MELI_URI_CALLBACK')
-    attentive_user = authenticate(username=username, password=password)
     inventary = []
     sales = []
     pools = []

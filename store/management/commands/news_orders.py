@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
-from django.contrib.auth import authenticate
 
 from datetime import timedelta 
 import logging
@@ -80,6 +79,6 @@ base de datos y fue orfertado bajo el pedido {offer_id} del comprador {buyer_api
             for msg in news_draw:
                 New.objects.create(
                     user=store.attentive_user,
-                    msg=msg
+                    message=msg
                     order=order
                 )
