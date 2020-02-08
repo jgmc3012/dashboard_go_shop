@@ -41,28 +41,28 @@ class Command(BaseCommand):
             else:
                 logging.info(product)
 
-        logging.info(f'{len(posts['deleted'])} Productos eliminados recientemente.')
+        logging.info(f"{len(posts['deleted'])} Productos eliminados recientemente.")
         Product.objects.filter(sku__in=posts['deleted']).update(
             status=Product.CLOSED,
             modifiable=False
         )
 
-        logging.info(f'{len(posts['active'])} Productos activos.')
+        logging.info(f"{len(posts['active'])} Productos activos.")
         Product.objects.filter(sku__in=posts['active']).update(
             status=Product.ACTIVE
         )
 
-        logging.info(f'{len(posts['paused'])} Productos pausados.')
+        logging.info(f"{len(posts['paused'])} Productos pausados.")
         Product.objects.filter(sku__in=posts['paused']).update(
             status=Product.PAUSED
         )
 
-        logging.info(f'{len(posts['under_review'])} Productos bajo revision de ML.')
+        logging.info(f"{len(posts['under_review'])} Productos bajo revision de ML.")
         Product.objects.filter(sku__in=posts['under_review']).update(
             status=Product.UNDER_REVIEW
         )
 
-        logging.info(f'{len(posts['inactive'])} Productos inactivos por revision de ML.')
+        logging.info(f"{len(posts['inactive'])} Productos inactivos por revision de ML.")
         Product.objects.filter(sku__in=posts['inactive']).update(
             status=Product.UNDER_REVIEW
         )
