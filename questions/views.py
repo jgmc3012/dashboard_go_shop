@@ -86,7 +86,7 @@ def new_answer(text, question, user):
 
 @login_required
 def outwith_answer(request):
-    questions = Question.objects.filter(answer=None).count()
+    questions = Question.objects.filter(answer=None, product__status=Product.ACTIVE).count()
 
     return JsonResponse({
         'ok': True,
