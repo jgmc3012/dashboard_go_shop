@@ -18,10 +18,9 @@ def orders(request):
     state = request.GET.get('state') if request.GET.get('state') else -1
     state = int(state)
     if (state >= 0):
-        orders = Order.objects.filter(state=state).select_related('product').select_related('buyer').select_related('invoice').select_related('pay')
+        orders = Order.objects.filter(state=state).select_related('product').select_related('buyer').select_related('invoice').select_related('invoice__pay')
     else:
         orders = Order.objects.all().select_related('product').select_related('buyer')
-    
     context = {
         'status_orders': Order.STATES_CHOICES,
         'orders': orders,
