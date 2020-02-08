@@ -43,7 +43,7 @@ def shipment_completed(guide:int):
             'msg': 'La recepcion de este paquete ya fue registrada.'
         }
 
-    shipping.date_completed=timezone.now()
+    shipping.date_completed=timezone.localtime()
     shipping.state = Shipping.COMPLETED
     shipping.save()
     return {
