@@ -1,13 +1,18 @@
-from meli_sdk.sdk.meli import Meli
-from decouple import config
+from django.contrib.auth import authenticate
+
 import math
 import logging
-from .products.models import Product, Picture, Attribute
 import os
 import re
 
+from decouple import config
+
+from meli_sdk.sdk.meli import Meli
+from .products.models import Product, Picture, Attribute
+
 from dollar_for_life.models import History
 from store.models import BusinessModel, BadWord
+
 
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
@@ -26,6 +31,15 @@ class Store(Meli):
         words = BadWord.objects.all().values_list('word', flat=True)
         words = [ f'(\A|\s){word.upper()}(S|ES)?(\s|$)' for word in words]
         self.pattern_bad_words = '|'.join(words)
+        self._attentive_user = None
+
+    @property
+    def attentive_user():
+        if not self._attentive_user:
+            username = config('ATTENTIVE_USER_NICK')
+            password = config('ATTENTIVE_USER_PASS')
+            self._attentive_user = authenticate(username=username,password=password)
+        return self._attentive_user
 
     def get_inventory_by_api(self)->list:
         """

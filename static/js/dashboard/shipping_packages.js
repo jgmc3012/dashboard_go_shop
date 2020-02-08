@@ -2,18 +2,20 @@ let shippingOrders = {}
 const products_items = document.querySelectorAll('[api="product-item"]')
 
 products_items.forEach( element => element.addEventListener('click', ( event => {
-    target = event.currentTarget
-    target.classList.toggle('list-group-item-primary')
-    orderId = target.getAttribute('order_id')
-    orderTitle = target.getAttribute('title')
-    if (shippingOrders[orderId]){
-        delete((shippingOrders[orderId]))
-    } else {
-        shippingOrders[orderId] = {'id':orderId, 'title':orderTitle}
+    if (event.target.getAttribute('api')!="show_news") {
+        target = event.currentTarget
+        target.classList.toggle('list-group-item-primary')
+        orderId = target.getAttribute('order_id')
+        orderTitle = target.getAttribute('title')
+        if (shippingOrders[orderId]){
+            delete((shippingOrders[orderId]))
+        } else {
+            shippingOrders[orderId] = {'id':orderId, 'title':orderTitle}
+        }
     }
 })))
 
-formTemplate = () => {
+const formTemplate = _ => {
     tableStr = ''
     for (let key in shippingOrders) {
         tableStr += `
@@ -59,10 +61,27 @@ formTemplate = () => {
 `)
 }
 
-btnShowModal = document.querySelector('[data-target="#shippingModal"]')
+const templateNotSelected = (`
+    <div>
+        <div class="modal-body" id='bodyModalState'>
+            <h4 class="text-center">Debe seleccionar al menos una orden clickeando sobre ella.</h4>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Regresar</button>
+        </div>
+    </div>
+`)
+
+const btnShowModal = document.querySelector('[data-target="#shippingModal"]')
 
 btnShowModal.addEventListener('click', (event) => {
-    const HTMLString = formTemplate()
+    let HTMLString
+    if (JSON.stringify(shippingOrders) == "{}") {
+        HTMLString = templateNotSelected
+    }
+    else {
+        HTMLString = formTemplate()
+    }
     if (HTMLString) {
         insertElement('#formContainer', HTMLString)
 

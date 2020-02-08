@@ -11,7 +11,7 @@ from store.store import Store
 
 class Pay(models.Model):
     amount = models.FloatField()
-    reference = models.BigIntegerField(unique=True)
+    reference = models.BigIntegerField(unique=True, null=True, default=None)
     confirmed = models.BooleanField(default=False)
 
 class Invoice(models.Model):

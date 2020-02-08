@@ -37,19 +37,18 @@ def new_pay( request, order_id):
         'attributes': 'date_created,buyer,order_items'
     }
     
-    order = Order.objects.filter(store_order_id=order_id).select_related('product').select_related('buyer').first()
+    order = Order.objects.filter(store_order_id=order_id).select_related('product').select_related('buyer').select_related('invoice').select_related('invoice__pay').first()
     if order.state >= Order.PROCESSING:
         return JsonResponse({
             'ok': False,
             'msg': f'{user_name} ya esta orden fue procesada. Contacta con un supervisor si deseas hacer cambios en ella.'
         })
 
-    if order.invoice:
+    if order.invoice.user:
         return JsonResponse({
             'ok': False,
             'msg': f'{user_name} ya esta orden contine un pago relacionado'
         })
-
 
     path = f'/orders/{order_id}'
     result = store.get(path,params, auth=True)
@@ -59,13 +58,24 @@ def new_pay( request, order_id):
 
     USD = History.objects.order_by('-datetime').first()
     if product.sale_price*USD.rate > product_api.get('unit_price'):
+        msg = f'El producto ha subido de precio.'
+        New.objects.create(
+            user=request.user,
+            message=msg,
+            order=order
+        )
         return JsonResponse({
             'ok': False,
-            'msg': f'{user_name}, el producto ha subido de precio, Contacta con tu supervisor.',
+            'msg': f'{user_name}. {msg}, Contacta con tu supervisor.',
         })
 
     res = store.verify_existence(product)
     if not res.get('ok'):
+        New.objects.create(
+            user=request.user,
+            message=res.get("msg"),
+            order=order
+        )
         return JsonResponse({
             'ok': False,
             'msg': f'{user_name}, {res.get("msg")}',
@@ -73,25 +83,33 @@ def new_pay( request, order_id):
 
     pay = Pay.objects.filter(reference=pay_reference).first()
     if pay:
+        msg = f'{user_name}. El numero de referencia de ese pago ya fue registrado anteriormente.'
+        New.objects.create(
+            user=store.attentive_user,
+            message=msg,
+            order=order
+        )
         return JsonResponse({
             'ok': False,
-            'msg': f'{user_name}. El numero de referencia de ese pago ya fue registrado anteriormente.'
+            'msg': msg
     })
 
-    pay = Pay.objects.create(
-        amount=product_api.get('unit_price'),
-        reference=pay_reference
-    )
-    invoice = Invoice.objects.create(pay=pay)
+    order.invoice.pay.reference = pay_reference
+    order.invoice.pay.save()
 
     order.quantity = quantity
-    order.invoice = invoice
     order.state = Order.PAID_OUT
     order.save()
+    msg = f'Referencia de pago agregada correctamente.'
+    New.objects.create(
+        user=request.user,
+        message=msg,
+        order=order
+    )
 
     return JsonResponse({
         'ok': True,
-        'msg': f'Orden agregada correctamente.  {user_name}.'
+        'msg': f'{user_name}. {msg}'
     })
 
 @login_required
@@ -125,7 +143,7 @@ contacta al desarrollador.'
         })
 
     invoice.user = user
-    invoice.datetime = timezone.now()
+    invoice.datetime = timezone.localtime()
     invoice.save()
 
     pay.confirmed = True
@@ -135,9 +153,15 @@ contacta al desarrollador.'
     order.provider_order_id = provider_order
     order.save()
 
+    msg = 'Se cambio el estado de la orden a Procesando.'
+    New.objects.create(
+        user=request.user,
+        message=msg,
+        order=order
+    )
     return JsonResponse({
             'ok':True,
-            'msg': f'{user_name}, Se cambio el estado de la orden a Procesando'
+            'msg': f'{user_name}, {msg}'
         })
 
 @login_required
@@ -154,9 +178,15 @@ def provider_deliveries( request, order_id):
 
     order.state = Order.RECEIVED_STORAGE
     order.save()
+    msg = 'Se cambio el estado a de la orden a Recibido en Bodega.'
+    New.objects.create(
+        user=request.user,
+        message=msg,
+        order=order
+    )
     return JsonResponse({
             'ok':True,
-            'msg': f'{user_name}, Se cambio el estado a de la orden a Recibido en Bodega'
+            'msg': f'{user_name}. {msg}'
         })
 
 @login_required
@@ -188,7 +218,7 @@ ordene(s) no corresponden con nuestra base de datos. \n{bad_orders}'
     if not destination:
         return JsonResponse({
             'ok':False,
-            'msg': f'ERROR: La guia {guide_shipping} contiene ordenes que debian\
+            'msg': f'{request.user.first_name}. La guia {guide_shipping} contiene ordenes que debian\
 ser enviadas a direcciones distintas. Contacta urgentemente a un supervisor.'
         })
 
@@ -199,10 +229,16 @@ ser enviadas a direcciones distintas. Contacta urgentemente a un supervisor.'
 
     shipping=request_shipping.get('data')
     bulk_mgr = BulkCreateManager()
+    msg = f'Paquete enviado bajo en numero de guia: {guide_shipping}'
     for orden in orders:
         order.state=Order.INTERNATIONAL_DEPARTURE
         order.shipping = shipping
         bulk_mgr.update(order,{'state','shipping'})
+        New.objects.create(
+            user=request.user,
+            message=msg,
+            order=order
+        )
     
     bulk_mgr.done()
 
@@ -212,30 +248,43 @@ ser enviadas a direcciones distintas. Contacta urgentemente a un supervisor.'
     })
 
 @login_required
-def received_packet( request, guide_shipping):
-    result = shipment_completed(guide_shipping)
+def received_packet( request, order_id):
+    _order = Order.objects.filter(store_order_id=order_id).select_related('shipping').first()
+    if not _order:
+        return JsonResponse({
+            'ok':False,
+            'msg': 'Error pedido no encontrado.'
+        })
+
+    shipping = _order.shipping
+    result = shipment_completed(shipping)
     if not result.get('ok'):
         return JsonResponse(result)
 
-    shipping = result.get('data')
-
-    orders = Order.objects.filter(shipping=shipping)
+    orders = Order.objects.filter(shipping=shipping).select_related('product')
 
     bulk_mgr = BulkCreateManager()
     number_products = 0
+    msg = 'El paquete donde se envio el producto fue recibido.'
     for order in orders:
+        New.objects.create(
+            user=request.user,
+            message=msg,
+            order=order
+        )
+
         order.state=Order.RECEIVED_STORE
-        number_products + order.quantity
+        number_products += order.quantity
         bulk_mgr.update(order, {'state'})
 
     bulk_mgr.done()
 
-    message = f'Solicitud Exitosa. El paquete contenia {number_products} producto(s).\n \
-A continuacion se listan los numeros de pedidos de dichos productos:'
+    message = f'Solicitud Exitosa. El paquete contenia {number_products} producto(s).\
+A continuacion se listan los numeros de pedidos con sus respectivos paquetes productos:'
     for order in orders:
-        message += f'\nPedido: {order.store_order_id} -> {order.quantity} producto(s).'
+        message += f'\nPedido: {order.store_order_id} -> {order.quantity} {order.product.title}.'
     return JsonResponse({
-        'okey':True,
+        'ok':True,
         'msg': message
     })
 
@@ -246,15 +295,22 @@ def complete_order( request, order_id):
     order = Order.objects.filter(store_order_id=order_id).first()
     if not order:
         return JsonResponse({
-            'okey':False,
+            'ok':False,
             'msg': 'Numero de orden invalido'
         })
     order.state = Order.COMPLETED
     order.save()
+    msg = 'Entrega exitosa.'
+    New.objects.create(
+        user=request.user,
+        message=msg,
+        order=order
+    )
     return JsonResponse({
-            'okey':True,
-            'msg': f'{user_name}, entrega exitosa.'
+            'ok':True,
+            'msg': f'{user_name}. {msg}'
         })
+
 
 # class NewView(LoginRequiredMixin, View):
 
@@ -271,10 +327,10 @@ def create_new(request):
             'msg': 'El numero de pedido no existen. Esto debe ser un error, consulte al desarrollador.'
         })
 
-    new = New.objects.create(
+    New.objects.create(
         order=order,
         message=msg.strip(),
-        user=request.user
+        user=request.user,
     )
 
     return JsonResponse({
