@@ -28,8 +28,10 @@ class Command(BaseCommand):
 
         posts_active = list()
         for product in results:
-            if product['body']['status'] == 'active':
+            if product.get('status') == 'active':
                 posts_active.append(product['body']['id'])
+            else:
+                logging.warning(f'Producto no actualizado: {product}')
 
         Product.objects.filter(sku__in=posts['active']).update(
             status=Product.ACTIVE
