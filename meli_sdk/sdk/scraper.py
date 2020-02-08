@@ -143,14 +143,11 @@ class Scraper(Meli):
             'ids': ids,
             'attributes': 'id,price,initial_quantity',
         } for ids in self.split_ids(list_ids)]
-        result_draw = self.map_pool_get(
+        results = self.map_pool_get(
             [path]*len(params),
             params
         )
 
-        results = list()
-        for result in result_draw:
-            results += result
         products_draw = {product['body']['id']:product['body'] for product in results}
         BM = BusinessModel.objects.get(pk=self.store.SELLER_ID)
         bulk_mgr = BulkCreateManager()
