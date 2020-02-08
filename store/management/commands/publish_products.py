@@ -14,13 +14,13 @@ class Command(BaseCommand):
         start = datetime.now()
         logging.info('Aplicando filtro de malas palabras a productos')
         filter_bad_products()
-        logging.info(f'Filtrado completado, tiempo de ejecucion {(datetime.now()-start).strftime("%H:%M:%S")}')
+        logging.info('Filtrado completado, tiempo de ejecucion {:.2f} seg'.format((datetime.now()-start).total_seconds()))
 
         start = datetime.now()
         logging.info('Consultando la base de datos')
         sellers_bad = Product.objects.filter(Q(available=0)|Q(status=Product.CLOSED)).values_list('seller',flat=True)
         products = Product.objects.exclude(sku=None).filter(quantity__gt=0,available=True, status=Product.PAUSED).exclude(seller__in=sellers_bad)[:1000]
-        logging.info(f'Fin de la consulta, tiempo de ejecucion {(datetime.now()-start).strftime("%H:%M:%S")}')
+        logging.info('Fin de la consulta, tiempo de ejecucion {:.2f} seg'.format((datetime.now()-start).total_seconds()))
         store = Store()
         ids = products.values_list('sku', flat=True)
         total = products.count()
@@ -28,7 +28,7 @@ class Command(BaseCommand):
 
         posts_active = list()
         for product in results:
-            if product['body']['status'] == 'active':
+            elif product['body']['status'] == 'active':
                 posts_active.append(product['body']['id'])
 
         Product.objects.filter(sku__in=posts['active']).update(
