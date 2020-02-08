@@ -1,11 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 
 from store.store import Store
-from store.models import Seller, BusinessModel
 from store.products.models import Product
 from meli_sdk.models import BulkCreateManager
 import logging
-from math import ceil
+from collections import defaultdict
 
 
 class Command(BaseCommand):
@@ -26,31 +25,44 @@ class Command(BaseCommand):
             [path]*len(params),
             params
         )
-        
-        posts_deleted = list()
-        posts_active = list()
-        posts_paused = list()
+        posts = defaultdict(list)
         for product in results:
             if product['code'] == 200:
                 if product['body']['status'] == 'closed':
-                    posts_deleted.append(product['body']['id'])
+                    posts['deleted'].append(product['body']['id'])
                 elif product['body']['status'] == 'active':
-                    posts_active.append(product['body']['id'])
+                    posts['active'].append(product['body']['id'])
                 elif product['body']['status'] == 'paused':
-                    posts_paused.append(product['body']['id'])
+                    posts['paused'].append(product['body']['id'])
+                elif product['body']['status'] == 'under_review':
+                    posts['under_review'].append(product['body']['id'])
+                elif product['body']['status'] == 'inactive':
+                    posts['inactive'].append(product['body']['id'])
             else:
                 logging.info(product)
 
-        Product.objects.filter(sku__in=posts_deleted).update(
+        logging.info(f'{len(posts['deleted'])} Productos eliminados recientemente.')
+        Product.objects.filter(sku__in=posts['deleted']).update(
             status=Product.CLOSED,
             modifiable=False
         )
 
-        Product.objects.filter(sku__in=posts_active).update(
+        logging.info(f'{len(posts['active'])} Productos activos.')
+        Product.objects.filter(sku__in=posts['active']).update(
             status=Product.ACTIVE
         )
-        Product.objects.filter(sku__in=posts_active).update(
+
+        logging.info(f'{len(posts['paused'])} Productos pausados.')
+        Product.objects.filter(sku__in=posts['paused']).update(
             status=Product.PAUSED
         )
-        logging.info(f'{len(posts_deleted)} Productos Eliminados.\
- {len(posts_active)} Productos Activos. {len(posts_paused)} Pausados')
+
+        logging.info(f'{len(posts['under_review'])} Productos bajo revision de ML.')
+        Product.objects.filter(sku__in=posts['under_review']).update(
+            status=Product.UNDER_REVIEW
+        )
+
+        logging.info(f'{len(posts['inactive'])} Productos inactivos por revision de ML.')
+        Product.objects.filter(sku__in=posts['inactive']).update(
+            status=Product.UNDER_REVIEW
+        )
