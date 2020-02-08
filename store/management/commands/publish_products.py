@@ -29,11 +29,11 @@ class Command(BaseCommand):
         posts_active = list()
         for product in results:
             if product.get('status') == 'active':
-                posts_active.append(product['body']['id'])
+                posts_active.append(product['id'])
             else:
                 logging.warning(f'Producto no actualizado: {product}')
 
-        Product.objects.filter(sku__in=posts['active']).update(
+        Product.objects.filter(sku__in=posts_active).update(
             status=Product.ACTIVE
         )
         logging.info(f"{len(posts_active)} Productos activados.")
