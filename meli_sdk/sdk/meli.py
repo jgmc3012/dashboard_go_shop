@@ -293,7 +293,10 @@ class Meli(object):
             results = executor.map(self.put, paths,body, params, extra_headers)        
         response = list()
         for result in results:
-            response.append(result)
+            if type(result) == list:
+                response += result
+            else:
+                response.append(result) 
         return response
 
     def search_items(self, ids_list, path, params=dict(), extra_headers=None):
@@ -319,7 +322,7 @@ class Meli(object):
         if not extra_headers:
             extra_headers = [extra_headers]*len(ids_list)
 
-        self.map_pool_put(
+        return self.map_pool_put(
             paths,
             bodys,
             [params]*len(ids_list),
