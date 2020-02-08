@@ -28,7 +28,7 @@ class Command(BaseCommand):
 
         posts_active = list()
         for product in results:
-            elif product['body']['status'] == 'active':
+            if product['body']['status'] == 'active':
                 posts_active.append(product['body']['id'])
 
         Product.objects.filter(sku__in=posts['active']).update(
