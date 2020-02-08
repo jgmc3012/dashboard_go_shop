@@ -9,6 +9,56 @@
 {% endblock %}
 
 {% block content_seccion %}
+    <div class='panel'>
+        <div class="row">
+            <h1 class="ml-2 font-weight-bold text-primary">Ordenes</h1>
+        </div>
+        <div class="row mb-1 p-2 bg-gray-300 rounded shadow">
+            <div class="col-3 input-group">
+            <select id='select_state_order' name="state_order" class="form-control custom-select shadow small">
+                <option
+                {% if selected == -1 %}
+                    selected
+                {% endif %}
+                value="-1"
+                >Todos</option>
+                {% for value, name in status_orders %}
+                <option
+                    {% if selected == value %}
+                    selected
+                    {% endif %}
+                    value="{{ value }}"
+                >{{ name }}</option>
+                {% endfor %}
+            </select>
+            <div class="input-group-append">
+            </div>
+            </div>
+            <div class="d-none d-sm-inline-block form-inline ml-auto my-2 my-md-0 mw-100 navbar-search">
+                <div class="input-group">
+                <input type="text" class="form-control bg-white shadow border-1 small" placeholder="Buscar por N° Pendido" aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-2">
+            <h4>Estado</h4>
+        </div>
+        <div class="col-7">
+            <h4>Producto</h4>
+        </div>
+        <div class="col-2">
+            <h4>Comprador</h4>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <ul class="list-group">
             {% for order in orders %}
