@@ -1,11 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
-from datetime import timedelta 
+from django.contrib.auth import authenticate
 
-from store.orders.models import Order, Buyer, Product
+from datetime import timedelta 
+import logging
+
+from store.orders.models import Order, Buyer, Product, Invoice, Pay, New
 from store.store import Store
 from dollar_for_life.models import History
-import logging
 from store.views import get_or_create_buyer
 
 class Command(BaseCommand):
@@ -26,6 +28,7 @@ class Command(BaseCommand):
         orders_api_draw = store.get(path, params, auth=True)
         orders_api = orders_api_draw.get('results')
         for order_draw in orders_api:
+            news_draw = list()
             offer_id = order_draw.get('id')
             buyer_api = order_draw.get('buyer')
 
@@ -41,7 +44,8 @@ class Command(BaseCommand):
             sku = product_api.get('item').get('id')
             product = Product.objects.filter(sku=sku).first()
             if not product:
-                msg = f'El producto con sku={sku} no se encuentra en nuestra base de datos y fue orfertado bajo el pedido {offer_id} del comprador buyer_api'
+                msg = f'El producto con sku={sku} no se encuentra en nuestra \
+base de datos y fue orfertado bajo el pedido {offer_id} del comprador {buyer_api}'
                 # LEVANTAR NOVEDAD
                 logging.warning(msg)
                 continue
@@ -50,20 +54,32 @@ class Command(BaseCommand):
             if product.sale_price*USD.rate > product_api.get('unit_price'):
                 # LEVANTAR NOVEDAD
                 msg = f'El precio acortado por el producto con sku={sku} no es rentable.'
+                news_draw.append(msg)
                 logging.warning(msg)
 
             res = store.verify_existence(product)
             if not res.get('ok'):
                 # LEVANTAR NOVEDAD
-                msg =  f'El producto con sku={sku} ha esta agotado'
+                msg =  f'El producto con sku={sku} esta agotado'
+                news_draw.append(msg)
                 logging.warning(msg)
-            
+
             order = Order.objects.filter(store_order_id=offer_id)
             if order:
                 break
+
+            pay = Pay.objects.create(amount=float(product_api['unit_price']))
+            invoice = Invoice.objects.create(pay=pay)
             order = Order.objects.create(
                 store_order_id=offer_id,
                 product=product,
                 quantity=quantity,
-                buyer=buyer
+                buyer=buyer,
+                invoice=invoice
             )
+            for msg in news_draw:
+                New.objects.create(
+                    user=store.attentive_user,
+                    msg=msg
+                    order=order
+                )
