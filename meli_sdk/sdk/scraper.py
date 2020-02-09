@@ -20,7 +20,11 @@ class Scraper(Meli):
         params = {
             'seller_id' : seller_id
         }
-        result = self.get(path, params)
+        result = await self.request(
+            request_type='get',
+            path=path,
+            params=params
+        )
         if not result:
             return []
         total = result['paging']['total'] if result['paging']['total'] <= 1000 else 1000
@@ -28,24 +32,27 @@ class Scraper(Meli):
         seller_draw = result['seller']
         products_draw = result['results']
 
-        list_params = [{
-            'seller_id' : seller_id,
-            'offset' : offset,
-            'limit':50,
-            'attributes': 'results'
-        }for offset in range(limit,total,limit)]
-        products_api = self.map_pool_get(
-            paths=[path]*len(list_params),
-            params=list_params
-        )
+        coros = [self.request(
+            request_type='get',
+            path=path,
+            params={
+                'seller_id' : seller_id,
+                'offset' : offset,
+                'limit':50,
+                'attributes': 'results'
+            })for offset in range(limit,total,limit)]
+        
+        products_api = await self.pool_requests(coros, f'scan_seller_{seller_id}')
+
         for product in products_api:
             products_draw += product['results']
 
         seller = Seller.objects.get(
             id=seller_draw['id'])
 
-        seller.nickname = seller_draw['nickname']
-        seller.save()
+        if not seller.nickname:
+            seller.nickname = seller_draw['nickname']
+            seller.save()
 
         categories = ScraperCategory()
 

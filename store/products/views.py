@@ -41,7 +41,7 @@ def filter_bad_products():
             if match:
                 msg = f'{product.provider_sku}:{product}. Contiene palabras prohibidas. {match.group()}'
             else:
-                msg = f'{product.provider_sku}:{product}. Es del vendedor {product.seller.id} que esta en la lista de malos vendedores.'
+                msg = f'{product.provider_sku}:{product}. {product.seller} que esta en la lista de malos vendedores.'
             logging.warning(msg)
             product.available = False
             bulk_mgr.update(product, {'available'})
