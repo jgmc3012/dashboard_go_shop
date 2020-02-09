@@ -47,3 +47,20 @@ def filter_bad_products():
             bulk_mgr.update(product, {'available'})
     
     bulk_mgr.done()
+
+    products_stop = Product.objects.filter(status=Product.ACTIVE, available=False)
+    results = store.publications_pauser(products_stop.values_list('sku',flat=True))
+
+    posts_stop = list()
+    for product in results:
+        if product.get('status') == 'paused':
+            posts_stop.append(product['id'])
+        else:
+            logging.warning(f'Producto no actualizado: {product}')
+
+    Product.objects.filter(sku__in=posts_stop).update(
+        status=Product.PAUSED,
+        no_problem=False,
+    )
+    logging.info(f"{len(posts_stop)} Productos pausados.")
+    
