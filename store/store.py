@@ -137,7 +137,7 @@ class Store(Meli):
         body = {
             'status':'paused'
         }
-        self.update_items(
+        return self.update_items(
             ids_list=ids_publications,
             bodys=[body]*len(ids_publications)
         )
