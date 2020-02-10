@@ -18,13 +18,17 @@ from decouple import config
 
 class Meli(object):
     def __init__(self, seller_id=None):
+        if seller_id:
+            self.SELLER_ID = seller_id
+        else:
+            self.SELLER_ID = config('MELI_ME_ID')
         self.client_secret = config('MELI_SECRET_KEY')
         self.client_id = config('MELI_APP_ID')
         self.limit_ids_per_request = 20
         self.max_workers = 5
         self.seller_id = seller_id
         try:
-            self.token = Token.objects.get(seller_id=seller_id)
+            self.token = Token.objects.get(seller_id=self.SELLER_ID)
         except Token.DoesNotExist:
             self.token = None
 

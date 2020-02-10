@@ -4,12 +4,28 @@ from django.utils import timezone
 
 class Category(models.Model):
     id = models.PositiveIntegerField(
-        help_text="Identificador unico de la categoria en mercadolibre sin el prefijo MLV",
+        help_text="Identificador unico de la categoria en mercadolibre sin el prefijo MLV,MCO,MCL,etc",
         primary_key=True
     )
-    father = models.PositiveIntegerField()
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="category_parent"
+    )
     approved = models.BooleanField(default=False)
     name = models.CharField(max_length=60)
+    bad_category = models.BooleanField(default=False)
+    root = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="category_root"
+    )
+    leaf = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.id}:{self.name}'
 
 class Product(models.Model):
     PAUSED = 0
