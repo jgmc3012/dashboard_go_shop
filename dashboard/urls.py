@@ -11,4 +11,5 @@ urlpatterns = [
     path('mensajes', views.mensajes, name='dashboard.mensajes'),
     path('correccion', views.correccion, name='dashboard.correccion'),
     path('editar', views.editar, name='dashboard.editar'),
-]
+    path('perfil', views.perfil, name='dashboard.perfil'),
+] 

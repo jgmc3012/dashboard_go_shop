@@ -61,3 +61,7 @@ def correccion(request):
 def editar(request):
     return render(request,'dashboard/dashboard.editar.html')
 
+@login_required
+def perfil(request):
+    return render(request,'dashboard/dashboard.perfil.html')
+
