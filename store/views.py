@@ -53,11 +53,13 @@ def get_or_create_buyer(buyer_id:int, buyer_draw=dict()):
         if len(phone) > 5:
             phone = int(phone)
 
-        buyer.nickname=buyer_draw.get('nickname')
-        buyer.phone=phone
-        buyer.first_name=buyer_draw.get('first_name')
-        buyer.last_name=buyer_draw.get('last_name')
-        buyer.save()
+        buyer = Buyer.objects.create(
+            id=buyer_id,
+            nickname=buyer_draw.get('nickname'),
+            phone=phone,
+            first_name=buyer_draw.get('first_name'),
+            last_name=buyer_draw.get('last_name'),
+        )
 
     logging.info(f'Comprador Actualizado/Registrado: {buyer}')
 

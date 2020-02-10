@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         store = Store()
-        now = timezone.localtime()
+        now = timezone.now()
         last_hour = now - timedelta(hours=1)
         params = {
             'seller': store.SELLER_ID,
@@ -79,6 +79,6 @@ base de datos y fue orfertado bajo el pedido {offer_id} del comprador {buyer_api
             for msg in news_draw:
                 New.objects.create(
                     user=store.attentive_user,
-                    message=msg
+                    message=msg,
                     order=order
                 )
