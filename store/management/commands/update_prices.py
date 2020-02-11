@@ -14,7 +14,7 @@ class Command(BaseCommand):
         BM = BusinessModel.objects.get(pk=store.SELLER_ID)
         price_usd = USD.rate + BM.usd_variation
 
-        products = Product.objects.exclude(sku=None,available=True)
+        products = Product.objects.filter(available=True).exclude(sku=None)
 
         ids = list()
         bodys= list()
