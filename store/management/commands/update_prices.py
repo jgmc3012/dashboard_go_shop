@@ -14,14 +14,15 @@ class Command(BaseCommand):
         BM = BusinessModel.objects.get(pk=store.SELLER_ID)
         price_usd = USD.rate + BM.usd_variation
 
-        products = Product.objects.exclude(sku=None).exclude(sale_price=0).exclude(status=Product.CLOSED)
+        products = Product.objects.exclude(sku=None,available=True)
 
         ids = list()
         bodys= list()
         for product in products:
             ids.append(product.sku)
             bodys.append({
-            'price': product.sale_price*price_usd
+                'price': product.sale_price*price_usd,
+                'available_quantity': 5 if product.quantity > 5 else product.quantity,
             })
 
         store.update_items(ids,bodys)
