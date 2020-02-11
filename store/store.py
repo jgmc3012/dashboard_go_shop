@@ -23,11 +23,7 @@ class Store(Meli):
     queues = []
 
     def __init__(self, seller_id=None):
-        if seller_id:
-            self.SELLER_ID = seller_id
-        else:
-            self.SELLER_ID = config('MELI_ME_ID')
-        super().__init__(self.SELLER_ID)
+        super().__init__(seller_id)
         words = BadWord.objects.all().values_list('word', flat=True)
         words = [ f'(\A|\s){word.upper()}(S|ES)?(\s|$)' for word in words]
         self.pattern_bad_words = '|'.join(words)
