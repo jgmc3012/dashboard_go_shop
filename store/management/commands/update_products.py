@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = 'Publica nuevos producto en las cuenta de mercado libre'
 
     def handle(self, *args, **options):
-        products = Product.objects.filter(available=True)
+        products = list(Product.objects.filter(available=True).values_list('provider_sku',flat=True))
         scraper = Scraper()
         total = products.count()
         for lap, _products in enumerate(scraper.chunks(products, 200)):

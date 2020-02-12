@@ -229,9 +229,9 @@ class Scraper(Meli):
                 bulk_mgr.add(picture)
         bulk_mgr.done()
 
-    def update_products(self, products):
-        logging.info(f'Actualizando {len(products)} productos. \n')
-        list_ids = products.values_list('provider_sku', flat=True)
+    def update_products(self, list_ids):
+        logging.info(f'Actualizando {len(list_ids)} productos. \n')
+        products = Product.objects.filter(provider_sku__in=list_ids)
         path = '/items'
         params = [{
             'ids': ids,
