@@ -16,8 +16,8 @@ class Command(BaseCommand):
         scraper = Scraper()
         category_id = options['category_id']
         if category_id:
-            category = Category.objects.filter(root=int(category_id)).first()
-            if category:
+            categories = Category.objects.filter(root=int(category_id))
+            for category in categories:
                 scraper.scan_for_category(category)
             else:
                 logging.info('Categria invalida')
