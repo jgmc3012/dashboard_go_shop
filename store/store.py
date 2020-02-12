@@ -158,15 +158,6 @@ class Store(Meli):
                 'data': product
             }
 
-        if re.search(self.pattern_bad_words, product.title.upper()):
-            msg = f'{product.title} no publicado. Contiene palabras prohibidas.'
-            logging.warning(msg)
-            product.available = False
-            product.save()
-            return {
-                'ok': False,
-                'msg': msg
-            }
         USD = History.objects.order_by('-datetime').first()
         BM = BusinessModel.objects.get(pk=self.SELLER_ID)
         price_usd = USD.rate + BM.usd_variation

@@ -21,7 +21,7 @@ class Command(BaseCommand):
 
         start = datetime.now()
         logging.info('Consultando la base de datos')
-        products = Product.objects.filter(sku=None,quantity__gt=0,available=1)
+        products = Product.objects.filter(sku=None,quantity__gt=0,available=True)[:11000]
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
         store = Store()
@@ -29,5 +29,5 @@ class Command(BaseCommand):
         slices = 100
         for lap, _products in enumerate(chunks(products, slices)):
             logging.info(f'PUBLICACIONES {(lap+1)*100}/{total}')
-            with ThreadPoolExecutor(max_workers=5) as executor:
+            with ThreadPoolExecutor(max_workers=8) as executor:
                 executor.map(store.publish, _products)

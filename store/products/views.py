@@ -32,7 +32,7 @@ def get_url_provider(request, sku):
 def filter_bad_products():
     bulk_mgr = BulkCreateManager()
 
-    products = Product.objects.filter(available=True).select_related('seller')
+    products = Product.objects.filter(available=True).exclude(no_problem=True).select_related('seller')
 
     store = Store()
     for product in products:
@@ -63,4 +63,3 @@ def filter_bad_products():
         no_problem=False,
     )
     logging.info(f"{len(posts_stop)} Productos pausados.")
-    
