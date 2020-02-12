@@ -21,7 +21,11 @@ class Command(BaseCommand):
 
         start = datetime.now()
         logging.info('Consultando la base de datos')
-        products = Product.objects.filter(sku=None,quantity__gt=0,available=True).select_related('category')[:11000]
+        products = Product.objects.filter(
+            sku=None,
+            quantity__gt=0,
+            available=True,
+            category__leaf=True).select_related('category')[:11000]
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
         store = Store()
