@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         products = list(Product.objects.filter(available=True).values_list('provider_sku',flat=True))
         scraper = Scraper()
-        total = products.count()
+        total = len(products)
         for lap, _products in enumerate(scraper.chunks(products, 200)):
             logging.info(f'PUBLICACIONES {(lap+1)*200}/{total}')
             scraper.update_products(_products)
