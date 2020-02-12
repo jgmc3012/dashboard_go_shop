@@ -366,6 +366,13 @@ class ScraperCategory(Meli):
             if int(father[3:]) != int(id[3:]):
                 self.update(father)
             self._set_array(id,father,name)
+    
+    def category_test_approved(self, category):
+        result = self.get(f'{self.category_path}/MLV{category.id}')
+        if result.get('id') and (result.get('name') == category.name):
+            category.approved=True
+            category.save()
+            logging.info(f'{category} Disponible en VZLA')
 
 class ScraperSeller(Meli):
     
