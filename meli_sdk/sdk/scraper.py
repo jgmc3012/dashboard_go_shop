@@ -142,7 +142,7 @@ class Scraper(Meli):
             products_draw += product['results']
 
         BM = BusinessModel.objects.get(pk=self.store.SELLER_ID)
-        bulk_mgr = BulkCreateManager()
+        bulk_mgr = BulkCreateManager(200)
 
         ids_products = list()
         sellers = ScraperSeller()
@@ -200,7 +200,7 @@ class Scraper(Meli):
         if product_with_img:
             products = products.exclude(id__in=product_with_img)
 
-        bulk_mgr = BulkCreateManager()
+        bulk_mgr = BulkCreateManager(250)
         for product in products:
             sku = product.provider_sku
             if not products_draw[sku].get('body'):
