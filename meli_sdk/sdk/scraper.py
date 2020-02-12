@@ -183,6 +183,56 @@ class Scraper(Meli):
         bulk_mgr.done()
         return self.scan_product(ids_products)
 
+    def new_product(self,id:str):
+        id = id.replace('-','')
+        logging.info(f'Scrapeando un productos')
+        product_ = self.get(
+            path=f'/items/{id}'
+        )
+
+        BM = BusinessModel.objects.get(pk=self.store.SELLER_ID)
+        bulk_mgr = BulkCreateManager(200)
+
+        sellers = ScraperSeller()
+        bad_sellers = Seller.objects.filter(bad_seller=True).values_list('id',flat=True)
+        seller_id = int(product_['seller']['id'])
+        categories = ScraperCategory()
+        category_id = int(product_['category_id'][3:])
+
+        if seller_id in bad_sellers:
+            return
+        elif seller_id not in sellers.ids:
+            sellers.update(seller_id)
+        elif (not category_id in categories.ids):
+            categories.update(product_['category_id'])
+
+        cost_price = ceil(product_['price']/BM.trm)
+        sales_cost = ceil( (cost_price+BM.shipping_vzla)*(1+BM.meli_tax/100)*(1+BM.utility/100))
+        product = Product.objects.filter(provider_sku=product_['id']).first()
+        if not product:
+            product = Product.objects.create(
+                seller=sellers.array[seller_id],
+                title=product_['title'],
+                cost_price=cost_price,
+                sale_price= sales_cost,
+                provider_sku=product_['id'],
+                provider_link=product_['permalink'],
+                image=product_['thumbnail'].replace('http','https'),
+                category = categories[category_id],
+                quantity=product_['available_quantity']
+            )
+            for _attribute in product_['attributes']:
+                if _attribute['value_name'] and (350 < len(_attribute['value_name'])):
+                    bulk_mgr.add(Attribute(
+                        id_meli=_attribute['id'],
+                        value=_attribute['value_name'],
+                        value_id=_attribute.get('value_id'),
+                        product=product
+                    ))
+
+        bulk_mgr.done()
+        return self.scan_product([id])
+
     def scan_product(self, list_ids):
         path = '/items'
         params = [{
@@ -235,13 +285,12 @@ class Scraper(Meli):
         path = '/items'
         params = [{
             'ids': ids,
-            'attributes': 'id,price,initial_quantity,status',
+            'attributes': 'id,price,initial_quantity,status,currency_id',
         } for ids in self.split_ids(list_ids)]
         results = self.map_pool_get(
             [path]*len(params),
             params
         )
-
         products_draw = {product['body']['id']:product['body'] for product in results if product.get('body')}
         BM = BusinessModel.objects.get(pk=self.store.SELLER_ID)
         bulk_mgr = BulkCreateManager()
@@ -253,11 +302,14 @@ class Scraper(Meli):
                     continue
                 if not products_draw[id]['status'] == 'active':
                     products_draw[id]['initial_quantity']=0
-                logging.info(f"{product.sku}: quantity: {product.quantity} \
+                logging.info(f"{product}: quantity: {product.quantity} \
 -> {products_draw[id]['initial_quantity']}")
                 product.quantity = products_draw[id]['initial_quantity']
-                cost_price = ceil(products_draw[id]['price']/BM.trm)
-                sale_cost = ceil( (cost_price+BM.shipping_vzla)*(1+BM.meli_tax/100)*(1+BM.utility/100) )
+                if products_draw[id]['currency_id'] == 'USD':
+                    cost_price = ceil(products_draw[id]['price'])
+                else:
+                    cost_price = ceil(products_draw[id]['price']/BM.trm)
+                sale_cost = ceil( (cost_price+BM.shipping_vzla)*(1+BM.meli_tax/100)*(1+BM.utility/100))
                 product.cost_price = cost_price
                 product.sale_price = sale_cost
                 product.last_update = timezone.localtime()
