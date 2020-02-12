@@ -181,7 +181,7 @@ class Store(Meli):
         else:
             category = self.predict_category(
                 title=f'{product.title} {product.category.name}',
-                category_from=f'MLV{product.category.id}',
+                category_from=f'MLV{product.category.root.id}',
                 price=product.sale_price*price_usd
             )
         pattern = r'[\w/,]?\d+[\w/,]?'
