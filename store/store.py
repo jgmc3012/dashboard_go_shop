@@ -30,7 +30,7 @@ class Store(Meli):
         self._attentive_user = None
 
     @property
-    def attentive_user():
+    def attentive_user(self):
         if not self._attentive_user:
             username = config('ATTENTIVE_USER_NICK')
             password = config('ATTENTIVE_USER_PASS')
