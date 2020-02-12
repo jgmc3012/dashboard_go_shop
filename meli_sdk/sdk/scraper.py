@@ -234,7 +234,7 @@ class Scraper(Meli):
         path = '/items'
         params = [{
             'ids': ids,
-            'attributes': 'id,price,initial_quantity',
+            'attributes': 'id,price,initial_quantity,status',
         } for ids in self.split_ids(list_ids)]
         results = self.map_pool_get(
             [path]*len(params),
@@ -250,6 +250,8 @@ class Scraper(Meli):
                 if not products_draw[id].get('initial_quantity'):
                     logging.warning(f'Producto {id} NO ACTUALIZADO')
                     continue
+                if not products_draw[id]['status'] == 'active':
+                    products_draw[id]['initial_quantity']=0
                 logging.info(f"{product.sku}: quantity: {product.quantity} \
 -> {products_draw[id]['initial_quantity']}")
                 product.quantity = products_draw[id]['initial_quantity']
