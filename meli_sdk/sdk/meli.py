@@ -277,12 +277,13 @@ class Meli(object):
 
         return ids_list
 
-    def map_pool_get(self, paths:list, params=None, extra_headers=None):
+    def map_pool_get(self, paths:list, params=None, extra_headers=None, auths=False):
         extra_headers = extra_headers if extra_headers else [extra_headers]*len(paths)
         params = params if params else [params]*len(paths)
+        auths = auths if auths else [auths]*len(paths)
         logging.info(f'Se estan realizando {len(paths)} peticiones.')
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            results = executor.map(self.get, paths, params, extra_headers)
+            results = executor.map(self.get, paths, params, extra_headers, auths)
         response = list()
         for result in results:
             if type(result) == list:

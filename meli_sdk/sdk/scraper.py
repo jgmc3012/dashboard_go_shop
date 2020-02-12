@@ -93,8 +93,7 @@ class Scraper(Meli):
                             product=product
                         ))
         bulk_mgr.done()
-
-        return ids_products
+        return self.scan_product(ids_products)
 
     def scan_for_category(self, category):
         params = {
@@ -109,7 +108,7 @@ class Scraper(Meli):
         }
 
         result_draw = self.get(
-            path,
+            self.path,
             params
         )
 
@@ -135,7 +134,8 @@ class Scraper(Meli):
         logging.info(f'Scrapeando {total} productos')
         products_api = self.map_pool_get(
             paths=[self.path]*len(list_params),
-            params=list_params
+            params=list_params,
+            auths=[True]*len(list_params)
         )
 
         for product in products_api:
@@ -145,6 +145,7 @@ class Scraper(Meli):
         bulk_mgr = BulkCreateManager()
 
         ids_products = list()
+        products= list()
         sellers = ScraperSeller()
         bad_sellers = Seller.objects.filter(bad_seller=True).values_list('id',flat=True)
         for product_ in products_draw:
@@ -156,20 +157,19 @@ class Scraper(Meli):
 
             cost_price = ceil(product_['price']/BM.trm)
             sales_cost = ceil( (cost_price+BM.shipping_vzla)*(1+BM.meli_tax/100)*(1+BM.utility/100))
-            product = Product.objects.get_or_create(
-                seller=sellers.array[seller_id],
-                title=product_['title'],
-                cost_price=cost_price,
-                sale_price= sales_cost,
-                provider_sku=product_['id'],
-                provider_link=product_['permalink'],
-                image=product_['thumbnail'].replace('http','https'),
-                category = category,
-                quantity=product_['initial_quantity']
-            )
-            if product[1]:
-                product = product[0]
-                ids_products.append(product_['id'])
+            product = Product.objects.filter(provider_sku=product_['id']).first()
+            if not product:
+                product = Product.objects.create(
+                    seller=sellers.array[seller_id],
+                    title=product_['title'],
+                    cost_price=cost_price,
+                    sale_price= sales_cost,
+                    provider_sku=product_['id'],
+                    provider_link=product_['permalink'],
+                    image=product_['thumbnail'].replace('http','https'),
+                    category = category,
+                    quantity=product_['available_quantity']
+                )
                 for _attribute in product_['attributes']:
                     if _attribute['value_name']:
                         bulk_mgr.add(Attribute(
@@ -178,22 +178,26 @@ class Scraper(Meli):
                             value_id=_attribute.get('value_id'),
                             product=product
                         ))
-        bulk_mgr.done()
-        return ids_products
+            ids_products.append(product_['id'])
+            products.append(product)
 
-    def scan_product(self, list_ids):
+        bulk_mgr.done()
+        return self.scan_product(ids_products, products)
+
+    def scan_product(self, list_ids, products=None):
         path = '/items'
         params = [{
             'ids': ids,
             'attributes': 'id,pictures,sale_terms',
         } for ids in self.split_ids(list_ids)]
-        result_draw = self.map_pool_get(
+        results = self.map_pool_get(
             [path]*len(params),
             params
         )
 
         products_draw = {product['body']['id']:product for product in results}
-        products = Product.objects.filter(provider_sku__in=products_draw.keys())
+        if not products:
+            products = Product.objects.filter(provider_sku__in=products_draw.keys())
 
         bulk_mgr = BulkCreateManager()
         for product in products:
@@ -204,18 +208,18 @@ class Scraper(Meli):
             elif not products_draw[sku]['body'].get('pictures'):
                 logging.warning(f'Al producto {product} no se le encontraron imagenes')
                 continue
-            elif product['sale_terms']:
-                for sale_term in product['sale_terms']:
+            elif products_draw[sku]['body']['sale_terms']:
+                for sale_term in products_draw[sku]['body']['sale_terms']:
                     timeout = (sale_term['id'] == 'MANUFACTURING_TIME')
                     if timeout:
-                        logging.warning(f'Producto {product} con terminos de entrega, {sale_term['value_name']}')
+                        logging.warning(f"Producto {product} con terminos de entrega, {sale_term['value_name']}")
                         break
                 if timeout:
                     continue
 
             for image in products_draw[sku]['body']['pictures']:
                 if 'resources/frontend/statics/processing' in image['secure_url']:
-                    logging.warning('Imagen Procesando por Meli')
+                    logging.warning('Imagen [Procesando por Meli]')
                     continue
                 picture = Picture(
                     src=image['secure_url'],
@@ -373,7 +377,7 @@ class ScraperSeller(Meli):
             sellers = Seller.objects.all()
             for seller in sellers:
                 self._sellers[seller.id] = seller
-            self._ids = sellers.values_list('id', flat=True)
+            self._ids = list(sellers.values_list('id', flat=True))
         return self._ids
 
     @property
@@ -382,16 +386,16 @@ class ScraperSeller(Meli):
             sellers = Seller.objects.all()
             for seller in sellers:
                 self._sellers[seller.id] = seller
-            self._ids = sellers.values_list('id', flat=True)
-        return self._categories
+            self._ids = list(sellers.values_list('id', flat=True))
+        return self._sellers
 
     def set_array(self, seller_id,seller_nickname):
         if not seller_id in self.ids:
-            self._categories[id] = Seller.objects.create(
+            self._sellers[seller_id] = Seller.objects.create(
                 id=seller_id,
                 nickname=seller_nickname
             )
-            self._ids.append(id)
+            self._ids.append(seller_id)
 
     def update(self, id:int):
         if not id in self.ids:
