@@ -3,6 +3,8 @@ from django.core.management.base import BaseCommand, CommandError
 from store.products.models import Product
 from meli_sdk.sdk.scraper import Scraper
 
+import logging
+
 class Command(BaseCommand):
     help = 'Publica nuevos producto en las cuenta de mercado libre'
 
