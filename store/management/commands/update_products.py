@@ -11,5 +11,5 @@ class Command(BaseCommand):
         scraper = Scraper()
         total = products.count()
         for lap, _products in enumerate(scraper.chunks(products, 200)):
-            logging.info(f'PUBLICACIONES {(lap+1)*100}/{total}')
+            logging.info(f'PUBLICACIONES {(lap+1)*200}/{total}')
             scraper.update_products(_products)
