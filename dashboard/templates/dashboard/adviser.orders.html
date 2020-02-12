@@ -9,6 +9,56 @@
 {% endblock %}
 
 {% block content_seccion %}
+    <div class='panel'>
+        <div class="row">
+            <h1 class="ml-2 font-weight-bold text-primary">Ordenes</h1>
+        </div>
+        <div class="row mb-1 p-2 bg-gray-300 rounded shadow">
+            <div class="col-3 input-group">
+            <select id='select_state_order' name="state_order" class="form-control custom-select shadow small">
+                <option
+                {% if selected == -1 %}
+                    selected
+                {% endif %}
+                value="-1"
+                >Todos</option>
+                {% for value, name in status_orders %}
+                <option
+                    {% if selected == value %}
+                    selected
+                    {% endif %}
+                    value="{{ value }}"
+                >{{ name }}</option>
+                {% endfor %}
+            </select>
+            <div class="input-group-append">
+            </div>
+            </div>
+            <div class="d-none d-sm-inline-block form-inline ml-auto my-2 my-md-0 mw-100 navbar-search">
+                <div class="input-group">
+                <input type="text" class="form-control bg-white shadow border-1 small" placeholder="Buscar por N° Pendido" aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-2">
+            <h4>Estado</h4>
+        </div>
+        <div class="col-7">
+            <h4>Producto</h4>
+        </div>
+        <div class="col-2">
+            <h4>Comprador</h4>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <ul class="list-group">
             {% for order in orders %}
@@ -16,6 +66,7 @@
                 <div class='row'>
                     <!-- Aqui comienza cada item -->
                     <div class='col-2'>
+                        <!-- Datos sobre el estado de la orden -->
                         <div>
                             <div class="row">
                                 <span class="text-black">Estado Actual:</span> 
@@ -40,8 +91,10 @@
                                 data-target="#cancelOrderModal"
                             >Cancelar</div>
                         </div>
+                        <!-- /Datos sobre el estado de la orden -->
                     </div>
                     <div class='col-7'>
+                        <!-- Datos del Product -->
                         <h5>{{ order.product.title }}</h5>
                         <div class="d-flex">
                             <div class='flex-fill'>
@@ -85,8 +138,10 @@
                                 >Novedades</div>
                             </div>
                         </div>
+                        <!-- /Datos del Product -->
                     </div>
                     <div class='col-2'>
+                        <!-- Datos del Vendodor -->
                         <div class="row">
                             <span class="text-black">Nombre Completo:</span>
                             <p>{{ order.buyer.first_name }} {{ order.buyer.last_name }}</p>
@@ -100,9 +155,10 @@
                             <p>{{ order.buyer.direction }}</p>
                         </div>
                         <div class="row">
-                            <span class="text-black">Precio de Venta:</span>
-                            <p>{{ order.invoice.pay.amount }}</p>
+                            <span class="text-black">Precio de Venta: </span>
+                            <strong>{{ order.invoice.pay.amount }} Bs</strong>
                         </div>
+                        <!-- / Datos del Vendodor -->
                     </div>
                     <!-- Final de cada item -->
                 </div>
@@ -130,5 +186,4 @@
 
     <script src="{% static 'js/dashboard/search_orders.js' %}"></script>
     <script src="{% static 'js/dashboard/next_state.js' %}"></script>
-    <script src="{% static 'js/dashboard/news.js' %}"></script>
 {% endblock %}

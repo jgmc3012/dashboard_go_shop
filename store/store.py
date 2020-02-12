@@ -1,13 +1,18 @@
-from meli_sdk.sdk.meli import Meli
-from decouple import config
+from django.contrib.auth import authenticate
+
 import math
 import logging
-from .products.models import Product, Picture, Attribute
 import os
 import re
 
+from decouple import config
+
+from meli_sdk.sdk.meli import Meli
+from .products.models import Product, Picture, Attribute
+
 from dollar_for_life.models import History
 from store.models import BusinessModel, BadWord
+
 
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
@@ -18,14 +23,19 @@ class Store(Meli):
     queues = []
 
     def __init__(self, seller_id=None):
-        if seller_id:
-            self.SELLER_ID = seller_id
-        else:
-            self.SELLER_ID = config('MELI_ME_ID')
-        super().__init__(self.SELLER_ID)
+        super().__init__(seller_id)
         words = BadWord.objects.all().values_list('word', flat=True)
         words = [ f'(\A|\s){word.upper()}(S|ES)?(\s|$)' for word in words]
         self.pattern_bad_words = '|'.join(words)
+        self._attentive_user = None
+
+    @property
+    def attentive_user(self):
+        if not self._attentive_user:
+            username = config('ATTENTIVE_USER_NICK')
+            password = config('ATTENTIVE_USER_PASS')
+            self._attentive_user = authenticate(username=username,password=password)
+        return self._attentive_user
 
     def get_inventory_by_api(self)->list:
         """
@@ -123,7 +133,7 @@ class Store(Meli):
         body = {
             'status':'paused'
         }
-        self.update_items(
+        return self.update_items(
             ids_list=ids_publications,
             bodys=[body]*len(ids_publications)
         )
@@ -148,15 +158,6 @@ class Store(Meli):
                 'data': product
             }
 
-        if re.search(self.pattern_bad_words, product.title.upper()):
-            msg = f'{product.title} no publicado. Contiene palabras prohibidas.'
-            logging.warning(msg)
-            product.available = False
-            product.save()
-            return {
-                'ok': False,
-                'msg': msg
-            }
         USD = History.objects.order_by('-datetime').first()
         BM = BusinessModel.objects.get(pk=self.SELLER_ID)
         price_usd = USD.rate + BM.usd_variation
@@ -175,11 +176,14 @@ class Store(Meli):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         with open(f'{dir_path}/templates/goshop.txt') as file:
             description= file.read()
-        category = self.predict_category(
-            title=product.title,
-            category_from=f'MLV{product.category.id}',
-            price=product.sale_price*price_usd
-        )
+        if product.category.approved:
+            category = f'MLV{product.category.id}'
+        else:
+            category = self.predict_category(
+                title=f'{product.title} {product.category.name}',
+                category_from=f'MLV{product.category.root.id}',
+                price=product.sale_price*price_usd
+            )
         pattern = r'[\w/,]?\d+[\w/,]?'
 
         body = {

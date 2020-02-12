@@ -9,6 +9,8 @@ function selectUrl(state, orderId) {
         case 3:
             return `${window.location.origin}/orders/api/provider_deliveries/${orderId}`
             break
+        case 5:
+            return `${window.location.origin}/orders/api/received_package/${orderId}`
         case 6:
             return `${window.location.origin}/orders/api/complete_order/${orderId}`
             break
@@ -68,7 +70,7 @@ const formNextState = (state, orderId ) => {
             window.location = `${window.location.origin}/dashboard/shipping_packages`
             break
         case 5:
-            window.location = `${window.location.origin}/dashboard/received_package`
+            sendData({}, selectUrl(state, orderId), '#stateModal', hideOrder, {orderId})
             break
         case 6: 
             sendData({}, selectUrl(state, orderId), '#stateModal', hideOrder, {orderId})

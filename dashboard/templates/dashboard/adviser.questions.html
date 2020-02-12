@@ -58,9 +58,11 @@
                                     <div class="form-group col-12 mb-1">
                                         <textarea
                                             class="form-control"
-                                            rows="2" name="answer"
+                                            rows="3" name="answer"
                                             api='data-answer-{{question.id}}'
-                                        >Buenas {{question.buyer.nickname}}</textarea>
+                                        >Hola {% if question.buyer.nickname %}{{question.buyer.nickname}}{% endif %}. Mi nombre {{ user.first_name }}.
+
+Esperamos que tengas un buen dia.</textarea>
                                     </div>
                                     <div class="mr-4">
                                         <button class="btn btn-primary" type="submit">

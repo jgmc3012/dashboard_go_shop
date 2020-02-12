@@ -4,12 +4,28 @@ from django.utils import timezone
 
 class Category(models.Model):
     id = models.PositiveIntegerField(
-        help_text="Identificador unico de la categoria en mercadolibre sin el prefijo MLV",
+        help_text="Identificador unico de la categoria en mercadolibre sin el prefijo MLV,MCO,MCL,etc",
         primary_key=True
     )
-    father = models.PositiveIntegerField()
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="category_parent"
+    )
     approved = models.BooleanField(default=False)
     name = models.CharField(max_length=60)
+    bad_category = models.BooleanField(default=False)
+    root = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="category_root"
+    )
+    leaf = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.id}:{self.name}'
 
 class Product(models.Model):
     PAUSED = 0
@@ -27,7 +43,6 @@ class Product(models.Model):
         (PAYMENT_REQUIRED, 'Pago Requerido'),
     ]
 
-
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
     title = models.CharField(max_length=60)
     cost_price = models.FloatField(null=True)
@@ -42,6 +57,7 @@ class Product(models.Model):
     quantity = models.IntegerField()
     last_update = models.DateTimeField(default=timezone.localtime)
     modifiable = models.BooleanField(default=True)
+    no_problem = models.BooleanField(default=False)
     status = models.IntegerField(
         choices=STATUS_CHOICES,
         default=PAUSED
@@ -59,7 +75,7 @@ class Picture(models.Model):
 
 class Attribute(models.Model):
     id_meli = models.CharField(max_length=50)
-    value = models.CharField(max_length=200)
+    value = models.CharField(max_length=350)
     value_id = models.CharField(max_length=50, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 

@@ -20,6 +20,6 @@ class Shipping(models.Model):
     date_send=models.DateTimeField()
     date_completed=models.DateTimeField(null=True)
     amount=models.FloatField(default=0)
-    guide=models.PositiveIntegerField()
+    guide=models.BigIntegerField()
     destination=models.CharField(max_length=250)
     shipper=models.ForeignKey(Shipper, on_delete=models.CASCADE)

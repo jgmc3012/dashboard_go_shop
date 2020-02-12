@@ -18,13 +18,17 @@ from decouple import config
 
 class Meli(object):
     def __init__(self, seller_id=None):
+        if seller_id:
+            self.SELLER_ID = seller_id
+        else:
+            self.SELLER_ID = config('MELI_ME_ID')
         self.client_secret = config('MELI_SECRET_KEY')
         self.client_id = config('MELI_APP_ID')
         self.limit_ids_per_request = 20
         self.max_workers = 5
         self.seller_id = seller_id
         try:
-            self.token = Token.objects.get(seller_id=seller_id)
+            self.token = Token.objects.get(seller_id=self.SELLER_ID)
         except Token.DoesNotExist:
             self.token = None
 
@@ -42,6 +46,10 @@ class Meli(object):
         except:
             self._requests = requests
 
+    def chunks(self, lst, n):
+        """Yield successive n-sized chunks from lst."""
+        for i in range(0, len(lst), n):
+            yield lst[i:i + n]
 
     #AUTH METHODS
     def auth_url(self,redirect_URI=None):
@@ -273,12 +281,13 @@ class Meli(object):
 
         return ids_list
 
-    def map_pool_get(self, paths:list, params=None, extra_headers=None):
+    def map_pool_get(self, paths:list, params=None, extra_headers=None, auths=False):
         extra_headers = extra_headers if extra_headers else [extra_headers]*len(paths)
         params = params if params else [params]*len(paths)
+        auths = auths if auths else [auths]*len(paths)
         logging.info(f'Se estan realizando {len(paths)} peticiones.')
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            results = executor.map(self.get, paths, params, extra_headers)
+            results = executor.map(self.get, paths, params, extra_headers, auths)
         response = list()
         for result in results:
             if type(result) == list:
@@ -293,7 +302,10 @@ class Meli(object):
             results = executor.map(self.put, paths,body, params, extra_headers)        
         response = list()
         for result in results:
-            response.append(result)
+            if type(result) == list:
+                response += result
+            else:
+                response.append(result) 
         return response
 
     def search_items(self, ids_list, path, params=dict(), extra_headers=None):
@@ -319,7 +331,7 @@ class Meli(object):
         if not extra_headers:
             extra_headers = [extra_headers]*len(ids_list)
 
-        self.map_pool_put(
+        return self.map_pool_put(
             paths,
             bodys,
             [params]*len(ids_list),
