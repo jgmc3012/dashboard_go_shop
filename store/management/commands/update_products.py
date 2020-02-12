@@ -8,5 +8,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         products = Product.objects.filter(available=True)
-
-        Scraper().update_products(products)
+        scraper = Scraper()
+        total = products.count()
+        for lap, _products in enumerate(scraper.chunks(products, 200)):
+            logging.info(f'PUBLICACIONES {(lap+1)*100}/{total}')
+            scraper.update_products(_products)
