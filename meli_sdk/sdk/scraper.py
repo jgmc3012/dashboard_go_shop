@@ -242,7 +242,7 @@ class Scraper(Meli):
             params
         )
 
-        products_draw = {product['body']['id']:product['body'] for product in results if results.get('body')}
+        products_draw = {product['body']['id']:product['body'] for product in results if product.get('body')}
         BM = BusinessModel.objects.get(pk=self.store.SELLER_ID)
         bulk_mgr = BulkCreateManager()
         for product in products:
