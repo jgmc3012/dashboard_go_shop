@@ -14,9 +14,6 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="{% url 'dashboard.orders' %}" class="nav-link">Inicio</a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contacto</a>
-      </li>
     </ul>
 
     <!-- SEARCH FORM -->
@@ -188,7 +185,7 @@
           />
         </div>
         <div class="info">
-          <a href="{% url 'dashboard.perfil' %}" class="d-block">{{ user.first_name }} {{ user.last_name }}</a>
+          <a href="{% url 'dashboard.profile' %}" class="d-block">{{ user.first_name }} {{ user.last_name }}</a>
         </div>
       </div>
 

@@ -46,22 +46,22 @@ def show_questions(request):
     return render(request,'dashboard/adviser.questions.html', context)
 
 @login_required
-def reclamos(request):
-    return render(request,'dashboard/dashboard.reclamos.html')
+def claims(request):
+    return render(request,'dashboard/dashboard.claims.html')
 
 @login_required
-def mensajes(request):
-    return render(request,'dashboard/dashboard.mensajes.html')
+def messages(request):
+    return render(request,'dashboard/dashboard.messages.html')
 
 @login_required
-def correccion(request):
-    return render(request,'dashboard/dashboard.correccion.html')
+def corrections(request):
+    return render(request,'dashboard/dashboard.corrections.html')
 
 @login_required
-def editar(request):
-    return render(request,'dashboard/dashboard.editar.html')
+def edit(request):
+    return render(request,'dashboard/dashboard.edit.html')
 
 @login_required
-def perfil(request):
-    return render(request,'dashboard/dashboard.perfil.html')
+def profile(request):
+    return render(request,'dashboard/dashboard.profile.html')
 
