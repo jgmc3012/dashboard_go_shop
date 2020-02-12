@@ -176,11 +176,14 @@ class Store(Meli):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         with open(f'{dir_path}/templates/goshop.txt') as file:
             description= file.read()
-        category = self.predict_category(
-            title=product.title,
-            category_from=f'MLV{product.category.id}',
-            price=product.sale_price*price_usd
-        )
+        if product.category.approved:
+            category = f'MLV{product.category.id}'
+        else:
+            category = self.predict_category(
+                title=f'{product.title} {product.category.name}',
+                category_from=f'MLV{product.category.id}',
+                price=product.sale_price*price_usd
+            )
         pattern = r'[\w/,]?\d+[\w/,]?'
 
         body = {
