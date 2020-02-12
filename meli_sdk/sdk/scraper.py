@@ -145,7 +145,6 @@ class Scraper(Meli):
         bulk_mgr = BulkCreateManager()
 
         ids_products = list()
-        products= list()
         sellers = ScraperSeller()
         bad_sellers = Seller.objects.filter(bad_seller=True).values_list('id',flat=True)
         for product_ in products_draw:
@@ -178,13 +177,13 @@ class Scraper(Meli):
                             value_id=_attribute.get('value_id'),
                             product=product
                         ))
+
             ids_products.append(product_['id'])
-            products.append(product)
 
         bulk_mgr.done()
-        return self.scan_product(ids_products, products)
+        return self.scan_product(ids_products)
 
-    def scan_product(self, list_ids, products=None):
+    def scan_product(self, list_ids):
         path = '/items'
         params = [{
             'ids': ids,
@@ -195,9 +194,11 @@ class Scraper(Meli):
             params
         )
 
-        products_draw = {product['body']['id']:product for product in results}
-        if not products:
-            products = Product.objects.filter(provider_sku__in=products_draw.keys())
+        products_draw = {product['body']['id']:product for product in results if product.get('body')}
+        products = Product.objects.filter(provider_sku__in=products_draw.keys())
+        product_with_img = Picture.objects.filter(product__in=products).values_list('product',flat=True)
+        if product_with_img:
+            products = products.exclude(id__in=product_with_img)
 
         bulk_mgr = BulkCreateManager()
         for product in products:
