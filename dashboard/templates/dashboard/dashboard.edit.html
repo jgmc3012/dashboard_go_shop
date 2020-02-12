@@ -1,0 +1,2216 @@
+{% extends 'dashboard/dashboard.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="wizard">
+
+    <ul class="nav nav-wizard">
+
+
+
+        <li class="active">
+            <a href="#step1" data-toggle="tab" id="menu_step1">1. Publicación</a>
+        </li>
+        <li>
+            <a href="#step2" data-toggle="tab" id="menu_step2">2. Variaciones</a>
+        </li>
+        <li id="finalstep" class="disabled">
+            <a href="#step3" data-toggle="tab" id="menu_step3">3. Resultado</a>
+        </li>
+    </ul>
+
+
+    <div>
+        <div class="tab-content">
+
+
+
+            <!-- START STEP1 -->
+            <div class="tab-pane active" id="step1" style="width:100%;min-width:700px;max-width:1000px">
+
+                <h3>Datos de la publicación</h3>
+                <p>Completa los campos para realizar tu publicación, si bien no todos los campos son obligatorios,
+                    mientras más completa sea tu publicación tendrás mejores resultados</p>
+                <p><strong>* Indica campo obligatorio</strong></p>
+                <p><span class="soon_light">Sugerido</span> <strong>Indica campo sugerido por MercadoLibre para mejorar
+                        la calidad de tu publicación.</strong></p>
+                <hr>
+
+                <hr>
+                <h4>Datos generales</h4><br>
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;display:none">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="El tipo de publicación afecta la exposición de tu publicación en Mercado Libre y también indica la comisión que este cobrará">
+                        <strong>Tipo de publicación*</strong> </div>
+                    <div class="col-sm-9" style="text-align:left">
+                        <div id="select"></div>
+                        <select class="form-control myselect2 select2-hidden-accessible" id="listing_type_id"
+                            tabindex="-1" aria-hidden="true">
+                            <option value="gold_premium">Oro Premium (Exposición: highest) [ Costo por venta: 6% | Costo
+                                por publicar: 5% ] </option>
+                            <option value="gold_special">Premium (Exposición: highest) [ Costo por venta: 11% | Costo
+                                por publicar: 0% ] </option>
+                            <option value="gold">Oro (Exposición: high) [ Costo por venta: 6% | Costo por publicar: 3% ]
+                            </option>
+                            <option value="silver">Plata (Exposición: mid) [ Costo por venta: 6% | Costo por publicar:
+                                1% ] </option>
+                            <option value="bronze">Clásico (Exposición: low) [ Costo por venta: 9% | Costo por publicar:
+                                0% ] </option>
+                        </select>
+                        <span class="select2 select2-container select2-container--default" dir="ltr"
+                            style="width: 100%;">
+                            <span class="selection">
+                                <span class="select2-selection select2-selection--single" role="combobox"aria-haspopup="true" aria-expanded="false" tabindex="0"aria-labelledby="select2-listing_type_id-container">
+                                    <spanclass="select2-selection__rendered" id="select2-listing_type_id-container"title="Premium (Exposición: highest) [ Costo por venta: 11% | Costo por publicar: 0% ] ">
+                                        Premium
+                                                            (Exposición: highest) [ Costo por venta: 11% | Costo por publicar: 0% ]
+                                    </span>
+                                    <span class="select2-selection__arrow" role="presentation"> 
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""data-original-title="Esta es la descripción que se mostrará cuando alguien vea tu publicación. No acepta códigos HTML">
+                        <strong>Descripción de texto plano*</strong> 
+                    </div>
+                    <div class="col-sm-9">
+                        <textarea type="text" class="form-control" id="description_plain_text" style="height:180px;">IMPORTANTE LEER ANTES DE REALIZAR LA COMPRA
+
+TIEMPOS DE ENTREGA VAN DE 5 A 7 DÍAS HÁBILES A CIUDADES PRINCIPALES
+
+El precio del producto es el publicado en Bolívares.
+
+METODOS DE PAGO:
+- Pago movil.
+- Transferencia Banesco.
+
+CONDICIONES DE COMPRA
+
+-Realice todas las preguntas necesarias en el área “Preguntar al vendedor” antes de ofertar, con gusto le aclararemos todas sus dudas.
+-Oferte una vez solo si está 100% seguro de adquirir el producto.
+-Después de ofertar le llegarán a su correo los datos a donde comunicarse vía correo, mensajes de texto o llamada, con un asesor que lo guiará en el proceso de compra.
+-Todos nuestros productos son importados y nuevos en su caja.
+-La garantia tiene una cobertura SOLO POR DEFECTOS DE FÁBRICA. Directamente con el Fabricante.
+-IMPORTANTE ningun tipo de repuestos, ni prendas intimas tiene Garantia.
+-Realizamos envíos a todo el territorio nacional.
+-No realizamos entregas personales.
+
+
+TIEMPOS DE ENTREGA VAN DE 5 A 7 DÍAS HÁBILES A CIUDADES PRINCIPALES</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="Nombre de máximo 60 caracteres que se mostrará en las búsquedas de Mercado Libre. Se aconseja usar el formato: [Nombre]+[Marca]+[Modelo]">
+                        <strong>Título*</strong></div>
+                    <div class="col-sm-9"><input type="text" class="form-control" id="title" style="height:28px;"
+                            value="" maxlength="60"></div>
+                </div>
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;" id="rowprice">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="Precio de tu producto. Los valores decimales se pueden indicar con '.' o ',' de manera equivalente">
+                        <strong>Precio*</strong> </div>
+                    <div class="col-sm-9"><input type="text" class="form-control" id="price" style="height:28px;"
+                            value=""></div>
+                </div>
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;" id="rowquantity">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="Stock del producto, debe ser un valor numérico"> <strong>Cantidad*</strong>
+                    </div>
+                    <div class="col-sm-9"><input type="text" class="form-control" id="available_quantity"
+                            style="height:28px;" value=""></div>
+                </div>
+
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="Estado del producto">Medio de pago</div>
+                    <div class="col-sm-9" style="text-align:left">
+
+                        <select id="immediate_payment" class="form-control myselect2 select2-hidden-accessible"
+                            tabindex="-1" aria-hidden="true">
+
+                            <option value="1">Permitir compras solo con Mercado Pago</option>
+                            <option value="2">Permitir cualquier medio de pago</option>
+                        </select>
+                        <span class="select2-selection__arrow" role="presentation">
+                            <b role="presentation"></b>
+                        </span>
+                    </span>
+                </span>
+                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                </span>
+
+                    </div>
+                </div>
+
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="Si tienes una o más tiendas oficiales en Mercado Libre debes indicar con cual de ellas deseas publicar">
+                        Tienda oficial</div>
+                    <div class="col-sm-9" style="text-align:left">
+                        <select class="form-control myselect2 select2-hidden-accessible" id="official_store_id"
+                            tabindex="-1" aria-hidden="true">
+                            <option value="-1">Sin tienda oficial</option>
+                        </select>                                   
+                        <span class="select2-selection__arrow" role="presentation">
+                        <b role="presentation"></b>
+                    </span>
+                </span>
+            </span>
+            <span class="dropdown-wrapper"aria-hidden="true"></span>
+        </span> 
+    </div>
+                </div>
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""data-original-title="Estado del producto">Condición </div>
+                    <div class="col-sm-9" style="text-align:left">
+                        <select id="condition" class="form-control myselect2 select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                            <option value="new">Nuevo</option>
+                            <option value="used">Usado</option>
+                        </select>
+                        <span class="select2 select2-container select2-container--default" dir="ltr"
+                            style="width: 100%;">
+                            <span class="selection">
+                                        <span class="select2-selection__arrow"
+                                        role="presentation"><b role="presentation"></b></span></span></span><span
+                                class="dropdown-wrapper" aria-hidden="true"></span></span>
+
+                    </div>
+                </div>
+
+
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="El SKU es un código interno tuyo, que tu utilizas para identificar tus productos. Puede ser lo que desees">
+                        SKU </div>
+                    <div class="col-sm-9"><input type="text" class="form-control" id="seller_custom_field"
+                            style="height:28px;" value=""></div>
+                </div>
+
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="Pequeña descripción de la garantía que ofreces en este producto">Garantía
+                    </div>
+                    <div class="col-sm-9">
+                        <textarea type="text" class="form-control" id="warranty" style="height:30px;"> </textarea>
+                    </div>
+                </div>
+
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="Este es un link a un video en Youtube que muestre tu producto. Se mostrará en Mercado Libre junto a las fotos de tu publicación">
+                        Video </div>
+                    <div class="col-sm-9"><input type="text" class="form-control" id="video_id" style="height:28px;"
+                            value=""></div>
+                </div>
+                <!-- <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;" >
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title="Es un número de 8 a 14 dígitos que se encuentra junto al código de barras, en la caja del producto, o en su etiqueta.">EAN</div>
+                    <div class="col-sm-9"><input type="text" class="form-control" 
+                    id="EAN" style="height:28px;" value=""></div>
+               </div>
+               <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;" >
+                   <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title="Es un número de 8 a 14 dígitos que se encuentra junto al código de barras, en la caja del producto, o en su etiqueta.">UPC</div>
+                    <div class="col-sm-9"><input type="text" class="form-control"
+                     id="UPC" style="height:28px;" value=""></div>
+               </div>
+             <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;" >
+                <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title="Es un número de 8 a 14 dígitos que se encuentra junto al código de barras, en la caja del producto, o en su etiqueta.">GTIN</div>
+                <div class="col-sm-9"><input type="text" class="form-control" 
+                    id="GTIN" style="height:28px;" value=""></div>
+            </div> -->
+
+
+                <hr>
+                <h4>Atributos del producto</h4>
+                <br>
+                <div id="boxAttribute">
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Marca">Marca </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text">
+                            <select class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="string" meliattrid="BRAND" id="attr_0" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="AOC" value_id="20262">AOC</option>
+                                <option value="Admiral" value_id="27499">Admiral</option>
+                                <option value="BGH" value_id="5601">BGH</option>
+                                <option value="Enxuta" value_id="79380">Enxuta</option>
+                                <option value="Hisense" value_id="30652">Hisense</option>
+                                <option value="Hitachi" value_id="234">Hitachi</option>
+                                <option value="JVC" value_id="2181">JVC</option>
+                                <option value="Ken Brown" value_id="593">Ken Brown</option>
+                                <option value="Kodak" value_id="1232">Kodak</option>
+                                <option value="LG" value_id="215">LG</option>
+                                <option value="Noblex" value_id="9807">Noblex</option>
+                                <option value="Panasonic" value_id="8">Panasonic</option>
+                                <option value="Philco" value_id="479">Philco</option>
+                                <option value="Philips" value_id="3">Philips</option>
+                                <option value="Pioneer" value_id="9838">Pioneer</option>
+                                <option value="RCA" value_id="21980">RCA</option>
+                                <option value="Samsung" value_id="206">Samsung</option>
+                                <option value="Sanyo" value_id="232">Sanyo</option>
+                                <option value="Sharp" value_id="4641">Sharp</option>
+                                <option value="Sony" value_id="995">Sony</option>
+                                <option value="TCL" value_id="16457">TCL</option>
+                                <option value="Telefunken" value_id="27327">Telefunken</option>
+                                <option value="Top House" value_id="460242">Top House</option>
+                                <option value="Samsung" value_id="206" selected="">Samsung</option>
+                            </select>
+                            <span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;">
+                                <span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                            <b role="presentation"></b>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Línea">Línea </div>
+                        <div class="col-sm-9" style="text-align:left;">
+                            <input type="text" class="form-control attritem" meliattrtype="string" meliattrid="LINE"
+                                id="attr_1" style="border:1px solid rgb(160, 160, 160);height:28px;" value="">
+                        </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Modelo">Modelo </div>
+                        <div class="col-sm-9" style="text-align:left;">
+                            <input type="text" class="form-control attritem" meliattrtype="string" meliattrid="MODEL"
+                                id="attr_2" style="border:1px solid rgb(160, 160, 160);height:28px;" value="">
+                        </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Modelo alfanumérico">Modelo alfanumérico </div>
+                        <div class="col-sm-9" style="text-align:left;">
+                            <input type="text" class="form-control attritem" meliattrtype="string"
+                                meliattrid="ALPHANUMERIC_MODEL" id="attr_3"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value="">
+                        </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Color">Color </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text">
+                            <select class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="string" meliattrid="COLOR" id="attr_4" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="Verde oscuro" value_id="52019">Verde oscuro</option>
+                                <option value="Turquesa" value_id="283160">Turquesa</option>
+                                <option value="Agua" value_id="52022">Agua</option>
+                                <option value="Índigo" value_id="283162">Índigo</option>
+                                <option value="Lavanda" value_id="52036">Lavanda</option>
+                                <option value="Rosa chicle" value_id="283163">Rosa chicle</option>
+                                <option value="Bordó" value_id="51998">Bordó</option>
+                                <option value="Nude" value_id="52003">Nude</option>
+                                <option value="Blanco" value_id="52055">Blanco</option>
+                                <option value="Azul marino" value_id="283161">Azul marino</option>
+                                <option value="Crema" value_id="52008">Crema</option>
+                                <option value="Rosa pálido" value_id="52045">Rosa pálido</option>
+                                <option value="Suela" value_id="283153">Suela</option>
+                                <option value="Naranja claro" value_id="283150">Naranja claro</option>
+                                <option value="Azul" value_id="52028">Azul</option>
+                                <option value="Rosa claro" value_id="52043">Rosa claro</option>
+                                <option value="Coral claro" value_id="283148">Coral claro</option>
+                                <option value="Coral" value_id="283149">Coral</option>
+                                <option value="Celeste" value_id="52021">Celeste</option>
+                                <option value="Azul acero" value_id="52031">Azul acero</option>
+                                <option value="Caqui" value_id="283156">Caqui</option>
+                                <option value="Beige" value_id="52001">Beige</option>
+                                <option value="Rojo" value_id="51993">Rojo</option>
+                                <option value="Terracota" value_id="51996">Terracota</option>
+                                <option value="Gris" value_id="283165">Gris</option>
+                                <option value="Violeta" value_id="52035">Violeta</option>
+                                <option value="Marrón claro" value_id="283154">Marrón claro</option>
+                                <option value="Negro" value_id="52049">Negro</option>
+                                <option value="Marrón oscuro" value_id="283155">Marrón oscuro</option>
+                                <option value="Plateado" value_id="52053">Plateado</option>
+                                <option value="Violeta oscuro" value_id="52047">Violeta oscuro</option>
+                                <option value="Rosa" value_id="51994">Rosa</option>
+                                <option value="Amarillo" value_id="52007">Amarillo</option>
+                                <option value="Verde lima" value_id="283157">Verde lima</option>
+                                <option value="Dorado oscuro" value_id="52012">Dorado oscuro</option>
+                                <option value="Verde claro" value_id="52015">Verde claro</option>
+                                <option value="Naranja oscuro" value_id="283151">Naranja oscuro</option>
+                                <option value="Azul petróleo" value_id="52024">Azul petróleo</option>
+                                <option value="Gris oscuro" value_id="52051">Gris oscuro</option>
+                                <option value="Chocolate" value_id="283152">Chocolate</option>
+                                <option value="Verde" value_id="52014">Verde</option>
+                                <option value="Dorado" value_id="283164">Dorado</option>
+                                <option value="Naranja" value_id="52000">Naranja</option>
+                                <option value="Azul oscuro" value_id="52033">Azul oscuro</option>
+                                <option value="Ocre" value_id="52010">Ocre</option>
+                                <option value="Verde musgo" value_id="283158">Verde musgo</option>
+                                <option value="Marrón" value_id="52005">Marrón</option>
+                                <option value="Lila" value_id="52038">Lila</option>
+                                <option value="Fucsia" value_id="52042">Fucsia</option>
+                                <option value="Cian" value_id="338779">Cian</option>
+                                <option value="Azul claro" value_id="52029">Azul claro</option>
+                            </select>
+                            <span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;">
+                                <span class="selection">
+                                        <span class="select2-selection__arrow" role="presentation">
+                                            <b role="presentation"></b>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Tipo de pantalla">Tipo de pantalla </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text">
+                            <select class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="string" meliattrid="DISPLAY_TYPE" id="attr_5" style="height:28px;"
+                                tabindex="-1" aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="CRT" value_id="172966">CRT</option>
+                                <option value="LCD" value_id="81834">LCD</option>
+                                <option value="LED" value_id="81830">LED</option>
+                                <option value="OLED" value_id="102776">OLED</option>
+                                <option value="QLED" value_id="3575905">QLED</option>
+                                <option value="ULED" value_id="3575896">ULED</option>
+                                <option value="Plasma" value_id="81833">Plasma</option>
+                                <option value="DLP" value_id="5686574">DLP</option>
+                            </select>
+                            <span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;">
+                                <span class="selection">
+                                        <span class="select2-selection__arrow" role="presentation">
+                                            <b role="presentation"></b>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Tamaño de la pantalla">Tamaño de la pantalla </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control attritem" meliattrtype="number_unit"
+                                meliattrid="DISPLAY_SIZE" id="attr_6"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value="">
+                        </div>
+                        <div class="col-sm-5" style="text-align:left;">
+                            <select class="form-control myselect2 select2-hidden-accessible" id="attr_6_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="&quot;" value_id="&quot;">"</option>
+                            </select>
+                            <span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;">
+                                <span class="selection">
+                                        <span class="select2-selection__arrow" role="presentation">
+                                            <b role="presentation"></b>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Tipo de resolución">Tipo de resolución </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text">
+                            <select class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="string" meliattrid="RESOLUTION_TYPE" id="attr_7" style="height:28px;"
+                                tabindex="-1" aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="4K" value_id="2685890">4K</option>
+                                <option value="5K" value_id="290767">5K</option>
+                                <option value="Full HD" value_id="290770">Full HD</option>
+                                <option value="HD" value_id="290771">HD</option>
+                                <option value="SDTV" value_id="4492665">SDTV</option>
+                                <option value="WVGA" value_id="3769689">WVGA</option>
+                                <option value="Full HD" value_id="290770" selected="">Full HD</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="País de origen">País de origen </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text"><select
+                                class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="string" meliattrid="ORIGIN_COUNTRY" id="attr_8" style="height:28px;"
+                                tabindex="-1" aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="Alemania" value_id="1098900">Alemania</option>
+                                <option value="Argentina" value_id="96380">Argentina</option>
+                                <option value="Brasil" value_id="97214">Brasil</option>
+                                <option value="China" value_id="96381">China</option>
+                                <option value="Estados Unidos" value_id="2114723">Estados Unidos</option>
+                                <option value="Francia" value_id="2114724">Francia</option>
+                                <option value="Japón" value_id="1098901">Japón</option>
+                                <option value="México" value_id="2240786">México</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Es smart">Es smart </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="IS_SMART" id="attr_9" style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Es 3D">Es 3D </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="IS_3D" id="attr_10" style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                        <span class="select2-selection__arrow" role="presentation">
+                                            <b role="presentation"></b>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Es curvo">Es curvo </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="IS_CURVED" id="attr_11" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con HDR">Con HDR </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_HDR" id="attr_12" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con USB">Con USB </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_USB" id="attr_13" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con HDMI">Con HDMI </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_HDMI" id="attr_14" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Es portátil">Es portátil </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="IS_PORTABLE" id="attr_15" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Tecnología de la pantalla">Tecnología de la pantalla </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text"><select
+                                class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="string" meliattrid="DISPLAY_TECHNOLOGY" id="attr_16" style="height:28px;"
+                                tabindex="-1" aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="TN" value_id="112159">TN</option>
+                                <option value="VA" value_id="116081">VA</option>
+                                <option value="IPS" value_id="112158">IPS</option>
+                                <option value="TFT" value_id="112160">TFT</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Resolución máxima">Resolución máxima </div>
+                        <div class="col-sm-9" style="text-align:left;"><input type="text" class="form-control attritem"
+                                meliattrtype="string" meliattrid="MAX_RESOLUTION" id="attr_17"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Ángulo de visión horizontal">Ángulo de visión horizontal </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="HORIZONTAL_VIEWING_ANGLE" id="attr_18"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_18_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="°" value_id="°">°</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection"><span
+                                        class="select2-selection select2-selection--single" role="combobox"
+                                        aria-haspopup="true" aria-expanded="false" tabindex="0"
+                                        aria-labelledby="select2-attr_18_units-container"><span
+                                            class="select2-selection__rendered" id="select2-attr_18_units-container"
+                                            title="°">°</span><span class="select2-selection__arrow"
+                                            role="presentation"><b role="presentation"></b></span></span></span><span
+                                    class="dropdown-wrapper" aria-hidden="true"></span></span></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Ángulo de visión vertical">Ángulo de visión vertical </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="VERTICAL_VIEWING_ANGLE" id="attr_19"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_19_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="°" value_id="°">°</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection"><span
+                                        class="select2-selection select2-selection--single" role="combobox"
+                                        aria-haspopup="true" aria-expanded="false" tabindex="0"
+                                        aria-labelledby="select2-attr_19_units-container"><span
+                                            class="select2-selection__rendered" id="select2-attr_19_units-container"
+                                            title="°">°</span><span class="select2-selection__arrow"
+                                            role="presentation"><b role="presentation"></b></span></span></span><span
+                                    class="dropdown-wrapper" aria-hidden="true"></span></span></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Relación de aspecto">Relación de aspecto </div>
+                        <div class="col-sm-9" style="text-align:left;"><input type="text" class="form-control attritem"
+                                meliattrtype="string" meliattrid="ASPECT_RATIO" id="attr_20"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Relación de contraste">Relación de contraste </div>
+                        <div class="col-sm-9" style="text-align:left;"><input type="text" class="form-control attritem"
+                                meliattrtype="string" meliattrid="CONTRAST_RATIO" id="attr_21"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Brillo">Brillo </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="BRIGHTNESS" id="attr_22"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_22_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="cd/m²" value_id="cd/m²">cd/m²</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Tiempo de respuesta">Tiempo de respuesta </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="RESPONSE_TIME" id="attr_23"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_23_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="m" value_id="m">m</option>
+                                <option value="ms" value_id="ms">ms</option>
+                                <option value="s" value_id="s">s</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Cantidad de puertos HDMI">Cantidad de puertos HDMI </div>
+                        <div class="col-sm-9" style="text-align:left;"><input type="text" class="form-control attritem"
+                                meliattrtype="number" meliattrid="HDMI_PORTS_NUMBER" id="attr_24"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Cantidad de puertos USB">Cantidad de puertos USB </div>
+                        <div class="col-sm-9" style="text-align:left;"><input type="text" class="form-control attritem"
+                                meliattrtype="number" meliattrid="USB_PORTS_NUMBER" id="attr_25"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con Wi-Fi">Con Wi-Fi </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_WI_FI" id="attr_26" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con Bluetooth">Con Bluetooth </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_BLUETOOTH" id="attr_27" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con ethernet">Con ethernet </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_ETHERNET" id="attr_28" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Ancho">Ancho </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="WIDTH" id="attr_29"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_29_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="&quot;" value_id="&quot;">"</option>
+                                <option value="cm" value_id="cm">cm</option>
+                                <option value="m" value_id="m">m</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;">
+                                <span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Profundidad">Profundidad </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="DEPTH" id="attr_30"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_30_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="&quot;" value_id="&quot;">"</option>
+                                <option value="cm" value_id="cm">cm</option>
+                                <option value="m" value_id="m">m</option>
+                                <option value="mm" value_id="mm">mm</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Altura">Altura </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="HEIGHT" id="attr_31"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_31_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="&quot;" value_id="&quot;">"</option>
+                                <option value="cm" value_id="cm">cm</option>
+                                <option value="m" value_id="m">m</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Peso">Peso </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="WEIGHT" id="attr_32"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_32_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="kg" value_id="kg">kg</option>
+                                <option value="lb" value_id="lb">lb</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con VGA">Con VGA </div>
+                        <div class="col-sm-9" style="text-align:left;">
+                            <select class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_VGA" id="attr_33" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Cantidad de parlantes">Cantidad de parlantes </div>
+                        <div class="col-sm-9" style="text-align:left;"><input type="text" class="form-control attritem"
+                                meliattrtype="number" meliattrid="SPEAKERS_NUMBER" id="attr_34"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Potencia máxima de los parlantes">Potencia máxima de los parlantes
+                        </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="MAX_SPEAKERS_POWER" id="attr_35"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_35_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="W" value_id="W">W</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Modos de sonido">Modos de sonido </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text"><select
+                                class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="string" meliattrid="SOUND_MODES" id="attr_36" style="height:28px;"
+                                tabindex="-1" aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="Stereo" value_id="564755">Stereo</option>
+                                <option value="Mono" value_id="564758">Mono</option>
+                                <option value="Ultra surround" value_id="564757">Ultra surround</option>
+                                <option value="Surround" value_id="564756">Surround</option>
+                                <option value="Dolby digital" value_id="564759">Dolby digital</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con youtube">Con youtube </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_YOUTUBE" id="attr_37" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con netflix">Con netflix </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_NETFLIX" id="attr_38" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Con navegador web">Con navegador web </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="WITH_WEB_BROWSER" id="attr_39" style="height:28px;" tabindex="-1"
+                                aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Condición del ítem">Condición del ítem </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text"><select
+                                class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="list" meliattrid="ITEM_CONDITION" id="attr_40" style="height:28px;"
+                                tabindex="-1" aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="Nuevo" value_id="2230284">Nuevo</option>
+                                <option value="Usado" value_id="2230581">Usado</option>
+                                <option value="Reacondicionado" value_id="2230582">Reacondicionado</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="SKU">SKU </div>
+                        <div class="col-sm-9" style="text-align:left;"><input type="text" class="form-control attritem"
+                                meliattrtype="string" meliattrid="SELLER_SKU" id="attr_41"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Es kit">Es kit </div>
+                        <div class="col-sm-9" style="text-align:left;"><select
+                                class="form-control attritem myselect2 select2-hidden-accessible" meliattrtype="boolean"
+                                meliattrid="IS_KIT" id="attr_42" style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="No" value_id="242084">No</option>
+                                <option value="Sí" value_id="242085">Sí</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Canal exclusivo">Canal exclusivo </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text"><select
+                                class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="list" meliattrid="EXCLUSIVE_CHANNEL" id="attr_43" style="height:28px;"
+                                tabindex="-1" aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="Mercado Shops" value_id="7865258">Mercado Shops</option>
+                                <option value="Mercado Libre" value_id="7865259">Mercado Libre</option>
+                                <option value="Privado" value_id="7889418">Privado</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="GTIN-14">GTIN-14 </div>
+                        <div class="col-sm-9" style="text-align:left;"><input type="text" class="form-control attritem"
+                                meliattrtype="string" meliattrid="GTIN14" id="attr_44"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Tipo de garantía">Tipo de garantía </div>
+                        <div class="col-sm-9" style="text-align:left;cursor:text"><select
+                                class="attritem myselectpicker form-control select2-hidden-accessible"
+                                meliattrtype="list" meliattrid="WARRANTY_TYPE" id="attr_45" style="height:28px;"
+                                tabindex="-1" aria-hidden="true">
+                                <option value="">No especificado</option>
+                                <option value="Garantía del vendedor" value_id="2230280">Garantía del vendedor</option>
+                                <option value="Garantía de fábrica" value_id="2230279">Garantía de fábrica</option>
+                                <option value="Sin garantía" value_id="6150835">Sin garantía</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Tiempo de garantía">Tiempo de garantía </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="WARRANTY_TIME" id="attr_46"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_46_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="días" value_id="días">días</option>
+                                <option value="meses" value_id="meses">meses</option>
+                                <option value="años" value_id="años">años</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow"role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Tiempo de elaboración">Tiempo de elaboración </div>
+                        <div class="col-sm-4"><input type="text" class="form-control attritem"
+                                meliattrtype="number_unit" meliattrid="MANUFACTURING_TIME" id="attr_47"
+                                style="border:1px solid rgb(160, 160, 160);height:28px;" value=""></div>
+                        <div class="col-sm-5" style="text-align:left;"><select
+                                class="form-control myselect2 select2-hidden-accessible" id="attr_47_units"
+                                style="height:28px;" tabindex="-1" aria-hidden="true">
+                                <option value="días" value_id="días">días</option>
+                            </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                style="width: 100%;"><span class="selection">
+                                    <span class="select2-selection__arrow" role="presentation">
+                                        <b role="presentation"></b>
+                                    </span>
+                                </span>
+                            </span>
+                            <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Números Mundial del Artículo Comercial [Global Trade Item Number] para el Artículo">
+                            Código universal de producto </div>
+                        <div class="col-sm-9"><input type="text" class="form-control attritem" meliattrtype="string"
+                                meliattrid="GTIN" id="attr_48" style="height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Sistema de código de barras usado normalmente en Estados Unidos y Canadá">
+                            UPC </div>
+                        <div class="col-sm-9"><input type="text" class="form-control attritem" meliattrtype="string"
+                                meliattrid="UPC" id="attr_49" style="height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Número de Parte del Fabricante utilizado a nivel mundial">MPN </div>
+                        <div class="col-sm-9"><input type="text" class="form-control attritem" meliattrtype="string"
+                                meliattrid="MPN" id="attr_50" style="height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="European Article Number (ahora renombrado a International Article Number). Es un sistema de código de barras adoptado por más de 100 países">
+                            EAN </div>
+                        <div class="col-sm-9"><input type="text" class="form-control attritem" meliattrtype="string"
+                                meliattrid="EAN" id="attr_51" style="height:28px;" value=""></div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                        <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                            data-original-title="Japanese Article Number. Es el sistema de códigos de identificación de productos usado en Japón. Es compatible con la longitud y validaciones de los códigos EAN-13">
+                            JAN </div>
+                        <div class="col-sm-9"><input type="text" class="form-control attritem" meliattrtype="string"
+                                meliattrid="JAN" id="attr_52" style="height:28px;" value=""></div>
+                    </div>
+                </div>
+                <hr>
+                <h4>Envío y visualidad</h4><br>
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="Como se enviará o entregará tu producto">Formas de envío </div>
+                    <div class="col-sm-9">
+
+
+                        <div class="row" style="text-align:left;font-size:10pt;color:rgb(70,70,70)">
+                            <div class="col-sm-3">
+                                <div style="margin-top:7px" data-toggle="tooltip" title=""
+                                    data-original-title="Se puede o no retirar en tu tienda">Retiro en tienda</div>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="checkbox" class="" id="shipping_local_pick_up" style="height:28px;">
+                            </div>
+                        </div>
+                        <div class="row" style="text-align:left;font-size:10pt;color:rgb(70,70,70)">
+                            <div class="col-sm-3">
+                                <div style="margin-top:7px" data-toggle="tooltip" title=""
+                                    data-original-title="Por qué medio realizarás los envíos. Puedes definir tus propios costos de envío seleccionando 'Personalizado' o dejarlo sin definir y acordarlo con el comprador posteriormente utilizando 'No especificado'">
+                                    Tipo de envío</div>
+                            </div>
+                            <div class="col-sm-9">
+                                <select id="shipping_type" class="form-control myselect2 select2-hidden-accessible"
+                                    tabindex="-1" aria-hidden="true">
+                                    <option value="not_specified">No especificado</option>
+                                    <option value="custom">Personalizado</option>
+                                </select><span class="select2 select2-container select2-container--default" dir="ltr"
+                                    style="width: 100%;"><span class="selection">
+                                        <span class="select2-selection__arrow" role="presentation">
+                                            <b role="presentation"></b>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="dropdown-wrapper" aria-hidden="true"></span>
+                        </span>
+                        </div>
+                        </div>
+
+
+                        <div id="shipping_custom_area" style="margin-top: 10px; display: none;">
+
+                            <div id="boxShippingCost" class="row"
+                                style="text-align:left;font-size:10pt;color:rgb(70,70,70)"></div>
+                            <div class="row" style="text-align:left;font-size:10pt;color:rgb(70,70,70);margin-top:10px">
+
+                                <div class="col-sm-10">
+                                    <div style="margin-top:7px"></div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input id="add_shipping_cost_button" type="button"
+                                        class="form-control warning alert-success" value="Agregar">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="shipping_me2_area" style="margin-top: 10px; display: none;">
+
+
+                        </div>
+                        <div id="shipping_not_specified_area" style="margin-top:10px;">
+
+                            <div class="col-sm-3">
+
+                            </div>
+                            <div class="col-sm-8">
+                                <div style="margin-top:7px">Gratuito a todo el país </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="checkbox" class="" id="shipping_free_shipping" style="height:28px;">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+                <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align:right;" id="rowpictures">
+                    <div class="col-sm-3" style="margin-top:5px" data-toggle="tooltip" title=""
+                        data-original-title="Son las imágenes que se mostraran en tu publicación de Mercado Libre. La primera corresponde a la imagen principal, que se mostrará en las búsquedas. ***Si vas a definir variaciones personalizadas, este campo puedes omitirlo">
+                        Imágenes </div>
+                    <div class="col-sm-9">
+
+                        <div class="file-input theme-explorer file-input-ajax-new">
+                            <div class="file-preview ">
+                                <div class="close fileinput-remove">×</div>
+                                <div class=" file-drop-zone">
+                                    <table class="table table-bordered table-hover">
+                                        <tbody class="file-preview-thumbnails">
+                                            <tr class="file-preview-frame explorer-frame  file-preview-initial file-sortable kv-preview-thumb"
+                                                id="preview-1581024905407-init_0" data-fileindex="init_0"
+                                                data-template="image">
+                                                <td class="kv-file-content">
+                                                    <img src="https://mlv-s2-p.mlstatic.com/992194-MLV40650775007_022020-O.jpg"
+                                                        class="file-preview-image kv-preview-data"
+                                                        title="Imagen en Meli 1" alt="Imagen en Meli 1"
+                                                        style="width:auto;height:60px;">
+                                                </td>
+                                                <td class="file-details-cell">
+                                                    <div class="explorer-caption" title="Imagen en Meli 1">Imagen en
+                                                        Meli 1</div>
+                                                    <div class="file-thumb-progress hide">
+                                                        <div class="progress">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                                                aria-valuemax="100" style="width:0%;">
+                                                                Inicializando...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="file-actions-cell"> <span
+                                                        class="file-drag-handle drag-handle-init text-info"
+                                                        title="Mover / Reordenar"><i
+                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                    <div class="file-actions">
+                                                        <div class="file-footer-buttons">
+                                                            <button type="button"
+                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                title="Eliminar archivo"
+                                                                data-url="/editproduct/deleteimage"
+                                                                data-key="https://mlv-s2-p.mlstatic.com/992194-MLV40650775007_022020-O.jpg"><i
+                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                            <button type="button"
+                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                title="Ver detalles"><i
+                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="display:none" class="kv-zoom-cache-theme">
+                                                <td>
+                                                    <table class="kv-zoom-cache">
+                                                        <tbody>
+                                                            <tr class="file-preview-frame explorer-frame  file-preview-initial kv-zoom-thumb"
+                                                                id="zoom-preview-1581024905407-init_0"
+                                                                data-fileindex="init_0" data-template="image">
+                                                                <td class="kv-file-content">
+                                                                    <img src="https://mlv-s2-p.mlstatic.com/992194-MLV40650775007_022020-O.jpg"
+                                                                        class="file-preview-image kv-preview-data"
+                                                                        title="Imagen en Meli 1" alt="Imagen en Meli 1"
+                                                                        style="width:auto;height:60px;">
+                                                                </td>
+                                                                <td class="file-details-cell">
+                                                                    <div class="explorer-caption"
+                                                                        title="Imagen en Meli 1">Imagen en Meli 1</div>
+                                                                    <div class="file-thumb-progress hide">
+                                                                        <div class="progress">
+                                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                                role="progressbar" aria-valuenow="0"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="width:0%;">
+                                                                                Inicializando...
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="file-actions-cell"> <span
+                                                                        class="file-drag-handle drag-handle-init text-info"
+                                                                        title="Mover / Reordenar"><i
+                                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                                    <div class="file-actions">
+                                                                        <div class="file-footer-buttons">
+                                                                            <button type="button"
+                                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                                title="Eliminar archivo"
+                                                                                data-url="/editproduct/deleteimage"
+                                                                                data-key="https://mlv-s2-p.mlstatic.com/992194-MLV40650775007_022020-O.jpg"><i
+                                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                                            <button type="button"
+                                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                                title="Ver detalles"><i
+                                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr class="file-preview-frame explorer-frame  file-preview-initial file-sortable kv-preview-thumb"
+                                                id="preview-1581024905407-init_1" data-fileindex="init_1"
+                                                data-template="image">
+                                                <td class="kv-file-content">
+                                                    <img src="https://mlv-s2-p.mlstatic.com/915666-MLV40650775011_022020-O.jpg"
+                                                        class="file-preview-image kv-preview-data"
+                                                        title="Imagen en Meli 2" alt="Imagen en Meli 2"
+                                                        style="width:auto;height:60px;">
+                                                </td>
+                                                <td class="file-details-cell">
+                                                    <div class="explorer-caption" title="Imagen en Meli 2">Imagen en
+                                                        Meli 2</div>
+                                                    <div class="file-thumb-progress hide">
+                                                        <div class="progress">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                                                aria-valuemax="100" style="width:0%;">
+                                                                Inicializando...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="file-actions-cell"> <span
+                                                        class="file-drag-handle drag-handle-init text-info"
+                                                        title="Mover / Reordenar"><i
+                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                    <div class="file-actions">
+                                                        <div class="file-footer-buttons">
+                                                            <button type="button"
+                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                title="Eliminar archivo"
+                                                                data-url="/editproduct/deleteimage"
+                                                                data-key="https://mlv-s2-p.mlstatic.com/915666-MLV40650775011_022020-O.jpg"><i
+                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                            <button type="button"
+                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                title="Ver detalles"><i
+                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="display:none" class="kv-zoom-cache-theme">
+                                                <td>
+                                                    <table class="kv-zoom-cache">
+                                                        <tbody>
+                                                            <tr class="file-preview-frame explorer-frame  file-preview-initial kv-zoom-thumb"
+                                                                id="zoom-preview-1581024905407-init_1"
+                                                                data-fileindex="init_1" data-template="image">
+                                                                <td class="kv-file-content">
+                                                                    <img src="https://mlv-s2-p.mlstatic.com/915666-MLV40650775011_022020-O.jpg"
+                                                                        class="file-preview-image kv-preview-data"
+                                                                        title="Imagen en Meli 2" alt="Imagen en Meli 2"
+                                                                        style="width:auto;height:60px;">
+                                                                </td>
+                                                                <td class="file-details-cell">
+                                                                    <div class="explorer-caption"
+                                                                        title="Imagen en Meli 2">Imagen en Meli 2</div>
+                                                                    <div class="file-thumb-progress hide">
+                                                                        <div class="progress">
+                                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                                role="progressbar" aria-valuenow="0"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="width:0%;">
+                                                                                Inicializando...
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="file-actions-cell"> <span
+                                                                        class="file-drag-handle drag-handle-init text-info"
+                                                                        title="Mover / Reordenar"><i
+                                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                                    <div class="file-actions">
+                                                                        <div class="file-footer-buttons">
+                                                                            <button type="button"
+                                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                                title="Eliminar archivo"
+                                                                                data-url="/editproduct/deleteimage"
+                                                                                data-key="https://mlv-s2-p.mlstatic.com/915666-MLV40650775011_022020-O.jpg"><i
+                                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                                            <button type="button"
+                                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                                title="Ver detalles"><i
+                                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr class="file-preview-frame explorer-frame  file-preview-initial file-sortable kv-preview-thumb"
+                                                id="preview-1581024905407-init_2" data-fileindex="init_2"
+                                                data-template="image">
+                                                <td class="kv-file-content">
+                                                    <img src="https://mlv-s2-p.mlstatic.com/932933-MLV40650775009_022020-O.jpg"
+                                                        class="file-preview-image kv-preview-data"
+                                                        title="Imagen en Meli 3" alt="Imagen en Meli 3"
+                                                        style="width:auto;height:60px;">
+                                                </td>
+                                                <td class="file-details-cell">
+                                                    <div class="explorer-caption" title="Imagen en Meli 3">Imagen en
+                                                        Meli 3</div>
+                                                    <div class="file-thumb-progress hide">
+                                                        <div class="progress">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                                                aria-valuemax="100" style="width:0%;">
+                                                                Inicializando...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="file-actions-cell"> <span
+                                                        class="file-drag-handle drag-handle-init text-info"
+                                                        title="Mover / Reordenar"><i
+                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                    <div class="file-actions">
+                                                        <div class="file-footer-buttons">
+                                                            <button type="button"
+                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                title="Eliminar archivo"
+                                                                data-url="/editproduct/deleteimage"
+                                                                data-key="https://mlv-s2-p.mlstatic.com/932933-MLV40650775009_022020-O.jpg"><i
+                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                            <button type="button"
+                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                title="Ver detalles"><i
+                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="display:none" class="kv-zoom-cache-theme">
+                                                <td>
+                                                    <table class="kv-zoom-cache">
+                                                        <tbody>
+                                                            <tr class="file-preview-frame explorer-frame  file-preview-initial kv-zoom-thumb"
+                                                                id="zoom-preview-1581024905407-init_2"
+                                                                data-fileindex="init_2" data-template="image">
+                                                                <td class="kv-file-content">
+                                                                    <img src="https://mlv-s2-p.mlstatic.com/932933-MLV40650775009_022020-O.jpg"
+                                                                        class="file-preview-image kv-preview-data"
+                                                                        title="Imagen en Meli 3" alt="Imagen en Meli 3"
+                                                                        style="width:auto;height:60px;">
+                                                                </td>
+                                                                <td class="file-details-cell">
+                                                                    <div class="explorer-caption"
+                                                                        title="Imagen en Meli 3">Imagen en Meli 3</div>
+                                                                    <div class="file-thumb-progress hide">
+                                                                        <div class="progress">
+                                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                                role="progressbar" aria-valuenow="0"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="width:0%;">
+                                                                                Inicializando...
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="file-actions-cell"> <span
+                                                                        class="file-drag-handle drag-handle-init text-info"
+                                                                        title="Mover / Reordenar"><i
+                                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                                    <div class="file-actions">
+                                                                        <div class="file-footer-buttons">
+                                                                            <button type="button"
+                                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                                title="Eliminar archivo"
+                                                                                data-url="/editproduct/deleteimage"
+                                                                                data-key="https://mlv-s2-p.mlstatic.com/932933-MLV40650775009_022020-O.jpg"><i
+                                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                                            <button type="button"
+                                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                                title="Ver detalles"><i
+                                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr class="file-preview-frame explorer-frame  file-preview-initial file-sortable kv-preview-thumb"
+                                                id="preview-1581024905407-init_3" data-fileindex="init_3"
+                                                data-template="image">
+                                                <td class="kv-file-content">
+                                                    <img src="https://mlv-s2-p.mlstatic.com/945329-MLV40650775008_022020-O.jpg"
+                                                        class="file-preview-image kv-preview-data"
+                                                        title="Imagen en Meli 4" alt="Imagen en Meli 4"
+                                                        style="width:auto;height:60px;">
+                                                </td>
+                                                <td class="file-details-cell">
+                                                    <div class="explorer-caption" title="Imagen en Meli 4">Imagen en
+                                                        Meli 4</div>
+                                                    <div class="file-thumb-progress hide">
+                                                        <div class="progress">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                                                aria-valuemax="100" style="width:0%;">
+                                                                Inicializando...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="file-actions-cell"> <span
+                                                        class="file-drag-handle drag-handle-init text-info"
+                                                        title="Mover / Reordenar"><i
+                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                    <div class="file-actions">
+                                                        <div class="file-footer-buttons">
+                                                            <button type="button"
+                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                title="Eliminar archivo"
+                                                                data-url="/editproduct/deleteimage"
+                                                                data-key="https://mlv-s2-p.mlstatic.com/945329-MLV40650775008_022020-O.jpg"><i
+                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                            <button type="button"
+                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                title="Ver detalles"><i
+                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="display:none" class="kv-zoom-cache-theme">
+                                                <td>
+                                                    <table class="kv-zoom-cache">
+                                                        <tbody>
+                                                            <tr class="file-preview-frame explorer-frame  file-preview-initial kv-zoom-thumb"
+                                                                id="zoom-preview-1581024905407-init_3"
+                                                                data-fileindex="init_3" data-template="image">
+                                                                <td class="kv-file-content">
+                                                                    <img src="https://mlv-s2-p.mlstatic.com/945329-MLV40650775008_022020-O.jpg"
+                                                                        class="file-preview-image kv-preview-data"
+                                                                        title="Imagen en Meli 4" alt="Imagen en Meli 4"
+                                                                        style="width:auto;height:60px;">
+                                                                </td>
+                                                                <td class="file-details-cell">
+                                                                    <div class="explorer-caption"
+                                                                        title="Imagen en Meli 4">Imagen en Meli 4</div>
+                                                                    <div class="file-thumb-progress hide">
+                                                                        <div class="progress">
+                                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                                role="progressbar" aria-valuenow="0"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="width:0%;">
+                                                                                Inicializando...
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="file-actions-cell"> <span
+                                                                        class="file-drag-handle drag-handle-init text-info"
+                                                                        title="Mover / Reordenar"><i
+                                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                                    <div class="file-actions">
+                                                                        <div class="file-footer-buttons">
+                                                                            <button type="button"
+                                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                                title="Eliminar archivo"
+                                                                                data-url="/editproduct/deleteimage"
+                                                                                data-key="https://mlv-s2-p.mlstatic.com/945329-MLV40650775008_022020-O.jpg"><i
+                                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                                            <button type="button"
+                                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                                title="Ver detalles"><i
+                                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr class="file-preview-frame explorer-frame  file-preview-initial file-sortable kv-preview-thumb"
+                                                id="preview-1581024905407-init_4" data-fileindex="init_4"
+                                                data-template="image">
+                                                <td class="kv-file-content">
+                                                    <img src="https://mlv-s2-p.mlstatic.com/911448-MLV40650775006_022020-O.jpg"
+                                                        class="file-preview-image kv-preview-data"
+                                                        title="Imagen en Meli 5" alt="Imagen en Meli 5"
+                                                        style="width:auto;height:60px;">
+                                                </td>
+                                                <td class="file-details-cell">
+                                                    <div class="explorer-caption" title="Imagen en Meli 5">Imagen en
+                                                        Meli 5</div>
+                                                    <div class="file-thumb-progress hide">
+                                                        <div class="progress">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                                                aria-valuemax="100" style="width:0%;">
+                                                                Inicializando...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="file-actions-cell"> <span
+                                                        class="file-drag-handle drag-handle-init text-info"
+                                                        title="Mover / Reordenar"><i
+                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                    <div class="file-actions">
+                                                        <div class="file-footer-buttons">
+                                                            <button type="button"
+                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                title="Eliminar archivo"
+                                                                data-url="/editproduct/deleteimage"
+                                                                data-key="https://mlv-s2-p.mlstatic.com/911448-MLV40650775006_022020-O.jpg"><i
+                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                            <button type="button"
+                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                title="Ver detalles"><i
+                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="display:none" class="kv-zoom-cache-theme">
+                                                <td>
+                                                    <table class="kv-zoom-cache">
+                                                        <tbody>
+                                                            <tr class="file-preview-frame explorer-frame  file-preview-initial kv-zoom-thumb"
+                                                                id="zoom-preview-1581024905407-init_4"
+                                                                data-fileindex="init_4" data-template="image">
+                                                                <td class="kv-file-content">
+                                                                    <img src="https://mlv-s2-p.mlstatic.com/911448-MLV40650775006_022020-O.jpg"
+                                                                        class="file-preview-image kv-preview-data"
+                                                                        title="Imagen en Meli 5" alt="Imagen en Meli 5"
+                                                                        style="width:auto;height:60px;">
+                                                                </td>
+                                                                <td class="file-details-cell">
+                                                                    <div class="explorer-caption"
+                                                                        title="Imagen en Meli 5">Imagen en Meli 5</div>
+                                                                    <div class="file-thumb-progress hide">
+                                                                        <div class="progress">
+                                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                                role="progressbar" aria-valuenow="0"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="width:0%;">
+                                                                                Inicializando...
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="file-actions-cell"> <span
+                                                                        class="file-drag-handle drag-handle-init text-info"
+                                                                        title="Mover / Reordenar"><i
+                                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                                    <div class="file-actions">
+                                                                        <div class="file-footer-buttons">
+                                                                            <button type="button"
+                                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                                title="Eliminar archivo"
+                                                                                data-url="/editproduct/deleteimage"
+                                                                                data-key="https://mlv-s2-p.mlstatic.com/911448-MLV40650775006_022020-O.jpg"><i
+                                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                                            <button type="button"
+                                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                                title="Ver detalles"><i
+                                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr class="file-preview-frame explorer-frame  file-preview-initial file-sortable kv-preview-thumb"
+                                                id="preview-1581024905407-init_5" data-fileindex="init_5"
+                                                data-template="image">
+                                                <td class="kv-file-content">
+                                                    <img src="https://mlv-s2-p.mlstatic.com/867490-MLV40650775010_022020-O.jpg"
+                                                        class="file-preview-image kv-preview-data"
+                                                        title="Imagen en Meli 6" alt="Imagen en Meli 6"
+                                                        style="width:auto;height:60px;">
+                                                </td>
+                                                <td class="file-details-cell">
+                                                    <div class="explorer-caption" title="Imagen en Meli 6">Imagen en
+                                                        Meli 6</div>
+                                                    <div class="file-thumb-progress hide">
+                                                        <div class="progress">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                                                aria-valuemax="100" style="width:0%;">
+                                                                Inicializando...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="file-actions-cell"> <span
+                                                        class="file-drag-handle drag-handle-init text-info"
+                                                        title="Mover / Reordenar"><i
+                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                    <div class="file-actions">
+                                                        <div class="file-footer-buttons">
+                                                            <button type="button"
+                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                title="Eliminar archivo"
+                                                                data-url="/editproduct/deleteimage"
+                                                                data-key="https://mlv-s2-p.mlstatic.com/867490-MLV40650775010_022020-O.jpg"><i
+                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                            <button type="button"
+                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                title="Ver detalles"><i
+                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="display:none" class="kv-zoom-cache-theme">
+                                                <td>
+                                                    <table class="kv-zoom-cache">
+                                                        <tbody>
+                                                            <tr class="file-preview-frame explorer-frame  file-preview-initial kv-zoom-thumb"
+                                                                id="zoom-preview-1581024905407-init_5"
+                                                                data-fileindex="init_5" data-template="image">
+                                                                <td class="kv-file-content">
+                                                                    <img src="https://mlv-s2-p.mlstatic.com/867490-MLV40650775010_022020-O.jpg"
+                                                                        class="file-preview-image kv-preview-data"
+                                                                        title="Imagen en Meli 6" alt="Imagen en Meli 6"
+                                                                        style="width:auto;height:60px;">
+                                                                </td>
+                                                                <td class="file-details-cell">
+                                                                    <div class="explorer-caption"
+                                                                        title="Imagen en Meli 6">Imagen en Meli 6</div>
+                                                                    <div class="file-thumb-progress hide">
+                                                                        <div class="progress">
+                                                                            <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                                                role="progressbar" aria-valuenow="0"
+                                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                                style="width:0%;">
+                                                                                Inicializando...
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="file-actions-cell"> <span
+                                                                        class="file-drag-handle drag-handle-init text-info"
+                                                                        title="Mover / Reordenar"><i
+                                                                            class="glyphicon glyphicon-menu-hamburger"></i></span>
+                                                                    <div class="file-actions">
+                                                                        <div class="file-footer-buttons">
+                                                                            <button type="button"
+                                                                                class="kv-file-remove btn btn-xs btn-default"
+                                                                                title="Eliminar archivo"
+                                                                                data-url="/editproduct/deleteimage"
+                                                                                data-key="https://mlv-s2-p.mlstatic.com/867490-MLV40650775010_022020-O.jpg"><i
+                                                                                    class="glyphicon glyphicon-trash text-danger"></i></button>
+                                                                            <button type="button"
+                                                                                class="kv-file-zoom btn btn-xs btn-default"
+                                                                                title="Ver detalles"><i
+                                                                                    class="glyphicon glyphicon-zoom-in"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="clearfix"></div>
+                                    <div class="file-preview-status text-center text-success"></div>
+                                    <div class="kv-fileinput-error file-error-message" style="display: none;"></div>
+                                </div>
+                            </div>
+                            <div class="kv-upload-progress hide"></div>
+                            <div class="input-group file-caption-main">
+                                <div tabindex="500" class="form-control file-caption  kv-fileinput-caption">
+                                    <div class="file-caption-name" title="6 archivos seleccionado(s)">
+                                        <i class="glyphicon glyphicon-file kv-caption-icon"></i>6 archivos
+                                        seleccionado(s)
+                                    </div>
+                                </div>
+
+                                <div class="input-group-btn">
+                                    <button type="button" tabindex="500" title="Quitar archivos seleccionados"
+                                        class="btn btn-default fileinput-remove fileinput-remove-button">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                        <span class="hidden-xs">Quitar todo</span>
+                                    </button>
+                                    <button type="button" tabindex="500" title="Abortar la subida en curso"
+                                        class="btn btn-default hide fileinput-cancel fileinput-cancel-button">
+                                        <i class="glyphicon glyphicon-ban-circle"></i>
+                                        <span class="hidden-xs">Cancelar</span>
+                                    </button>
+
+                                    <div tabindex="500" class="btn btn-primary btn-file"><i
+                                            class="glyphicon glyphicon-folder-open"></i>&nbsp;
+                                        <span class="hidden-xs">Examinar …</span>
+                                        <input id="pictures" name="fileToUpload" type="file" multiple="" class="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- buttonstep2 -->
+                <hr>
+                <ul class="list-inline pull-right">
+                    <li><button type="button" class="btn btn-primary nextbutton">Continuar</button></li>
+                </ul>
+            </div>
+            <!-- END STEP1 -->
+
+            <!-- START STEP2 -->
+            <div class="tab-pane" id="step2" style="width:100%;min-width:700px;max-width:1000px" "="">
+
+            <div id=" category_variation">
+                <h3>Variaciones del producto</h3>
+                <p>
+                    Una variación permite que dentro de un mismo producto se puedan mostrar distintas versiones de este.
+                    Por ejemplo, podemos publicar una polera e indicar que la tenemos en color "ROJO" y en "AZUL". Con
+                    esto, se hace más simple la interacción con el usuario, se minimiza el número de preguntas y se
+                    aumenta el número de ventas.
+                </p>
+                <p>
+                    Lo primero para crear una variación es indicar cuales son los atributos según los cuales vamos a
+                    variar la publicación, por Ejemplo Color. En general, estos atributos dependen de la categoría de
+                    Mercado Libre en la cual se desea publicar, pero siempre podrás añadir uno personalizado.
+                </p>
+                <hr>
+                <div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align: left;">
+                        <div class="col-sm-2" style="margin-top:5px">
+                            Conjunto de atributos
+                        </div>
+                        <div class="col-sm-10">
+
+
+
+                            <div id="attribute_combination_picker_custom">
+                                <div class="row" style="margin:0px;padding:0px">
+                                    <div class="col-sm-6" style="text-align:right">
+                                        <div style="margin-top:1px" id="name_usevariation_custom">Personalizado</div>
+                                    </div>
+                                    <!-- carga los campos registrados  -->
+                                    <div class="col-sm-2">
+                                        <input type="checkbox" id="usevariation_custom" class="
+
+                                        usevariationcheckbox" onchange="usevarionchange(this)">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" value="Nombre personalizado"
+                                            id="inputname_usevariation_custom">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div id="attribute_combination_picker_default"></div>
+
+
+
+
+                        </div>
+                    </div>
+                    <div class="row" style="padding:0px;margin:10px 0px 0px 0px;text-align: left;">
+                        <div class="col-sm-2" style="margin-top:5px">
+                            Variaciones
+                        </div>
+                        <div class="col-sm-10">
+
+                            <div id="boxVariation">
+                                <div class="contentChildVariationBox" id="child_variation_0">
+                                    <hr>
+                                    <div style="margin-top:10px" class="row variation_custom">
+                                        <div class="col-sm-1">
+                                            <div style="margin-top:7px;text-align:right;"
+                                                id="child_variation_0_displayname">#1</div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input id="child_variation_0_deletebutton" type="button"
+                                                class="form-control alert-warning" value="Quitar"
+                                                onclick="deleteContentChildVariationBox('child_variation_0')">
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input style="display:none" class="variation_id" type="text">
+                                            <div style="text-align:right;margin-top:7px;">
+                                                <strong>
+                                                    <span class="displayname_usevariation_custom">Nombre
+                                                        personalizado</span>
+                                                    *
+                                                </strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control attr_combination" meliid="custom">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="child_variation_0_defaultfield">
+                                    <div class="row" style="text-align:right;margin-top:10px">
+                                        <div class="col-sm-4">
+                                            <div>
+                                                <strong>Precio*</strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control defaultfieldvariation" meliid="price"
+                                                style="height:28px">
+                                        </div>
+                                    </div>
+                                    <div class="row" style="text-align:right;margin-top:10px">
+                                        <div class="col-sm-4">
+                                            <div>
+                                                <strong>Cantidad*</strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control defaultfieldvariation"
+                                                meliid="available_quantity" style="height:28px">
+                                        </div>
+                                    </div>
+                                    <div class="row" style="text-align:right;margin-top:10px">
+                                        <div class="col-sm-4">
+                                            <div>Sku</div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control defaultfieldvariation"
+                                                meliid="seller_custom_field" style="height:28px">
+                                        </div>
+                                    </div>
+                                    <div id="boxAttributeVariation" style="margin:0px;padding:0px">
+                                        <div class="row" style="text-align:right;margin-top:10px">
+                                            <div class="col-sm-4" style="margin-top:5px">SKU </div>
+                                            <div class="col-sm-8" style="text-align:left;">
+                                                <input type="text" class="form-control attrvariation"
+                                                    meliattrtype="string" meliattrid="SELLER_SKU" id="attrvar_0"
+                                                    style="border:1px solid rgb(160, 160, 160);height:28px;" value="">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="text-align:right;margin-top:10px">
+                                            <div class="col-sm-4" style="margin-top:5px">GTIN-14 </div>
+                                            <div class="col-sm-8" style="text-align:left;">
+                                                <input type="text" class="form-control attrvariation"
+                                                    meliattrtype="string" meliattrid="GTIN14" id="attrvar_1"
+                                                    style="border:1px solid rgb(160, 160, 160);height:28px;" value="">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="text-align:right;margin-top:10px">
+                                            <div class="col-sm-4" style="margin-top:5px">Código universal de producto
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control attrvariation" meliattrid="GTIN"
+                                                    id="attrvar_2" style="height:28px;" value="">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="text-align:right;margin-top:10px">
+                                            <div class="col-sm-4" style="margin-top:5px">UPC </div>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control attrvariation" meliattrid="UPC"
+                                                    id="attrvar_3" style="height:28px;" value="">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="text-align:right;margin-top:10px">
+                                            <div class="col-sm-4" style="margin-top:5px">MPN </div>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control attrvariation" meliattrid="MPN"
+                                                    id="attrvar_4" style="height:28px;" value="">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="text-align:right;margin-top:10px">
+                                            <div class="col-sm-4" style="margin-top:5px">EAN </div>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control attrvariation" meliattrid="EAN"
+                                                    id="attrvar_5" style="height:28px;" value="">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="text-align:right;margin-top:10px">
+                                            <div class="col-sm-4" style="margin-top:5px">JAN </div>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control attrvariation" meliattrid="JAN"
+                                                    id="attrvar_6" style="height:28px;" value="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="text-align:right;margin-top:10px">
+                                        <div class="col-sm-4">
+                                            <div>Imágenes</div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="file-input theme-explorer file-input-ajax-new">
+                                                <div class="file-preview ">
+                                                    <div class="close fileinput-remove">×</div>
+                                                    <div class=" file-drop-zone">
+                                                        <div class="file-drop-zone-title">Arrastre y suelte aquí los
+                                                            archivos …</div>
+                                                        <table class="table table-bordered table-hover">
+                                                            <tbody class="file-preview-thumbnails">
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="clearfix"></div>
+                                                        <div class="file-preview-status text-center text-success"></div>
+                                                        <div class="kv-fileinput-error file-error-message"
+                                                            style="display: none;"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="kv-upload-progress hide">
+                                                    <div class="progress">
+                                                        <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                                            role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                                            aria-valuemax="100" style="width:0%;">
+                                                            0%
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="input-group file-caption-main">
+                                                    <div tabindex="500"
+                                                        class="form-control file-caption  kv-fileinput-caption">
+                                                        <div class="file-caption-name"></div>
+                                                    </div>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" tabindex="500"
+                                                            title="Quitar archivos seleccionados"
+                                                            class="btn btn-default fileinput-remove fileinput-remove-button">
+                                                            <i class="glyphicon glyphicon-trash"></i>
+                                                            <span class="hidden-xs">Quitar todo</span>
+                                                        </button>
+                                                        <button type="button" tabindex="500"
+                                                            title="Abortar la subida en curso"
+                                                            class="btn btn-default hide fileinput-cancel fileinput-cancel-button">
+                                                            <i class="glyphicon glyphicon-ban-circle"></i>
+                                                            <span class="hidden-xs">Cancelar</span>
+                                                        </button>
+
+                                                        <div tabindex="500" class="btn btn-primary btn-file">
+                                                            <i class="glyphicon glyphicon-folder-open"></i>
+                                                            &nbsp;
+                                                            <span class="hidden-xs">Examinar …</span>
+                                                            <input name="fileToUpload" type="file" multiple=""
+                                                                class="picture_ids" meliid="picture_ids"
+                                                                id="68231239_picture_ids">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top:10px">
+
+                                <div class="col-sm-4">
+                                </div>
+                                <div class="col-sm-8">
+                                    <hr>
+                                    <input id="add_variation" type="button" class="form-control alert-success"
+                                        value="Agregar otra variación" style="display: none;">
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <!-- buttonstep3 -->
+            <hr>
+            <ul class="list-inline pull-right">
+                <li><button type="button" class="btn btn-success nextbutton">Modificar mi publicación</button></li>
+            </ul>
+        </div>
+        <!-- END STEP2 -->
+        <!-- END STEP3 -->
+        <!-- START STEP4 -->
+        <div class="tab-pane" id="step3" style="width:100%;min-width:700px;max-width:1000px" "="">
+
+    <br>
+    <div id=" publicationresult">
+        </div>
+
+    </div>
+    <!-- END STEP4 -->
+    <div class="clearfix"></div>
+</div>
+</div>
+</div>
+{% endblock %}

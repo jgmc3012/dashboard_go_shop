@@ -18,7 +18,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Control Center</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard.orders' %}">Control Center</a></li>
                     <li class="breadcrumb-item active">Ordenes</li>
                     </ol>
                 </div><!-- /.col -->
@@ -58,7 +58,7 @@
                 <div class="icon">
                     <i class="ion ion-chatbubble-working"></i>
                 </div>
-                <a href="#" class="small-box-footer">Ingresar <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{% url 'dashboard.messages' %}" class="small-box-footer">Ingresar <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -73,7 +73,7 @@
                 <div class="icon">
                     <i class="ion ion-edit"></i>
                 </div>
-                <a href="#" class="small-box-footer">Ingresar <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{% url 'dashboard.corrections' %}" class="small-box-footer">Ingresar <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -88,7 +88,7 @@
                 <div class="icon">
                     <i class="ion ion-alert-circled"></i>
                 </div>
-                <a href="#" class="small-box-footer">Ingresar <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{% url 'dashboard.claims' %}" class="small-box-footer">Ingresar <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->

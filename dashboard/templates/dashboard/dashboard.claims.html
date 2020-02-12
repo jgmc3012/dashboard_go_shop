@@ -1,0 +1,324 @@
+{% extends 'dashboard/dashboard.html' %}
+{% load static %}
+
+
+{% block content %}
+
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Reclamos</h1>
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="#">Control Center</a>
+            </li>
+            <li class="breadcrumb-item active">Reclamos</li>
+          </ol>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- Menu contenido -->
+      <!-- small box -->
+      <div class="small-box bg-warning">
+        <div class="inner">
+          <h3>Nombre del cliente</h3>
+
+          <h4>Motivo del Reclamo</h4>
+        </div>
+      </div>
+      <!-- ./col -->
+      <!-- /.menu contenido -->
+
+<!-- Aqui inicia el contenido -->
+
+            <!-- DIRECT CHAT WARNING -->
+            <div class="d-flex">
+                <div class="flex-fill">
+                  <div
+                    class="card card-warning direct-chat direct-chat-warning col-12 flex-column"
+                  >
+                    <div class="card-header">
+                      <h3 class="card-title">
+                        Estado del reclamo "abierto, cerrado o en mediacion"
+                      </h3>
+                      <div class="card-tools"></div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                      <!-- Conversations are loaded here -->
+                      <div class="direct-chat-messages">
+                        <!-- Message. Default to the left -->
+                        <div class="direct-chat-msg">
+                          <div class="direct-chat-infos clearfix">
+                            <span class="direct-chat-name float-left"
+                              >Nombre del cliente</span
+                            >
+                            <span class="direct-chat-timestamp float-right"
+                              >Fecha de respuesta</span
+                            >
+                          </div>
+                          <!-- /.direct-chat-infos -->
+                          <img
+                            class="direct-chat-img"
+                            src="{% static 'vendor/adminLTE/dist/img/user1-128x128.jpg' %}"
+                            alt="Message User Image"
+                          />
+                          <!-- /.direct-chat-img -->
+                          <div class="direct-chat-text">
+                            Respuesta del cliente
+                          </div>
+                          <!-- /.direct-chat-text -->
+                        </div>
+                        <!-- /.direct-chat-msg -->
+  
+                        <!-- Message to the right -->
+                        <div class="direct-chat-msg right">
+                          <div class="direct-chat-infos clearfix">
+                            <span class="direct-chat-name float-right"
+                              >Nombre del asesor</span
+                            >
+                            <span class="direct-chat-timestamp float-left"
+                              >Fecha de respuesta</span
+                            >
+                          </div>
+                          <!-- /.direct-chat-infos -->
+                          <img
+                            class="direct-chat-img"
+                            src="{% static 'vendor/adminLTE/dist/img/user3-128x128.jpg' %}"
+                            alt="Message User Image"
+                          />
+                          <!-- /.direct-chat-img -->
+                          <div class="direct-chat-text">
+                            Respuesta del asesor
+                          </div>
+                          <!-- /.direct-chat-text -->
+                        </div>
+                        <!-- /.direct-chat-msg -->
+                      </div>
+                      <!--/.direct-chat-messages-->
+  
+                      <!-- Contacts are loaded here -->
+                      <div class="direct-chat-contacts">
+                        <ul class="contacts-list">
+                          <li>
+                            <a href="#">
+                              <img
+                                class="contacts-list-img"
+                                src="{% static 'vendor/adminLTE/dist/img/user1-128x128.jp' %}"
+                              />
+  
+                              <div class="contacts-list-info">
+                                <span class="contacts-list-name">
+                                  Count Dracula
+                                  <small class="contacts-list-date float-right"
+                                    >2/28/2015</small
+                                  >
+                                </span>
+                                <span class="contacts-list-msg"
+                                  >How have you been? I was...</span
+                                >
+                              </div>
+                              <!-- /.contacts-list-info -->
+                            </a>
+                          </li>
+                          <!-- End Contact Item -->
+                        </ul>
+                        <!-- /.contatcts-list -->
+                      </div>
+                      <!-- /.direct-chat-pane -->
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                      <form action="#" method="post">
+                        <div class="input-group">
+                          <input
+                            type="text"
+                            name="message"
+                            placeholder="Respuesta ..."
+                            class="form-control"
+                          />
+                          <span class="input-group-append">
+                            <button type="submit" class="btn btn-warning">
+                              Responder
+                            </button>
+                          </span>
+                        </div>
+                      </form>
+                    </div>
+                    <!-- /.card-footer-->
+                  </div>
+                  <!--/.direct-chat -->
+  
+                  <!-- Box Comment -->
+                  <div class="card card-widget float-left col-12">
+                    <div class="card-header bg-warning">
+                      <div class="nav flex-column">
+                        <div class="inner text-white">
+                          <h3>Novedades</h3>
+                        </div>
+                      </div>
+                      <!-- /.user-block -->
+                      <div class="card-tools"></div>
+                      <!-- /.card-tools -->
+                    </div>
+  
+                    <div class="card-footer card-comments">
+                      <div class="card-comment">
+                        <!-- User image -->
+                        <img
+                          class="img-circle img-sm"
+                          src="{% static 'vendor/adminLTE/dist/img/user3-128x128.jpg' %}"
+                          alt="User Image"
+                        />
+  
+                        <div class="comment-text">
+                          <span class="username">
+                            Nombre del asesor
+                            <span class="text-muted float-right"
+                              >Fecha de la novedad y estado</span
+                            > </span
+                          ><!-- /.username -->
+                          Novedad
+                        </div>
+                        <!-- /.comment-text -->
+                      </div>
+                      <!-- /.card-comment -->
+                      <div class="card-comment">
+                        <!-- User image -->
+                        <img
+                          class="img-circle img-sm"
+                          src="{% static 'vendor/adminLTE/dist/img/user5-128x128.jpg' %}"
+                          alt="User Image"
+                        />
+  
+                        <div class="comment-text">
+                          <span class="username">
+                            Nombre del asesor
+                            <span class="text-muted float-right"
+                              >Fecha de la novedad y estado</span
+                            > </span
+                          ><!-- /.username -->
+                          Novedad
+                        </div>
+                        <!-- /.comment-text -->
+                      </div>
+                      <!-- /.card-comment -->
+                    </div>
+                    <!-- /.card-footer -->
+                    <div class="card-footer">
+                      <form action="#" method="post">
+                        <div class="input-group">
+                          <input
+                            type="text"
+                            name="message"
+                            placeholder="Respuesta ..."
+                            class="form-control"
+                          />
+                          <span class="input-group-append">
+                            <button type="submit" class="btn btn-warning">
+                              Colocar Novedad
+                            </button>
+                          </span>
+                        </div>
+                      </form>
+                    </div>
+                    <!-- /.card-footer -->
+                  </div>
+                  <!-- /.card -->
+                  <!-- /.row -->
+                  <!-- /.container-fluid -->
+                </div>
+                <!-- /.col -->
+                <!-- aqui inicia la barra lateral derecha -->
+                <div class="flex-fill ml-2">
+                  <div class="card card-widget widget-user-2 float-right col-12">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-warning">
+                      <div class="widget-user-image">
+                        <img
+                          class="img-circle elevation-2"
+                          src="{% static 'vendor/adminLTE/dist/img/user7-128x128.jpg' %}"
+                          alt="User Avatar"
+                        />
+                      </div>
+                      <!-- /.widget-user-image -->
+                      <h3 class="widget-user-username">Nombre del cliente</h3>
+                      <h5 class="widget-user-desc">numero de pedido</h5>
+                    </div>
+                    <div class="card-footer p-0">
+                      <ul class="nav flex-column">
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                            Fecha de Compra
+                            <span class="float-right badge bg-primary"
+                              >17 de diembre del 2019</span
+                            >
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                            Cobro
+                            <span class="float-right badge bg-info">$1,822</span>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                            Comision por venta de mercado libre
+                            <span class="float-right badge bg-success"
+                              >$-236</span
+                            >
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                            Cobramos
+                            <span class="float-right badge bg-danger"
+                              >$1,585</span
+                            >
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                            Siguiente Cliente
+                            <span class="float-right badge bg-primary"
+                              >Adelante</span
+                            >
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#" class="nav-link">
+                            Cliente Anterior
+                            <span class="float-right badge bg-primary"
+                              >atras</span
+                            >
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <!-- /.widget-user -->
+                </div>
+                <!-- /.col -->
+              </div>
+            </div>
+          </section>
+          <!-- /.content -->
+        </div>
+      </div>
+      <!-- aqui finaliza el lateral derecho -->
+
+{% endblock %}

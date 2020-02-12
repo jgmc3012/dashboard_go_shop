@@ -44,3 +44,24 @@ def show_questions(request):
         'questions': questions,
     }
     return render(request,'dashboard/adviser.questions.html', context)
+
+@login_required
+def claims(request):
+    return render(request,'dashboard/dashboard.claims.html')
+
+@login_required
+def messages(request):
+    return render(request,'dashboard/dashboard.messages.html')
+
+@login_required
+def corrections(request):
+    return render(request,'dashboard/dashboard.corrections.html')
+
+@login_required
+def edit(request):
+    return render(request,'dashboard/dashboard.edit.html')
+
+@login_required
+def profile(request):
+    return render(request,'dashboard/dashboard.profile.html')
+
