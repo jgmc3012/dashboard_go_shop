@@ -348,15 +348,17 @@ class ScraperCategory(Meli):
             self._ids = categories.values_list('id', flat=True)
         return self._categories
 
-    def _set_array(self, id, father, name, approved=False):
+    def _set_array(self, id, root, parent, name, approved=False):
         if 'M' == id[0]:
             id = int(id[3:])
-        if 'M' == father[0]:
+        if 'M' == root[0]:
             father = int(father[3:])
         if not id in self.ids:
+            parents = Category.objects.filter(id__in=[root,parent])
             self._categories[id] = Category.objects.create(
                 id=id,
-                father=father,
+                root=parents.get(id=root),
+                parent=parents.get(id=parent),
                 name=name,
                 approved=approved
             )
@@ -388,7 +390,7 @@ class ScraperCategory(Meli):
             self._categories = dict()
             root_id = int(result['path_from_root'][0]['id'][3:])
             root = self.array[root_id]
-            
+
             for category in children_categories:
                 id = int(category['id'][3:])
                 items = int(category['total_items_in_this_category'])
@@ -402,6 +404,12 @@ class ScraperCategory(Meli):
                         name=name,
                         leaf=leaf
                     ))
+                else:
+                    _category = self.array[id]
+                    _category.parent=current_category
+                    _category.root= root
+                    _category.leaf= leaf
+                    self.bulk_mgr.update(_category,{'root','parent', 'leaf'})
                 logging.info(f'<{id}:{name}[{items} items]>')
                 if not leaf:
                     next_level.append(category['id'])
@@ -418,10 +426,12 @@ class ScraperCategory(Meli):
             path = f'/categories/{id}'
             result = self.get(path)
             name = result['name']
-            father = result['path_from_root'][0]['id']
-            if int(father[3:]) != int(id[3:]):
-                self.update(father)
-            self._set_array(id,father,name)
+            root = result['path_from_root'][0]['id']
+            len_path = len(result['path_from_root'])
+            parent = result['path_from_root'][len_path-1]['id']
+            if int(root[3:]) != int(parent[3:]):
+                self.update(parent)
+            self._set_array(id,root,parent, name)
     
     def category_test_approved(self, category):
         result = self.get(f'{self.category_path}/MLV{category.id}')
