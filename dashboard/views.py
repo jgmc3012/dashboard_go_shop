@@ -23,7 +23,7 @@ def orders(request):
         orders = Order.objects.all().select_related('product').select_related('buyer').select_related('invoice').select_related('invoice__pay')
     context = {
         'status_orders': Order.STATES_CHOICES,
-        'orders': orders,
+        'orders': orders.order_by('-date_offer'),
         'selected': state
     }
     return render(request,'dashboard/adviser.orders.html', context)

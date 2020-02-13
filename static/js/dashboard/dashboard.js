@@ -57,6 +57,17 @@ function sendData(data, url, selectorModal, callback, kwargs={}, show_response=t
             callback(kwargs)
         }
     })
+    .catch( error => {
+        console.error(error)
+        toggleLoading()
+        const HTMLString = alertInfoHTML(
+            'Intente realizar la accion nuevamente, Si persiste el error contacte al Desarrollador',
+            'danger',
+            'ERROR:'
+        )
+        insertElement('#InfoMsg', HTMLString)
+    })
+
 }
 
 function getJsonFromForm(selector) {
