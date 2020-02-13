@@ -185,7 +185,7 @@ class Scraper(Meli):
 
     def new_product(self,id:str):
         id = id.replace('-','')
-        logging.info(f'Scrapeando un productos')
+        logging.info(f'Scrapeando un producto')
         product_ = self.get(
             path=f'/items/{id}'
         )
@@ -195,7 +195,7 @@ class Scraper(Meli):
 
         sellers = ScraperSeller()
         bad_sellers = Seller.objects.filter(bad_seller=True).values_list('id',flat=True)
-        seller_id = int(product_['seller']['id'])
+        seller_id = int(product_['seller_id'])
         categories = ScraperCategory()
         category_id = int(product_['category_id'][3:])
 
@@ -206,7 +206,10 @@ class Scraper(Meli):
         elif (not category_id in categories.ids):
             categories.update(product_['category_id'])
 
-        cost_price = ceil(product_['price']/BM.trm)
+        if product_['currency_id'] == 'USD':
+            cost_price = ceil(product_['price'])
+        else:
+            cost_price = ceil(product_['price']/BM.trm)
         sales_cost = ceil( (cost_price+BM.shipping_vzla)*(1+BM.meli_tax/100)*(1+BM.utility/100))
         product = Product.objects.filter(provider_sku=product_['id']).first()
         if not product:
@@ -218,8 +221,8 @@ class Scraper(Meli):
                 provider_sku=product_['id'],
                 provider_link=product_['permalink'],
                 image=product_['thumbnail'].replace('http','https'),
-                category = categories[category_id],
-                quantity=product_['available_quantity']
+                category = categories.array[category_id],
+                quantity=product_['initial_quantity']
             )
             for _attribute in product_['attributes']:
                 if _attribute['value_name'] and (350 < len(_attribute['value_name'])):
@@ -231,7 +234,8 @@ class Scraper(Meli):
                     ))
 
         bulk_mgr.done()
-        return self.scan_product([id])
+        self.scan_product([id])
+        return product
 
     def scan_product(self, list_ids):
         path = '/items'
