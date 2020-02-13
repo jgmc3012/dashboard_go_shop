@@ -95,7 +95,12 @@
                     </div>
                     <div class='col-7'>
                         <!-- Datos del Product -->
-                        <h5>{{ order.product.title }}</h5>
+                        <a href="{{ order.product.provider_link }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <h5>{{ order.product.title }}</h5>
+                        </a>
                         <div class="d-flex">
                             <div class='flex-fill'>
                                 <img
@@ -116,13 +121,6 @@
                                 <div class="row">
                                     <span class="text-black">Guia del Envio:</span>
                                     <p>{{ order.shipping.guide }}</p>
-                                </div>
-                                <div class="row">
-                                    <span class="text-black">Publicacion del proveedor:</span>
-                                    <a
-                                        target="_blank"
-                                        href="{{ order.product.provider_link }}"
-                                    >Link</a>
                                 </div>
                                 <div class="row">
                                     <span class="text-black">Referencia de Pago:</span>
@@ -157,6 +155,7 @@
                         <div class="row">
                             <span class="text-black">Precio de Venta: </span>
                             <strong>{{ order.invoice.pay.amount }} Bs</strong>
+                            <strong>{{ order.product.sale_price }} USD</strong>
                         </div>
                         <!-- / Datos del Vendodor -->
                     </div>
