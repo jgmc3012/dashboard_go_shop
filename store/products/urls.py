@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import get_url_provider
+from .views import get_url_product
 
 urlpatterns = [
-    path('api/mlv/<str:sku>', get_url_provider, name='product.url_provider'),
+    path('api/sku/<str:sku>', get_url_product, name='product.sku'),
 ]
