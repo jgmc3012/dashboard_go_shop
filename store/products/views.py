@@ -11,23 +11,37 @@ from store.store import Store
 import logging
 
 @login_required
-def get_url_provider(request, sku):
-    sku = sku.replace('-', '')
-    product = Product.objects.filter(sku=sku).first()
-
-    if not product:
+def get_url_product(request, sku):
+    sku = sku.replace('-', '').upper()
+    if sku[:3] == 'MCO':
+        product = Product.objects.filter(provider_sku=sku).first()
+        if not product:
+            return JsonResponse({
+                'ok': False,
+                'msg': f'No se encontro ningun producto con el sku: {sku}'
+            })
         return JsonResponse({
-            'ok': False,
-            'msg': f'No se encontro ningun producto con el sku: {sku}'
-        })
+                'ok': True,
+                'msg': 'El enlace a la publicacion del producto se abrira en una nueva ventana.',
+                'data': {
+                    'provider_url': product.store_link
+                }
+            })
 
-    return JsonResponse({
-            'ok': True,
-            'msg': '',
-            'data': {
-                'provider_url': product.provider_link
-            }
-        })
+    elif sku[:3] == 'MLV':
+        product = Product.objects.filter(sku=sku).first()
+        if not product:
+            return JsonResponse({
+                'ok': False,
+                'msg': f'No se encontro ningun producto con el sku: {sku}'
+            })
+        return JsonResponse({
+                'ok': True,
+                'msg': 'El enlace a la publicacion del producto se abrira en una nueva ventana.',
+                'data': {
+                    'provider_url': product.provider_link
+                }
+            })
 
 def filter_bad_products():
     bulk_mgr = BulkCreateManager()
