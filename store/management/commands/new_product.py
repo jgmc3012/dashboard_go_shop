@@ -17,4 +17,7 @@ class Command(BaseCommand):
             MCO = f'MCO{MCO}'
         res = scraper.new_product(MCO)
         logging.info(res)
-        Store().publish(product=res, paused=False)
+        if res.sku:
+            logging.info('El producto ya existe en nuestra tienda')
+        else:
+            Store().publish(product=res, paused=False)

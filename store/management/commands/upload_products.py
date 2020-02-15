@@ -25,13 +25,20 @@ class Command(BaseCommand):
             sku=None,
             quantity__gt=0,
             available=True,
-            category__leaf=True).select_related('category')[:11000]
+            category__leaf=True).select_related('category')
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
         store = Store()
-        total = len(products)
         slices = 100
         for lap, _products in enumerate(chunks(products, slices)):
-            logging.info(f'PUBLICACIONES {(lap+1)*100}/{total}')
+            logging.info(f'PUBLICANDO {(lap)*100}-{(lap+1)*100}')
             with ThreadPoolExecutor(max_workers=8) as executor:
-                executor.map(store.publish, _products)
+                response = executor.map(store.publish, _products)
+                limit_per_day = False
+                for product in response:
+                    if not response['ok']:
+                        limit_per_day = (response['data'].get('message') ==  'daily_quota.reached')
+                    if limit_per_day:
+                        break
+                if limit_per_day:
+                        break
