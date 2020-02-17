@@ -47,11 +47,13 @@ def get_or_create_buyer(buyer_id:int, buyer_draw=dict()):
         phone_draw = buyer_draw.get('phone')
         phone = ''
         if phone_draw.get('area_code'):
-            phone += phone_draw.get('area_code')
+            phone += phone_draw.get('area_code').replace(' ', '')
         if phone_draw.get('number'):
-            phone +=phone_draw.get('number').replace('-','')
+            phone +=phone_draw.get('number').replace('-','').replace(' ', '')
         if len(phone) > 5:
             phone = int(phone)
+        else:
+            phone = 0
 
         if not buyer:
             buyer = Buyer.objects.create(

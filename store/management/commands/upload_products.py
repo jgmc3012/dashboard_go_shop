@@ -36,8 +36,8 @@ class Command(BaseCommand):
                 response = executor.map(store.publish, _products)
                 limit_per_day = False
                 for product in response:
-                    if not response['ok']:
-                        limit_per_day = (response['data'].get('message') ==  'daily_quota.reached')
+                    if not product['ok'] and product.get('data'):
+                        limit_per_day = (product['data'].get('message') ==  'daily_quota.reached')
                     if limit_per_day:
                         break
                 if limit_per_day:
