@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from .models import Product
 from meli_sdk.models import BulkCreateManager
 from store.products.models import Product
-from store.models import Seller
+from store.models import Seller, BadWord
 import re
 from store.store import Store
 import logging
@@ -43,19 +43,29 @@ def get_url_product(request, sku):
                 }
             })
 
+def filter_bad_words(bad_words, text):
+    for _text_ in text.split():
+        if (_text_.strip().upper() in bad_words) or (
+            f'{_text_.strip().upper()}S' in bad_words) or (
+            f'{_text_.strip().upper()}ES' in bad_words
+        ):
+            return _text_
+    return None
+
 def filter_bad_products():
-    bulk_mgr = BulkCreateManager()
-
-    products = Product.objects.filter(available=True).exclude(no_problem=True).select_related('seller')
-
+    bulk_mgr = BulkCreateManager(1000)
+    products = Product.objects.filter(available=True).select_related('seller')
+    bad_words = set(BadWord.objects.all().values_list('word', flat=True))
     store = Store()
     for product in products:
-        match = re.search(store.pattern_bad_words, product.title.upper())
-        if match or product.seller.bad_seller:
+        msg = ''
+        if product.seller.bad_seller:
+            msg = f'{product.provider_sku}:{product}. Es del vendedor {product.seller.id} que esta en la lista de malos vendedores.'
+        else:
+            match = filter_bad_words(bad_words, product.title.upper())
             if match:
-                msg = f'{product.provider_sku}:{product}. Contiene palabras prohibidas. {match.group()}'
-            else:
-                msg = f'{product.provider_sku}:{product}. Es del vendedor {product.seller.id} que esta en la lista de malos vendedores.'
+                msg = f'{product.provider_sku}:{product}. Contiene palabras prohibidas. {match}'
+        if msg:
             logging.warning(msg)
             product.available = False
             bulk_mgr.update(product, {'available'})
