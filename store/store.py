@@ -11,7 +11,7 @@ from meli_sdk.sdk.meli import Meli
 from .products.models import Product, Picture, Attribute
 
 from dollar_for_life.models import History
-from store.models import BusinessModel, BadWord
+from store.models import BusinessModel
 
 
 class Store(Meli):
@@ -24,9 +24,6 @@ class Store(Meli):
 
     def __init__(self, seller_id=None):
         super().__init__(seller_id)
-        words = BadWord.objects.all().values_list('word', flat=True)
-        words = [ f'(\A|\s){word.upper()}(S|ES)?(\s|$)' for word in words]
-        self.pattern_bad_words = '|'.join(words)
         self._attentive_user = None
 
     @property
