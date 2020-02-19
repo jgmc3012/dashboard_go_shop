@@ -268,6 +268,8 @@ class Scraper(Meli):
                     timeout = (sale_term['id'] == 'MANUFACTURING_TIME')
                     if timeout:
                         logging.warning(f"Producto {product} con terminos de entrega, {sale_term['value_name']}")
+                        product.available=False
+                        bulk_mgr.update(product,{'available'})
                         break
                 if timeout:
                     continue
