@@ -10,17 +10,16 @@ class Command(BaseCommand):
 
 
     def add_arguments(self, parser):
-        parser.add_argument('--category_id', type=str)
+        parser.add_argument('--category_id', type=int)
 
     def handle(self, *args, **options):
         scraper = Scraper()
         category_id = options['category_id']
         if category_id:
-            categories = Category.objects.filter(root=int(category_id))
+            categories = Category.objects.filter(root=category_id, leaf=True)
             for category in categories:
                 scraper.scan_for_category(category)
-            else:
-                logging.info('Categria invalida')
+
         else:
             categories_ids = [
                 1747,   # "name": "Accesorios para Vehículos"
@@ -45,6 +44,6 @@ class Command(BaseCommand):
                 # 1953,   # "name": "Otras categorías"
             ]
 
-            categories = Category.objects.filter(root__in=categories_ids)
+            categories = Category.objects.filter(root__in=categories_ids, leaf=True)
             for category in categories:
                 scraper.scan_for_category(category)
