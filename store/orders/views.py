@@ -9,7 +9,7 @@ import json
 from meli_sdk.models import BulkCreateManager
 
 from store.store import Store
-from .models import Order, Buyer, Product, Pay, Invoice, New
+from .models import Order, Buyer, Product, Pay, Invoice, New, FeedBack
 from dollar_for_life.models import History
 
 from shipping.views import new_shipping, shipment_completed
@@ -25,6 +25,7 @@ def new_pay( request, order_id):
     pay_reference = int(json_data.get('pay_reference'))
     quantity = int(json_data.get('quantity'))
 
+    user_name = request.user.first_name
     if not (pay_reference and quantity):
         return JsonResponse({
             'ok': False,
@@ -32,7 +33,6 @@ def new_pay( request, order_id):
         })
 
     store = Store()
-    user_name = request.user.first_name
     params = {
         'attributes': 'date_created,buyer,order_items'
     }
@@ -42,6 +42,12 @@ def new_pay( request, order_id):
         return JsonResponse({
             'ok': False,
             'msg': f'{user_name} ya esta orden fue procesada. Contacta con un supervisor si deseas hacer cambios en ella.'
+        })
+
+    if order.state == Order.CANCELLED:
+        return JsonResponse({
+            'ok': False,
+            'msg': f'Esta orden ya fue concelada. No se puede modificar su estado.'
         })
 
     if order.invoice.user:
@@ -205,7 +211,7 @@ def shipping_of_packet( request):
 
         return JsonResponse({
             'ok':False,
-            'msg': f'El envio {guide}. No se pudo registrar porque la(s) siguiente(s) \
+            'msg': f'El envio {guide_shipping}. No se pudo registrar porque la(s) siguiente(s) \
 ordene(s) no corresponden con nuestra base de datos. \n{bad_orders}'
         })
 
@@ -311,6 +317,66 @@ def complete_order( request, order_id):
             'msg': f'{user_name}. {msg}'
         })
 
+@login_required
+def cancel_order(request):
+    json_data=json.loads(request.body)
+    message = json_data['message']
+    order_id = json_data['orderId']
+    reason = json_data['reason']
+    rating = json_data['rating']
+
+    order = Order.objects.filter(id=order_id).first()
+    if not order:
+        return JsonResponse({
+            'ok': False,
+            'msg': 'El numero de pedido no existen. Esto debe ser un error, consulte al desarrollador.'
+        })
+
+    if order.state > Order.OFFERED:
+        return JsonResponse({
+            'ok': False,
+            'msg': f'Esta orden ya tiene un pago registrado, no es posible cancelar la misma.'
+        })
+
+    if not (message and reason):
+        return JsonResponse({
+            'ok': False,
+            'msg': 'Verifique que esta llenando correctamente los campos necesarios.'
+        })
+
+    body = {
+        'fulfield':False,
+        'message':'No se pudimos concretar la venta',
+        'reason':FeedBack.REASON_MELI[reason],
+        'rating':'neutral',
+    }
+
+    store = Store()
+    res = store.post(
+        path=f'/orders/{order_id}/feedback',
+        body=body,
+        auth=True,
+    )
+
+    # if res.status = 200 o algo para validar que fue correta la cancelacion
+
+    FeedBack.create(
+        raiting=rating,
+        reason=reason,
+        fulfilled=False,
+        user=request.user,
+        message=message,
+        order=order
+    )
+
+    order.status = Order.CANCELLED
+    order.save()
+
+    return JsonResponse({
+        'ok': True,
+        'msg': 'Orden cancelada correctamente.',
+        'data': []
+    })
 
 # class NewView(LoginRequiredMixin, View):
 
@@ -363,3 +429,4 @@ def show_news(request):
         'msg': '',
         'data': {'news':news}
     })
+

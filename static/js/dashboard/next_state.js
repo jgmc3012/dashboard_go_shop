@@ -17,6 +17,39 @@ function selectUrl(state, orderId) {
     }
 }
 
+const formCancelOrder = `
+    <div>
+        <div class="modal-body" id='bodyModalState'>
+            <form id='form_cancel_order'>
+                <div class='d-flex mb-2'>
+                    <div class="radio">
+                    <label><input type="radio" name="optradio" value='-1'>Mal</label>
+                    </div>
+                    <div class="radio">
+                    <label><input type="radio" name="optradio" value='0'>Mee..</label>
+                    </div>
+                    <div class="radio disabled">
+                    <label><input type="radio" name="optradio" value='1'>Fine</label>
+                    </div>
+                </div>
+                <div class="form-group mb-2">
+                    <textarea class="form-control" rows="2" name="message" api='data-news'></textarea>
+                </div> 
+                <select name="state_order" class="form-control custom-select shadow small">
+                    <option value="SELLER_OUT_OF_STOCK">No tenemos Stock</option>
+                    <option value="SELLER_DIDNT_TRY_TO_CONTACT_BUYER">No pude contactar al comprador</option>
+                    <option value="BUYER_NOT_ENOUGH_MONEY">El comprador no tenia el dinero del producto</option>
+                    <option value="BUYER_REGRETS">El comprador decidio no comprar</option>
+                </select>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="btn btn-primary" orderId='${orderId}' id='btnSutmitCancelOrder' >Enviar</div>
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+`
+
 const formNextState = (state, orderId ) => {
     switch (state+1) {
         case 1:
