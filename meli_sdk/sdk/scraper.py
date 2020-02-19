@@ -249,7 +249,7 @@ class Scraper(Meli):
         )
 
         products_draw = {product['body']['id']:product for product in results if product.get('body')}
-        products = Product.objects.filter(provider_sku__in=products_draw.keys())
+        products = Product.objects.filter(provider_sku__in=products_draw.keys(),available=True)
         product_with_img = Picture.objects.filter(product__in=products).values_list('product',flat=True)
         if product_with_img:
             products = products.exclude(id__in=product_with_img)
