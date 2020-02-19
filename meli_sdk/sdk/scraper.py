@@ -249,7 +249,7 @@ class Scraper(Meli):
         )
 
         products_draw = {product['body']['id']:product for product in results if product.get('body')}
-        products = Product.objects.filter(provider_sku__in=products_draw.keys())
+        products = Product.objects.filter(provider_sku__in=products_draw.keys(),available=True)
         product_with_img = Picture.objects.filter(product__in=products).values_list('product',flat=True)
         if product_with_img:
             products = products.exclude(id__in=product_with_img)
@@ -268,6 +268,8 @@ class Scraper(Meli):
                     timeout = (sale_term['id'] == 'MANUFACTURING_TIME')
                     if timeout:
                         logging.warning(f"Producto {product} con terminos de entrega, {sale_term['value_name']}")
+                        product.available=False
+                        bulk_mgr.update(product,{'available'})
                         break
                 if timeout:
                     continue
