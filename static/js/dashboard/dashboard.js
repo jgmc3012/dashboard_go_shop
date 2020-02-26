@@ -75,11 +75,14 @@ function getJsonFromForm(selector) {
     data = {}
     elements.forEach( element => {
         key = element.getAttribute('name')
+        if (element.type == 'radio' && !data[key] ) {
+            
+        }
         value = element.value
         data[key] = value
     } )
     return data
-} 
+}
 
 function clearForm(selector) {
     elements = document.querySelectorAll(selector)

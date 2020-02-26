@@ -17,39 +17,6 @@ function selectUrl(state, orderId) {
     }
 }
 
-const formCancelOrder = `
-    <div>
-        <div class="modal-body" id='bodyModalState'>
-            <form id='form_cancel_order'>
-                <div class='d-flex mb-2'>
-                    <div class="radio">
-                    <label><input type="radio" name="optradio" value='-1'>Mal</label>
-                    </div>
-                    <div class="radio">
-                    <label><input type="radio" name="optradio" value='0'>Mee..</label>
-                    </div>
-                    <div class="radio disabled">
-                    <label><input type="radio" name="optradio" value='1'>Fine</label>
-                    </div>
-                </div>
-                <div class="form-group mb-2">
-                    <textarea class="form-control" rows="2" name="message" api='data-news'></textarea>
-                </div> 
-                <select name="state_order" class="form-control custom-select shadow small">
-                    <option value="SELLER_OUT_OF_STOCK">No tenemos Stock</option>
-                    <option value="SELLER_DIDNT_TRY_TO_CONTACT_BUYER">No pude contactar al comprador</option>
-                    <option value="BUYER_NOT_ENOUGH_MONEY">El comprador no tenia el dinero del producto</option>
-                    <option value="BUYER_REGRETS">El comprador decidio no comprar</option>
-                </select>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <div class="btn btn-primary" orderId='${orderId}' id='btnSutmitCancelOrder' >Enviar</div>
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
-        </div>
-    </div>
-`
-
 const formNextState = (state, orderId ) => {
     switch (state+1) {
         case 1:
@@ -119,7 +86,7 @@ btnsNextState.forEach( (btn) => {
         let state = parseInt(parseInt(event.target.getAttribute('state')))
         const HTMLString = formNextState(state,orderId)
         if (HTMLString) {
-            insertElement('#formContainer', HTMLString)
+            insertElement('#formContainer', HTMLString) 
 
             btnRequest = document.getElementById('btnRequestNextState')
             btnRequest.addEventListener( 'click' , (event) => {
@@ -130,5 +97,62 @@ btnsNextState.forEach( (btn) => {
                 sendData(data ,url, '#stateModal', hideOrder, {orderId})
             })
         }
+    })
+})
+
+// CANCEL ORDER
+
+const cancel_template = orderId => (`
+<div>
+    <div>
+        <h3>Cancelar Orden</h3>
+    </div>
+    <form id="formCancelOrder" method="post">
+        <div class="modal-body" id='bodyModalState'>
+            <div class="form-group">
+            <label for="reasons">Motivo de la cancelacion:</label>
+            <select class="form-control" id="reasons" name="reason">
+                <option value="0">Nos quedamos sin stock</option>
+                <option value="1">No pudimos contactar al comprador</option>
+                <option value="2">El cliente no tenia el dinero suficiente para la compra</option>
+                <option value="3">El cliente se arrepintio de la compra</option>
+            </select>
+            <div>
+                <label class="radio-inline"><input type="radio" name="rating" value="-1">Negativo</label>
+                <label class="radio-inline"><input type="radio" name="rating" value="0" checked>Neutro</label>
+                <label class="radio-inline"><input type="radio" name="rating" value="1">Positivo</label>
+            </div>
+
+            <div class="form-group">
+                <label for="mesage">Mensajes:</label>
+                <textarea class="form-control" rows="5" name="mesage" required></textarea>
+            </div>
+
+            </div>
+            <input id="orderId" name="orderId" type="hidden" value="${orderId}">
+        </div>
+        <div class="modal-footer">
+            <input class="btn btn-danger" type="submit" id='btnRequestCancelOrder' value='Cancelar Orden'></input>
+            <div class="btn btn-secondary" data-dismiss="modal">Salir</div>
+        </div>
+    </form>
+</div>
+`)
+
+btnsNextState = document.querySelectorAll('[data-target="#stateModal"]')
+btnsNextState.forEach( (btn) => {
+    btn.addEventListener('click', (event) => {
+        let orderId = event.target.getAttribute('id')
+        const HTMLString = cancel_template(orderId)
+        insertElement('#formContainer', HTMLString)
+
+        formRequest = document.getElementById('formCancelOrder')
+        formRequest.addEventListener( 'submit' , (event) => {
+            let url = `${window.location.origin}/orders/api/cancel`
+            event.preventDefault()
+
+            debugger
+            // sendData(data ,url, '#stateModal', hideOrder, {orderId})
+        })
     })
 })

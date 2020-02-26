@@ -346,7 +346,7 @@ def cancel_order(request):
 
     body = {
         'fulfield':False,
-        'message':'No se pudimos concretar la venta',
+        'message':'No se pudo concretar la venta',
         'reason':FeedBack.REASON_MELI[reason],
         'rating':'neutral',
     }
