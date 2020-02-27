@@ -155,7 +155,6 @@ class Meli(object):
             try:
                 return response.json()
             except:
-                breakpoint()
                 logging.error(response)
         
         #### Esto debe ser un decorador
