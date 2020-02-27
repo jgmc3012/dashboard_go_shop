@@ -29,6 +29,7 @@ class Order(models.Model):
     RECEIVED_STORE = 5
     COMPLETED = 6
     STATES_CHOICES = [
+        (CANCELLED, 'Cancelada'),
         (OFFERED, 'Ofertado en MercadoLibre'),
         (PAID_OUT, 'Pagado'),
         (PROCESSING, 'Procesando'),

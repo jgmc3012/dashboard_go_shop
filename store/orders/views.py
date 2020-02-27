@@ -321,15 +321,19 @@ def complete_order( request, order_id):
 def cancel_order(request):
     json_data=json.loads(request.body)
     message = json_data['message']
-    order_id = json_data['orderId']
-    reason = json_data['reason']
-    rating = json_data['rating']
-
-    order = Order.objects.filter(id=order_id).first()
+    order_id = int(json_data['orderId'])
+    reason = int(json_data['reason'])
+    rating = int(json_data['rating'])
+    order = Order.objects.filter(store_order_id=order_id).first()
     if not order:
         return JsonResponse({
             'ok': False,
             'msg': 'El numero de pedido no existen. Esto debe ser un error, consulte al desarrollador.'
+        })
+    if order.state == order.CANCELLED:
+        return JsonResponse({
+            'ok': False,
+            'msg': f'Esta orden ya fue cancelada anteriormente.'
         })
 
     if order.state > Order.OFFERED:
@@ -338,14 +342,8 @@ def cancel_order(request):
             'msg': f'Esta orden ya tiene un pago registrado, no es posible cancelar la misma.'
         })
 
-    if not (message and reason):
-        return JsonResponse({
-            'ok': False,
-            'msg': 'Verifique que esta llenando correctamente los campos necesarios.'
-        })
-
     body = {
-        'fulfield':False,
+        'fulfilled':False,
         'message':'No se pudo concretar la venta',
         'reason':FeedBack.REASON_MELI[reason],
         'rating':'neutral',
@@ -358,25 +356,29 @@ def cancel_order(request):
         auth=True,
     )
 
-    # if res.status = 200 o algo para validar que fue correta la cancelacion
+    if res[0] == 'Feedback already exists':
+        FeedBack.objects.create(
+            raiting=rating,
+            reason=reason,
+            fulfilled=False,
+            user=request.user,
+            message=message,
+            order=order
+        )
 
-    FeedBack.create(
-        raiting=rating,
-        reason=reason,
-        fulfilled=False,
-        user=request.user,
-        message=message,
-        order=order
-    )
-
-    order.status = Order.CANCELLED
-    order.save()
-
-    return JsonResponse({
-        'ok': True,
-        'msg': 'Orden cancelada correctamente.',
-        'data': []
-    })
+        order.state = Order.CANCELLED
+        order.save()
+        return JsonResponse({
+            'ok': True,
+            'msg': 'Orden cancelada correctamente.',
+            'data': []
+        })
+    else:
+        return JsonResponse({
+            'ok': False,
+            'msg': res,
+            'data': []
+        })
 
 # class NewView(LoginRequiredMixin, View):
 

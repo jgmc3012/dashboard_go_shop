@@ -17,10 +17,10 @@
             <div class="col-3 input-group">
             <select id='select_state_order' name="state_order" class="form-control custom-select shadow small">
                 <option
-                {% if selected == -1 %}
+                {% if selected == -10 %}
                     selected
                 {% endif %}
-                value="-1"
+                value="-10"
                 >Todos</option>
                 {% for value, name in status_orders %}
                 <option
@@ -75,6 +75,7 @@
                                 <p>{{ order.get_state_display }}</p> 
                             </div>
                         </div>
+                        {% if order.state >= 0 and order.state < 6 %}
                         <div class="row">
                             <span class="text-black">Pasar a:</span> 
                         </div>
@@ -84,13 +85,16 @@
                                 data-toggle="modal"
                                 data-target="#stateModal"
                                 state='{{ order.state }}'
-                            >{{ order.next_state }}</div>
-                            <div id='{{ order.store_order_id }}'
+                                api='modalNextState'
+                                >{{ order.next_state }}</div>
+                                <div id='{{ order.store_order_id }}'
                                 class='btn btn-secondary ml-0 col-9'
                                 data-toggle="modal"
+                                api='modalCancelOrder'
                                 data-target="#stateModal"
                             >Cancelar</div>
                         </div>
+                        {% endif %}
                         <!-- /Datos sobre el estado de la orden -->
                     </div>
                     <div class='col-7'>
