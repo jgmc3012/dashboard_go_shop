@@ -10,8 +10,6 @@ from decouple import config
 from meli_sdk.sdk.meli import Meli
 from .products.models import Product, Picture, Attribute
 
-from dollar_for_life.models import History
-from store.models import BusinessModel
 
 
 class Store(Meli):
@@ -148,18 +146,14 @@ class Store(Meli):
                 'ok':True,
                 'msg': 'Todo okey!'
             }
-    def publish(self, product, paused=True):
+    def publish(self, product, price_usd, paused=True):
         if product.sku:
             return {
                 'ok': True,
                 'data': product
             }
 
-        USD = History.objects.order_by('-datetime').first()
-        BM = BusinessModel.objects.get(pk=self.SELLER_ID)
-        price_usd = USD.rate + BM.usd_variation
-
-        pictures = Picture.objects.filter(product=product)
+        pictures = Picture.objects.filter(product=product)[:9]
         if not pictures:
             msg = f'El producto {product} no tiene imagenes asociadas'
             logging.warning(msg)
@@ -175,10 +169,15 @@ class Store(Meli):
             description= file.read()
         if product.category.approved:
             category = f'MLV{product.category.id}'
-        else:
+        elif product.category.root.approved:
             category = self.predict_category(
                 title=f'{product.title} {product.category.name}',
                 category_from=f'MLV{product.category.root.id}',
+                price=product.sale_price*price_usd
+            )
+        else:
+            category = self.predict_category(
+                title=f'{product.title} {product.category.name}',
                 price=product.sale_price*price_usd
             )
         pattern = r'[\w/,]?\d+[\w/,]?'

@@ -152,7 +152,11 @@ class Meli(object):
         uri = self.make_path(path)
         response = self._requests.get(uri, params=urlencode(params), headers=headers)
         if response.status_code == 200:
-            return response.json()
+            try:
+                return response.json()
+            except:
+                breakpoint()
+                logging.error(response)
         
         #### Esto debe ser un decorador
         elif response.status_code == 401:
