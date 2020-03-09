@@ -16,27 +16,25 @@ class BusinessModel(models.Model):
     """
     Aqui esta todas las variables que se le aplicaran a cada precio de costo por producto
     """
-    seller_id = models.CharField(
-        max_length=50,
+    seller_id = models.PositiveIntegerField(
         primary_key=True,
-        help_text="Identificador unico del vendedor en la WEB/API del proveeedor",
+        help_text="Identificador unico del vendedor en la API de mercadolibre",
     )
-    trm = models.IntegerField(
+    trm = models.FloatField(
         help_text="Conversion de la moneda del proveedor a 1 USD.",
     )
-    shipping_vzla = models.IntegerField(
+    shipping_vzla = models.FloatField(
         help_text="Costo MAXIMO de envio dentro de venezuela(en USD).",
     )
-    meli_tax = models.IntegerField(
+    meli_tax = models.FloatField(
         help_text="PORCENTAJE de la comision de mercadolibre.",
     )
     utility = models.IntegerField(
         help_text="PORCENTAJE de la utilidad de los socios.",
     )
-
-    usd_variation = models.IntegerField(
+    usd_variation = models.FloatField(
         help_text="Precio de actualizacion del USD por encima de la taza.",
-        default=10000
+        default=0
     )
 
 class Buyer(models.Model):
@@ -51,7 +49,6 @@ class Buyer(models.Model):
         return f'{self.id}:{self.nickname}'
 
 class BadWord(models.Model):
-    word= models.CharField(max_length=50, unique=True)
-
+    word = models.CharField(max_length=50, unique=True)
     def __str__(self):
         return self.word
