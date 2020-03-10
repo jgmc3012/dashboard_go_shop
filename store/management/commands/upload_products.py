@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from store.products.models import Product, Picture
-from store.products.views import filter_bad_products 
+from store.products.models import Product, Picture, ProductForStore
+from store.products.views import filter_bad_products
 from store.store import Store
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
@@ -24,12 +24,12 @@ class Command(BaseCommand):
 
         start = datetime.now()
         logging.info('Consultando la base de datos')
-        sellers_bad = Product.objects.filter(Q(available=0)|Q(status=Product.CLOSED)).values_list('seller',flat=True)
+        product_exits = ProductForStore().objects.all()
         products = Product.objects.filter(
             sku=None,
             quantity__gt=0,
             available=True,
-            category__leaf=True).exclude(seller__in=sellers_bad).select_related('category')
+            category__leaf=True).select_related('category')
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
         store = Store()
