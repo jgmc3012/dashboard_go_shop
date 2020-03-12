@@ -11,7 +11,6 @@ from meli_sdk.sdk.meli import Meli
 from .products.models import Product, Picture, Attribute
 
 
-
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
     URI_CALLBACK = config('MELI_URI_CALLBACK')
@@ -20,8 +19,9 @@ class Store(Meli):
     pools = []
     queues = []
 
-    def __init__(self, seller_id=None):
+    def __init__(self, seller_id=None, name='goshop', currency="VES"):
         super().__init__(seller_id)
+        self.name = name
         self._attentive_user = None
 
     @property
@@ -147,12 +147,9 @@ class Store(Meli):
                 'msg': 'Todo okey!'
             }
     def publish(self, product, price_usd, paused=True):
-        if product.sku:
-            return {
-                'ok': True,
-                'data': product
-            }
-
+        """
+        Hay que modificar el price_usd
+        """
         pictures = Picture.objects.filter(product=product)[:9]
         if not pictures:
             msg = f'El producto {product} no tiene imagenes asociadas'
@@ -165,31 +162,32 @@ class Store(Meli):
         attributes = Attribute.objects.filter(product=product)
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        with open(f'{dir_path}/templates/goshop.txt') as file:
+        with open(f'{dir_path}/templates/{self.name}.txt') as file:
             description= file.read()
-        if product.category.approved:
-            category = f'MLV{product.category.id}'
-        elif product.category.root.approved:
-            category = self.predict_category(
-                title=f'{product.title} {product.category.name}',
-                category_from=f'MLV{product.category.root.id}',
-                price=product.sale_price*price_usd
-            )
-        else:
-            category = self.predict_category(
-                title=f'{product.title} {product.category.name}',
-                price=product.sale_price*price_usd
-            )
-        pattern = r'[\w/,]?\d+[\w/,]?'
+        # if product.category.approved:
+        #     category = f'MLV{product.category.id}'
+        # elif product.category.root.approved:
+        #     category = self.predict_category(
+        #         title=f'{product.title} {product.category.name}',
+        #         category_from=f'MLV{product.category.root.id}',
+        #         price=product.sale_price*price_usd
+        #     )
+        # else:
+        category = self.predict_category(
+            title=f'{product.title} {product.category_name}',
+            price=product.sale_price*price_usd
+        )
+        # pattern = r'[\w/,]?\d+[\w/,]?' # Esto es solo para la tienda de venezuela
 
         body = {
-            "title": re.sub(pattern,'',product.title),
+            # "title": re.sub(pattern,'',product.title[:59]), # Esto es solo para la tienda de venezuela
+            "title": product.title[:59],
             "category_id": category,
             "price":product.sale_price*price_usd,
             "available_quantity": 5 if product.quantity > 5 else product.quantity,
             "buying_mode":"buy_it_now",
             "condition":"new",
-            "currency_id": "VES",
+            "currency_id": self.currency,
             "listing_type_id":"gold_special",
             "description":{
                 "plain_text": description

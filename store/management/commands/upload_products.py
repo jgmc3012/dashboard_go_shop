@@ -24,18 +24,18 @@ class Command(BaseCommand):
 
         start = datetime.now()
         logging.info('Consultando la base de datos')
-        product_exits = ProductForStore().objects.all()
+        BM = BusinessModel.objects.get(pk=store.SELLER_ID)
+        store = Store()
+        product_exits = ProductForStore().objects.filter(seller=BM).values_list(
+            'product__id', flat=True
+        )
         products = Product.objects.filter(
-            sku=None,
             quantity__gt=0,
-            available=True,
-            category__leaf=True).select_related('category')
+            available=True).exclude(id__in=product_exits)
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
-        store = Store()
         slices = 100
         USD = History.objects.order_by('-datetime').first()
-        BM = BusinessModel.objects.get(pk=store.SELLER_ID)
         price_usd = USD.rate + BM.usd_variation
 
         for lap, _products in enumerate(chunks(products, slices)):

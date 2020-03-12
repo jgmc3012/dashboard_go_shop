@@ -12,6 +12,7 @@ cd threepersonteam
 python3.7 -m venv venv
 source venv/bin/activate
 
+python -m pip install wheel
 python -m pip install -r requirements.txt
 
 git clone https://github.com/jgmc3012/new-interface.git static/vendor/adminLTE

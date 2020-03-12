@@ -9,6 +9,7 @@ import json
 from meli_sdk.models import BulkCreateManager
 
 from store.store import Store
+from meli_sdk.sdk.scraper import Scraper
 from .models import Order, Buyer, Product, Pay, Invoice, New, FeedBack
 from dollar_for_life.models import History
 
@@ -432,3 +433,43 @@ def show_news(request):
         'data': {'news':news}
     })
 
+@login_required
+def change_product(request):
+    json_data=json.loads(request.body)
+    order_id = json_data['productOld']
+    id_product_new = json_data['productNew'].upper()
+    order = Order.objects.filter(id=order_id).selected_relative('product',flat=True).first()
+    if not order:
+        return JsonResponse({
+            'ok': False,
+            'msg': 'El numero de pedido no existe. Esto debe ser un error, consulte al desarrollador.',
+            'data': {}
+        })
+
+    product_new = Product.objects.filter(provider_sku=id_product_new)
+
+    if !(product_new):
+
+        res = Scraper().new_product(id_product_newi)
+        if not res:
+        return JsonResponse({
+            'ok': False,
+            'msg': 'El nuevo producto no se encuentra en nestra base de datos. Rectifique el sku del proveedor',
+            'data': {}
+        })
+
+    msg = f'Se cambio el producto del {order.product.provider_sku} al {product_new.provider_sku}'
+    order.product = product_new
+    order.save()
+
+    New.objects.create(
+        order=order,
+        message=msg,
+        user=request.user,
+    )
+
+    return JsonResponse({
+        'ok': True,
+        'msg': f'{msg} exitosamente.',
+        'data': []
+    })
