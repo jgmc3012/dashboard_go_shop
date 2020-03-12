@@ -37,7 +37,7 @@ class Product(models.Model):
     provider_link = models.CharField(max_length=255, unique=True)
     image = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
-    category_name = models.CharField(max_length=60) #"Temporal. Para el scraper de amazon"
+    category_name = models.CharField(max_length=60, null=True) #"Para el scraper de amazon"
     description = models.TextField(null=True, default=None)
     available = models.BooleanField(default=True)
     quantity = models.IntegerField()
