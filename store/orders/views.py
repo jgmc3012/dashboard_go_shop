@@ -448,15 +448,15 @@ def change_product(request):
 
     product_new = Product.objects.filter(provider_sku=id_product_new)
 
-    if !(product_new):
+    if not product_new:
 
-        res = Scraper().new_product(id_product_newi)
+        res = Scraper().new_product(id_product_new)
         if not res:
-        return JsonResponse({
-            'ok': False,
-            'msg': 'El nuevo producto no se encuentra en nestra base de datos. Rectifique el sku del proveedor',
-            'data': {}
-        })
+            return JsonResponse({
+                'ok': False,
+                'msg': 'El nuevo producto no se encuentra en nestra base de datos. Rectifique el sku del proveedor',
+                'data': {}
+            })
 
     msg = f'Se cambio el producto del {order.product.provider_sku} al {product_new.provider_sku}'
     order.product = product_new

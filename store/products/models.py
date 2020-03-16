@@ -36,7 +36,6 @@ class Product(models.Model):
     provider_sku = models.CharField(max_length=50, unique=True)
     provider_link = models.CharField(max_length=255, unique=True)
     image = models.CharField(max_length=255)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     category_name = models.CharField(max_length=60, null=True) #"Para el scraper de amazon"
     description = models.TextField(null=True, default=None)
     available = models.BooleanField(default=True)
@@ -86,7 +85,9 @@ class ProductForStore(models.Model):
     seller = models.ForeignKey(BusinessModel, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     no_problem = models.BooleanField(default=False)
-    sku = models.CharField(max_length=20, unique=True)
+    sale_price = models.FloatField()
+    sku = models.CharField(max_length=20, unique=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
 
     @property
     def store_link(self):

@@ -9,6 +9,7 @@ from decouple import config
 
 from meli_sdk.sdk.meli import Meli
 from .products.models import Product, Picture, Attribute
+from store.models import BusinessModel
 
 
 class Store(Meli):
@@ -19,10 +20,49 @@ class Store(Meli):
     pools = []
     queues = []
 
-    def __init__(self, seller_id=None, name='goshop', currency="VES"):
+    def __init__(self, seller_id=None, currency="VES"):
         super().__init__(seller_id)
-        self.name = name
+        self._name_ = None
         self._attentive_user = None
+
+    def init_properties(self):
+        """
+        Inicia los valores de la prodiedades que son obtenidas de la DB.
+        """
+        BM = BusinessModel.objects.get(pk=self.SELLER_ID)
+        self._name_ = BM.name
+        self._country_ = BM.country
+
+    @property
+    def currency(self):
+        if not self._country_:
+            self.init_properties()
+        return self.get_currency(self._country_)
+    
+    @property
+    def meli_code(self):
+        if not self._country_:
+            self.init_properties()
+        return self.get_meli_code(self._country_)
+
+    @property
+    def name(self):
+        if not self._name_:
+            self.init_properties()
+        return self._name_
+    
+    @property
+    def country(self):
+        if not self._country_:
+            self.init_properties()
+        return self._country_
+
+    def delete_numbers(self, string):
+        """
+        Elimina los numero de un string
+        """
+        parent =  r'[\w/,]?\d+[\w/,]?'
+        return re.sub(self.pattern,'', string)
 
     @property
     def attentive_user(self):
@@ -146,10 +186,9 @@ class Store(Meli):
                 'ok':True,
                 'msg': 'Todo okey!'
             }
-    def publish(self, product, price_usd, paused=True):
-        """
-        Hay que modificar el price_usd
-        """
+
+    def publish(self, product_store, price_usd, paused=True):
+        product = product_store.product
         pictures = Picture.objects.filter(product=product)[:9]
         if not pictures:
             msg = f'El producto {product} no tiene imagenes asociadas'
@@ -164,26 +203,20 @@ class Store(Meli):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         with open(f'{dir_path}/templates/{self.name}.txt') as file:
             description= file.read()
-        # if product.category.approved:
-        #     category = f'MLV{product.category.id}'
-        # elif product.category.root.approved:
-        #     category = self.predict_category(
-        #         title=f'{product.title} {product.category.name}',
-        #         category_from=f'MLV{product.category.root.id}',
-        #         price=product.sale_price*price_usd
-        #     )
-        # else:
+            
         category = self.predict_category(
             title=f'{product.title} {product.category_name}',
-            price=product.sale_price*price_usd
+            price=product_store.sale_price*price_usd
         )
-        # pattern = r'[\w/,]?\d+[\w/,]?' # Esto es solo para la tienda de venezuela
+
+        title = self.cut_title(product.title)
+        if self.country == 've':
+            title = self.delete_numbers(title)
 
         body = {
-            # "title": re.sub(pattern,'',product.title[:59]), # Esto es solo para la tienda de venezuela
-            "title": product.title[:59],
+            "title": title,
             "category_id": category,
-            "price":product.sale_price*price_usd,
+            "price":product_store.sale_price*price_usd,
             "available_quantity": 5 if product.quantity > 5 else product.quantity,
             "buying_mode":"buy_it_now",
             "condition":"new",
@@ -202,9 +235,9 @@ class Store(Meli):
         path = '/items'
         res = self.post(path, body=body, auth=True)
         if res.get('id'):
-            product.sku = res.get('id')
-            product.save()
-            logging.info(f'{product.title}. Agregado con exito a la tienda')
+            product_store.sku = res.get('id')
+            product_store.save()
+            logging.info(f'{product}. Agregado con exito a la tienda')
             logging.debug(res)
             if paused:
                 body = {
@@ -224,9 +257,9 @@ class Store(Meli):
                 'msg': 'Error en la peticion a mercadolibre',
                 'data': res
             }
-        
+
     def predict_category(self, title, category_from=None,price=None):
-        path = '/sites/MLV/category_predictor/predict'
+        path = f'/sites/{self.meli_code}/category_predictor/predict'
         params = {
             'title': title
         }

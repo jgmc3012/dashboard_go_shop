@@ -23,8 +23,8 @@ class BusinessModel(models.Model):
     trm = models.FloatField(
         help_text="Conversion de la moneda del proveedor a 1 USD.",
     )
-    shipping_vzla = models.FloatField(
-        help_text="Costo MAXIMO de envio dentro de venezuela(en USD).",
+    shipping = models.FloatField(
+        help_text="Costo MAXIMO de envio dentro del pais es decir la ultima milla(en USD).",
     )
     meli_tax = models.FloatField(
         help_text="PORCENTAJE de la comision de mercadolibre.",
@@ -35,6 +35,14 @@ class BusinessModel(models.Model):
     usd_variation = models.FloatField(
         help_text="Precio de actualizacion del USD por encima de la taza.",
         default=0
+    )
+    name = models.CharField(
+        max_length=10,
+        help_text="Nombre de la tienda. Max 10 caracteres")
+    
+    country = models.CharField(
+        max_length=2,
+        help_text="Abreviatura del pais online. Ej: ve, co, do, mx"
     )
 
 class Buyer(models.Model):

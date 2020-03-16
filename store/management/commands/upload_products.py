@@ -26,27 +26,25 @@ class Command(BaseCommand):
         logging.info('Consultando la base de datos')
         BM = BusinessModel.objects.get(pk=store.SELLER_ID)
         store = Store()
-        product_exits = ProductForStore().objects.filter(seller=BM).values_list(
-            'product__id', flat=True
-        )
-        products = Product.objects.filter(
-            quantity__gt=0,
-            available=True).exclude(id__in=product_exits)
+        products = ProductForStore.objects.filter(
+            seller=BM,
+            sku=None,
+            product__available=True,
+            product__quantity__gt=0).select_related('product')
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
         slices = 100
         USD = History.objects.order_by('-datetime').first()
-        price_usd = USD.rate + BM.usd_variation
+        price_usd = USD.country(BM.country) + BM.usd_variation
 
+        limit_per_day = False
         for lap, _products in enumerate(chunks(products, slices)):
             logging.info(f'PUBLICANDO {(lap)*100}-{(lap+1)*100}')
             with ThreadPoolExecutor(max_workers=3) as executor:
                 response = executor.map(
                     store.publish,
                     _products,
-                    [price_usd]*len(_products),
-                    [False]*len(_products))
-                limit_per_day = False
+                    [price_usd]*len(_products))
                 for product in response:
                     if not product['ok'] and product.get('data'):
                         limit_per_day = (product['data'].get('message') ==  'daily_quota.reached')
