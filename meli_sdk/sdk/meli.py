@@ -21,7 +21,7 @@ class Meli(object):
         if seller_id:
             self.SELLER_ID = seller_id
         else:
-            self.SELLER_ID = config('MELI_ME_ID')
+            raise "Debe pasar el seller_id como parametro"
         self.client_secret = config('MELI_SECRET_KEY')
         self.client_id = config('MELI_APP_ID')
         self.limit_ids_per_request = 20

@@ -18,14 +18,19 @@ def chunks(lst, n):
 class Command(BaseCommand):
     help = 'Publica nuevos producto en las cuenta de mercado libre'
 
+    def add_arguments(self, parser):
+        parser.add_argument('--seller_id', type=int)
+
     def handle(self, *args, **options):
+        seller_id = options['seller_id']
         logging.info('Aplicando filtro de malas palabras a productos')
-        filter_bad_products()
+        filter_bad_products(seller_id=seller_id)
 
         start = datetime.now()
         logging.info('Consultando la base de datos')
         BM = BusinessModel.objects.get(pk=store.SELLER_ID)
-        store = Store()
+
+        store = Store(seller_id=seller_id)
         products = ProductForStore.objects.filter(
             seller=BM,
             sku=None,
