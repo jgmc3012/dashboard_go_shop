@@ -62,6 +62,13 @@ class Meli(object):
         }
         return codes[country]
 
+    def get_listing_type(self, country:str):
+        listings = {
+            've':'gold_special',
+            'mx':'gold_pro',
+            'do':'gold_premium',
+        }
+        return listings[country]
 
     def chunks(self, lst, n):
         """Yield successive n-sized chunks from lst."""
