@@ -275,7 +275,8 @@ class Store(Meli):
         meli_values = {
             'marca': 'BRAND',
             'color': 'COLOR',
-            'modelo': 'MODEL'
+            'modelo': 'MODEL',
+            'talla': 'SIZE',
         }
         attributes = list()
         for _attribute_ in attributes_draw:
