@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from django.contrib.auth.models import User
 from store.models import Buyer
-from store.products.models import Product
+from store.products.models import ProductForStore
 from shipping.models import Shipping
 
 from store.store import Store
@@ -46,7 +46,7 @@ class Order(models.Model):
     store_order_id=models.BigIntegerField(unique=True)
     provider_order_id=models.BigIntegerField(unique=True, null=True)
     date_offer = models.DateTimeField(default=timezone.localtime)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductForStore, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True)

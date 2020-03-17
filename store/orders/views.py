@@ -10,7 +10,7 @@ from meli_sdk.models import BulkCreateManager
 
 from store.store import Store
 from meli_sdk.sdk.scraper import Scraper
-from .models import Order, Buyer, Product, Pay, Invoice, New, FeedBack
+from .models import Order, Buyer, ProductForStore, Pay, Invoice, New, FeedBack
 from dollar_for_life.models import History
 
 from shipping.views import new_shipping, shipment_completed
@@ -268,7 +268,7 @@ def received_packet( request, order_id):
     if not result.get('ok'):
         return JsonResponse(result)
 
-    orders = Order.objects.filter(shipping=shipping).select_related('product')
+    orders = Order.objects.filter(shipping=shipping).select_related('product').select_related('product__product')
 
     bulk_mgr = BulkCreateManager()
     number_products = 0
@@ -289,7 +289,7 @@ def received_packet( request, order_id):
     message = f'Solicitud Exitosa. El paquete contenia {number_products} producto(s).\
 A continuacion se listan los numeros de pedidos con sus respectivos paquetes productos:'
     for order in orders:
-        message += f'\nPedido: {order.store_order_id} -> {order.quantity} {order.product.title}.'
+        message += f'\nPedido: {order.store_order_id} -> {order.quantity} {order.product.product.title}.'
     return JsonResponse({
         'ok':True,
         'msg': message
@@ -446,19 +446,16 @@ def change_product(request):
             'data': {}
         })
 
-    product_new = Product.objects.filter(provider_sku=id_product_new)
+    product_new = ProductForStore.objects.filter(product__provider_sku=id_product_new)
 
     if not product_new:
+        return JsonResponse({
+            'ok': False,
+            'msg': 'El nuevo producto no se encuentra en nestra base de datos. Rectifique el sku del proveedor',
+            'data': {}
+        })
 
-        res = Scraper().new_product(id_product_new)
-        if not res:
-            return JsonResponse({
-                'ok': False,
-                'msg': 'El nuevo producto no se encuentra en nestra base de datos. Rectifique el sku del proveedor',
-                'data': {}
-            })
-
-    msg = f'Se cambio el producto del {order.product.provider_sku} al {product_new.provider_sku}'
+    msg = f'Se cambio el producto del {order.product.provider_sku} al {id_product_new}'
     order.product = product_new
     order.save()
 
