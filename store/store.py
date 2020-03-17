@@ -20,7 +20,7 @@ class Store(Meli):
     pools = []
     queues = []
 
-    def __init__(self, seller_id=None, currency="VES"):
+    def __init__(self, seller_id=None):
         super().__init__(seller_id)
         self._name_ = None
         self._attentive_user = None

@@ -52,11 +52,11 @@ def filter_bad_words(bad_words, text):
             return _text_
     return None
 
-def filter_bad_products():
+def filter_bad_products(seller_id:int):
     bulk_mgr = BulkCreateManager(1000)
     products = Product.objects.filter(available=True).select_related('seller')
     bad_words = set(BadWord.objects.all().values_list('word', flat=True))
-    store = Store()
+    store = Store(seller_id=seller_id)
     for product in products:
         msg = ''
         _bad_seller_ = product.seller.bad_seller if product.seller else False
