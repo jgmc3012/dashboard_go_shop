@@ -87,7 +87,6 @@ def filter_bad_products(seller_id:int):
             logging.warning(f'Producto no actualizado: {product}')
 
     ProductForStore.objects.filter(sku__in=posts_stop).update(
-        status=ProductForStore.PAUSED,
-        product__no_problem=False,
+        status=ProductForStore.PAUSED
     )
     logging.info(f"{len(posts_stop)} Productos pausados.")
