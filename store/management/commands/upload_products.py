@@ -35,7 +35,7 @@ class Command(BaseCommand):
             seller=BM,
             sku=None,
             product__available=True,
-            product__quantity__gt=0).select_related('product')
+            product__quantity__gt=2).select_related('product')
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
         slices = 100

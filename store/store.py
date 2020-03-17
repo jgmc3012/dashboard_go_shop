@@ -223,7 +223,7 @@ class Store(Meli):
             "currency_id": self.currency,
             "listing_type_id":"gold_special",
             "description":{
-                "plain_text": description
+                "plain_text": description.replace('product_description', product.description)
             },
             "pictures": [{"source": picture.src} for picture in pictures],
         }
@@ -242,7 +242,7 @@ class Store(Meli):
                    'status':'paused'
                 }
                 self.put(
-                    path=f'{path}/{product.sku}',
+                    path=f'{path}/{res.get("id")}',
                     body=body,
                 )
             return {
