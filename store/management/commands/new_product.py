@@ -11,11 +11,10 @@ class Command(BaseCommand):
         parser.add_argument('--mco', type=str)
 
     def handle(self, *args, **options):
-        scraper = Scraper()
         MCO = options['mco']
         if not MCO.upper()[:3] == 'MCO':
             MCO = f'MCO{MCO}'
-        res = scraper.new_product(MCO)
+        res = Scraper().new_product(MCO)
         logging.info(res)
         if res.sku:
             logging.info('El producto ya existe en nuestra tienda')

@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
 from store.views import get_or_create_buyer
-from store.products.models import Product
+from store.products.models import ProductForStore
 from questions.models import Question, Answer
 from django.http import JsonResponse
 from store.store import Store
@@ -26,7 +26,7 @@ def new_question(question_draw):
     ))
 
     buyer = get_or_create_buyer(int(question_draw['from']['id']))
-    product = Product.objects.get(sku=question_draw['item_id'])
+    product = ProductForStore.objects.get(sku=question_draw['item_id'])
 
     question = Question.objects.create(
         id=question_id,
@@ -86,7 +86,7 @@ def new_answer(text, question, user):
 
 @login_required
 def outwith_answer(request):
-    questions = Question.objects.filter(answer=None, product__status=Product.ACTIVE).count()
+    questions = Question.objects.filter(answer=None, product__status=ProductForStore.ACTIVE).count()
 
     return JsonResponse({
         'ok': True,

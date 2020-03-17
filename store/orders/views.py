@@ -9,7 +9,8 @@ import json
 from meli_sdk.models import BulkCreateManager
 
 from store.store import Store
-from .models import Order, Buyer, Product, Pay, Invoice, New, FeedBack
+from meli_sdk.sdk.scraper import Scraper
+from .models import Order, Buyer, ProductForStore, Pay, Invoice, New, FeedBack
 from dollar_for_life.models import History
 
 from shipping.views import new_shipping, shipment_completed
@@ -267,7 +268,7 @@ def received_packet( request, order_id):
     if not result.get('ok'):
         return JsonResponse(result)
 
-    orders = Order.objects.filter(shipping=shipping).select_related('product')
+    orders = Order.objects.filter(shipping=shipping).select_related('product').select_related('product__product')
 
     bulk_mgr = BulkCreateManager()
     number_products = 0
@@ -288,7 +289,7 @@ def received_packet( request, order_id):
     message = f'Solicitud Exitosa. El paquete contenia {number_products} producto(s).\
 A continuacion se listan los numeros de pedidos con sus respectivos paquetes productos:'
     for order in orders:
-        message += f'\nPedido: {order.store_order_id} -> {order.quantity} {order.product.title}.'
+        message += f'\nPedido: {order.store_order_id} -> {order.quantity} {order.product.product.title}.'
     return JsonResponse({
         'ok':True,
         'msg': message
@@ -432,3 +433,40 @@ def show_news(request):
         'data': {'news':news}
     })
 
+@login_required
+def change_product(request):
+    json_data=json.loads(request.body)
+    order_id = json_data['productOld']
+    id_product_new = json_data['productNew'].upper()
+    order = Order.objects.filter(id=order_id).selected_relative('product',flat=True).first()
+    if not order:
+        return JsonResponse({
+            'ok': False,
+            'msg': 'El numero de pedido no existe. Esto debe ser un error, consulte al desarrollador.',
+            'data': {}
+        })
+
+    product_new = ProductForStore.objects.filter(product__provider_sku=id_product_new)
+
+    if not product_new:
+        return JsonResponse({
+            'ok': False,
+            'msg': 'El nuevo producto no se encuentra en nestra base de datos. Rectifique el sku del proveedor',
+            'data': {}
+        })
+
+    msg = f'Se cambio el producto del {order.product.provider_sku} al {id_product_new}'
+    order.product = product_new
+    order.save()
+
+    New.objects.create(
+        order=order,
+        message=msg,
+        user=request.user,
+    )
+
+    return JsonResponse({
+        'ok': True,
+        'msg': f'{msg} exitosamente.',
+        'data': []
+    })

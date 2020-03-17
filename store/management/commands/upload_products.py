@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from store.products.models import Product, Picture
-from store.products.views import filter_bad_products 
+from store.products.models import Product, Picture, ProductForStore
+from store.products.views import filter_bad_products
 from store.store import Store
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
@@ -24,29 +24,27 @@ class Command(BaseCommand):
 
         start = datetime.now()
         logging.info('Consultando la base de datos')
-        sellers_bad = Product.objects.filter(Q(available=0)|Q(status=Product.CLOSED)).values_list('seller',flat=True)
-        products = Product.objects.filter(
+        BM = BusinessModel.objects.get(pk=store.SELLER_ID)
+        store = Store()
+        products = ProductForStore.objects.filter(
+            seller=BM,
             sku=None,
-            quantity__gt=0,
-            available=True,
-            category__leaf=True).exclude(seller__in=sellers_bad).select_related('category')
+            product__available=True,
+            product__quantity__gt=0).select_related('product')
         logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
-        store = Store()
         slices = 100
         USD = History.objects.order_by('-datetime').first()
-        BM = BusinessModel.objects.get(pk=store.SELLER_ID)
-        price_usd = USD.rate + BM.usd_variation
+        price_usd = USD.country(BM.country) + BM.usd_variation
 
+        limit_per_day = False
         for lap, _products in enumerate(chunks(products, slices)):
             logging.info(f'PUBLICANDO {(lap)*100}-{(lap+1)*100}')
             with ThreadPoolExecutor(max_workers=3) as executor:
                 response = executor.map(
                     store.publish,
                     _products,
-                    [price_usd]*len(_products),
-                    [False]*len(_products))
-                limit_per_day = False
+                    [price_usd]*len(_products))
                 for product in response:
                     if not product['ok'] and product.get('data'):
                         limit_per_day = (product['data'].get('message') ==  'daily_quota.reached')

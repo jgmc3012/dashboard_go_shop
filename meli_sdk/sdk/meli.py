@@ -45,11 +45,37 @@ class Meli(object):
             self._requests.mount('https://', SSLAdapter(ssl_version=getattr(ssl, self.SSL_VERSION)))
         except:
             self._requests = requests
+        
+    def get_currency(self, country:str):
+        currencies = {
+            've': 'VES'
+        }
+        return currencies[country]
+
+    def get_meli_code(self, country:str):
+        codes = {
+            've': 'MLV'
+        }
+        return codes[country]
+
 
     def chunks(self, lst, n):
         """Yield successive n-sized chunks from lst."""
         for i in range(0, len(lst), n):
             yield lst[i:i + n]
+
+    def cut_title(self, title, max_lenth=60):
+        """
+        Retorna un string de maximo de max_lenth caracteres, sin palabras picadas.
+        """
+        if len(title) <= max_lenth:
+            return title
+
+        title_new = ''
+        for word in title.split():
+            if len(f'{title_new} {word}') <= max_lenth:
+                title_new = f'{title_new} {word}'
+        return title_new
 
     #AUTH METHODS
     def auth_url(self,redirect_URI=None):

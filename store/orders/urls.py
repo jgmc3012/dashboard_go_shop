@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/cancel',views.cancel_order, name='order.cancel'),
     path('api/news/create', views.create_new, name='store.create_new'),
     path('api/news/show', views.show_news, name='store.show_news'),
+    path('api/change_product', views.change_product, name='store.change_product'),
 ]
