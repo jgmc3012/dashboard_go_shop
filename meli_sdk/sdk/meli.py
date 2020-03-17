@@ -48,13 +48,17 @@ class Meli(object):
         
     def get_currency(self, country:str):
         currencies = {
-            've': 'VES'
+            've': 'VES',
+            'mx': 'MXN',
+            'do': 'DOP',
         }
         return currencies[country]
 
     def get_meli_code(self, country:str):
         codes = {
-            've': 'MLV'
+            've': 'MLV',
+            'mx': 'MLM',
+            'do': 'MRD',
         }
         return codes[country]
 
