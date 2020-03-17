@@ -13,8 +13,23 @@ import logging
 @login_required
 def get_url_product(request, sku):
     sku = sku.replace('-', '').upper()
-    if sku[:3] == 'MCO':
-        product = Product.objects.filter(provider_sku=sku).first()
+    if sku[0] == 'M':
+        product = ProductForStore.objects.filter(sku=sku).select_related('product').first()
+        if not product:
+            return JsonResponse({
+                'ok': False,
+                'msg': f'No se encontro ningun producto con el sku: {sku}'
+            })
+        return JsonResponse({
+                'ok': True,
+                'msg': 'El enlace a la publicacion del producto se abrira en una nueva ventana.',
+                'data': {
+                    'provider_url': product.product.provider_link
+                }
+            })
+
+    else:
+        product = ProductForStore.objects.filter(provider_sku=sku).first()
         if not product:
             return JsonResponse({
                 'ok': False,
@@ -28,20 +43,6 @@ def get_url_product(request, sku):
                 }
             })
 
-    elif sku[:3] == 'MLV':
-        product = Product.objects.filter(sku=sku).first()
-        if not product:
-            return JsonResponse({
-                'ok': False,
-                'msg': f'No se encontro ningun producto con el sku: {sku}'
-            })
-        return JsonResponse({
-                'ok': True,
-                'msg': 'El enlace a la publicacion del producto se abrira en una nueva ventana.',
-                'data': {
-                    'provider_url': product.provider_link
-                }
-            })
 
 def filter_bad_words(bad_words, text):
     for _text_ in text.split():
