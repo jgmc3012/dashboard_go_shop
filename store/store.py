@@ -264,7 +264,7 @@ class Store(Meli):
     def predict_category(self, title, category_from=None,price=None):
         path = f'/sites/{self.meli_code}/category_predictor/predict'
         params = {
-            'title': self.cut_title(title, 200)
+            'title': self.cut_title(title, 150)
         }
         if self.seller_id:
             params['seller_id'] = self.seller_id
