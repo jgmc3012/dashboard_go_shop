@@ -226,12 +226,10 @@ class Store(Meli):
                 "plain_text": description
             },
             "pictures": [{"source": picture.src} for picture in pictures],
-            "attributes": [{
-                'id': attribute.id_meli,
-                'value_name':attribute.value,
-                'value_id':attribute.value_id
-                } for attribute in attributes]
         }
+        attr =  self.get_attributes(attributes)
+        if attr:
+            body["attributes"] = attr
         path = '/items'
         res = self.post(path, body=body, auth=True)
         if res.get('id'):
@@ -272,3 +270,20 @@ class Store(Meli):
 
         category = self.get(path, params)
         return category['id']
+
+    def get_attributes(self, attributes_draw:list):
+        meli_values = {
+            'marca': 'BRAND',
+            'color': 'COLOR',
+            'modelo': 'MODEL'
+        }
+        attributes = list()
+        for _attribute_ in attributes_draw:
+            for id in meli_values:
+                if id in _attribute_.id_meli:
+                    attribute = {
+                        'id': meli_values[id],
+                        'value_name': _attribute_.value
+                    }
+                    attributes.append(attribute)
+        return attributes
