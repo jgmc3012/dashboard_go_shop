@@ -28,9 +28,9 @@ class Command(BaseCommand):
 
         start = datetime.now()
         logging.info('Consultando la base de datos')
+        store = Store(seller_id=seller_id)
         BM = BusinessModel.objects.get(pk=store.SELLER_ID)
 
-        store = Store(seller_id=seller_id)
         products = ProductForStore.objects.filter(
             seller=BM,
             sku=None,
