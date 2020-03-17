@@ -4,7 +4,7 @@ from django.http import JsonResponse
 
 from .models import Product
 from meli_sdk.models import BulkCreateManager
-from store.products.models import Product
+from store.products.models import Product, ProductForStore
 from store.models import Seller, BadWord
 import re
 from store.store import Store
@@ -59,7 +59,8 @@ def filter_bad_products():
     store = Store()
     for product in products:
         msg = ''
-        if product.seller.bad_seller:
+        _bad_seller_ = product.seller.bad_seller if product.seller else False
+        if _bad_seller_:
             msg = f'{product.provider_sku}:{product}. Es del vendedor {product.seller.id} que esta en la lista de malos vendedores.'
         else:
             match = filter_bad_words(bad_words, product.title.upper())
@@ -72,7 +73,10 @@ def filter_bad_products():
     
     bulk_mgr.done()
 
-    products_stop = Product.objects.filter(status=Product.ACTIVE, available=False)
+    products_stop = ProductForStore.objects.filter(
+        status=ProductForStore.ACTIVE,
+        available=False
+    )
     results = store.publications_pauser(products_stop.values_list('sku',flat=True))
 
     posts_stop = list()
@@ -82,8 +86,8 @@ def filter_bad_products():
         else:
             logging.warning(f'Producto no actualizado: {product}')
 
-    Product.objects.filter(sku__in=posts_stop).update(
-        status=Product.PAUSED,
+    ProductForStore.objects.filter(sku__in=posts_stop).update(
+        status=ProductForStore.PAUSED,
         no_problem=False,
     )
     logging.info(f"{len(posts_stop)} Productos pausados.")
