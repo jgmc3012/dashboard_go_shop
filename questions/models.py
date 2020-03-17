@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from django.contrib.auth.models import User
 from store.models import Buyer
-from store.products.models import Product
+from store.products.models import ProductForStore
 
 
 class Question(models.Model):
@@ -11,7 +11,7 @@ class Question(models.Model):
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
     text = models.CharField(max_length=2000)
     date_created = models.DateTimeField(default=timezone.localtime)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductForStore, on_delete=models.CASCADE)
 
     def from_date(self):
         from_date = f'{timezone.localtime()-self.date_created}'

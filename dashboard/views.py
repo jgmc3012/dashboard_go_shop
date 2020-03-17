@@ -5,7 +5,7 @@ from django.views.generic import View
 
 from store.orders.models import Order
 from questions.models import Question
-from store.products.models import Product
+from store.products.models import ProductForStore
 import json
 
 
@@ -39,7 +39,7 @@ def shipping_packages(request):
 
 @login_required
 def show_questions(request):
-    questions = Question.objects.filter(answer=None, product__status=Product.ACTIVE).select_related('product').select_related('buyer')
+    questions = Question.objects.filter(answer=None, product__status=ProductForStore.ACTIVE).select_related('product').select_related('buyer')
     context = {
         'questions': questions,
     }
