@@ -75,7 +75,7 @@ def filter_bad_products():
 
     products_stop = ProductForStore.objects.filter(
         status=ProductForStore.ACTIVE,
-        available=False
+        product__available=False
     )
     results = store.publications_pauser(products_stop.values_list('sku',flat=True))
 
@@ -88,6 +88,6 @@ def filter_bad_products():
 
     ProductForStore.objects.filter(sku__in=posts_stop).update(
         status=ProductForStore.PAUSED,
-        no_problem=False,
+        product__no_problem=False,
     )
     logging.info(f"{len(posts_stop)} Productos pausados.")
