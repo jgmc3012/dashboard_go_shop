@@ -18,10 +18,7 @@ from decouple import config
 
 class Meli(object):
     def __init__(self, seller_id=None):
-        if seller_id:
-            self.SELLER_ID = seller_id
-        else:
-            raise "Debe pasar el seller_id como parametro"
+        self.SELLER_ID = seller_id
         self.client_secret = config('MELI_SECRET_KEY')
         self.client_id = config('MELI_APP_ID')
         self.limit_ids_per_request = 20
@@ -62,6 +59,13 @@ class Meli(object):
         }
         return codes[country]
 
+    def get_listing_type(self, country:str):
+        listings = {
+            've':'gold_special',
+            'mx':'gold_pro',
+            'do':'gold_pro',
+        }
+        return listings[country]
 
     def chunks(self, lst, n):
         """Yield successive n-sized chunks from lst."""
@@ -119,7 +123,7 @@ class Meli(object):
                 self.token.access_token = access_token
                 self.token.refresh_token = refresh_token
                 self.token.expiration = expiration
-            else:                
+            else:
                 self.token = Token(
                     access_token=access_token,
                     refresh_token=refresh_token,

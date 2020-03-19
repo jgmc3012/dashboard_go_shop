@@ -62,7 +62,7 @@ class Store(Meli):
         Elimina los numero de un string
         """
         parent =  r'[\w/,]?\d+[\w/,]?'
-        return re.sub(self.pattern,'', string)
+        return re.sub(pattern,'', string)
 
     @property
     def attentive_user(self):
@@ -221,7 +221,7 @@ class Store(Meli):
             "buying_mode":"buy_it_now",
             "condition":"new",
             "currency_id": self.currency,
-            "listing_type_id":"gold_special",
+            "listing_type_id": self.get_listing_type(self.country),
             "description":{
                 "plain_text": description.replace('product_description', product.description)
             },
@@ -230,6 +230,11 @@ class Store(Meli):
         attr =  self.get_attributes(attributes)
         if attr:
             body["attributes"] = attr
+        if self.country == 'mx':
+            body['shipping'] = {
+                'mode': 'me2',
+                'local_pick_up': False
+            }
         path = '/items'
         res = self.post(path, body=body, auth=True)
         if res.get('id'):
@@ -259,7 +264,7 @@ class Store(Meli):
     def predict_category(self, title, category_from=None,price=None):
         path = f'/sites/{self.meli_code}/category_predictor/predict'
         params = {
-            'title': title
+            'title': self.cut_title(title, 150)
         }
         if self.seller_id:
             params['seller_id'] = self.seller_id
