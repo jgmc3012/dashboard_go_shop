@@ -235,6 +235,11 @@ class Store(Meli):
                 'mode': 'me2',
                 'local_pick_up': False
             }
+        else:
+            body['shipping'] = {
+                "mode": "not_specified",
+                "free_shipping": True,
+            }
         path = '/items'
         res = self.post(path, body=body, auth=True)
         if res.get('id'):
