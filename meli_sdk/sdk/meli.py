@@ -63,7 +63,7 @@ class Meli(object):
         listings = {
             've':'gold_special',
             'mx':'gold_pro',
-            'do':'gold_premium',
+            'do':'gold_pro',
         }
         return listings[country]
 
