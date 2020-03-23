@@ -189,7 +189,7 @@ class Meli(object):
             try:
                 return response.json()
             except:
-                logging.error(response)
+                logging.getLogger('log_three').error(response)
         
         #### Esto debe ser un decorador
         elif response.status_code == 401:
@@ -223,7 +223,7 @@ class Meli(object):
             uri, data=body, params=urlencode(params), headers=headers
         )
         if response.status_code >= 300:
-            logging.warning(f'Status Code:{response.status_code} en {uri}. Response: {response.json()}')
+            logging.getLogger('log_three').warning(f'Status Code:{response.status_code} en {uri}. Response: {response.json()}')
 
         return response.json()
 
@@ -246,7 +246,7 @@ class Meli(object):
             uri, data=body, params=urlencode(params), headers=headers
         )
         if response.status_code != 200:
-            logging.warning(f'Status Code:{response.status_code} en {uri}. Respuesta:{response.json()}')
+            logging.getLogger('log_three').warning(f'Status Code:{response.status_code} en {uri}. Respuesta:{response.json()}')
 
         return response.json()
 
@@ -322,7 +322,7 @@ class Meli(object):
         extra_headers = extra_headers if extra_headers else [extra_headers]*len(paths)
         params = params if params else [params]*len(paths)
         auths = auths if auths else [auths]*len(paths)
-        logging.info(f'Se estan realizando {len(paths)} peticiones.')
+        logging.getLogger('log_three').info(f'Se estan realizando {len(paths)} peticiones.')
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             results = executor.map(self.get, paths, params, extra_headers, auths)
         response = list()
@@ -334,7 +334,7 @@ class Meli(object):
         return response
 
     def map_pool_put(self, paths, body=None, params=None, extra_headers=None):
-        logging.info(f'Se estan realizando {len(paths)} peticiones.')
+        logging.getLogger('log_three').info(f'Se estan realizando {len(paths)} peticiones.')
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             results = executor.map(self.put, paths,body, params, extra_headers)        
         response = list()
@@ -352,7 +352,7 @@ class Meli(object):
             params['ids'] = ids
             params_send.append(params.copy())
         
-        logging.info(f'Cargando {len(ids_list)} items.')
+        logging.getLogger('log_three').info(f'Cargando {len(ids_list)} items.')
         items = self.map_pool_get(
             [path]*len(stack_ids),
             params_send,
@@ -364,7 +364,7 @@ class Meli(object):
         path = '/items'
         paths = [f'{path}/{id}' for id in ids_list]
         params =  {'access_token': self.access_token}
-        logging.info(f'Actualizando {len(ids_list)} items.')
+        logging.getLogger('log_three').info(f'Actualizando {len(ids_list)} items.')
         if not extra_headers:
             extra_headers = [extra_headers]*len(ids_list)
 

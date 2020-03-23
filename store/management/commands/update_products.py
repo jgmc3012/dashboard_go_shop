@@ -9,9 +9,10 @@ class Command(BaseCommand):
     help = 'Publica nuevos producto en las cuenta de mercado libre'
 
     def handle(self, *args, **options):
-        products = list(Product.objects.filter(available=True).values_list('provider_sku',flat=True))
-        scraper = Scraper()
-        total = len(products)
-        for lap, _products in enumerate(scraper.chunks(products, 1000)):
-            logging.info(f'PUBLICACIONES {(lap+1)*1000}/{total}')
-            scraper.update_products(_products)
+        print('Comando Descontinuado')
+        # products = list(Product.objects.filter(available=True).values_list('provider_sku',flat=True))
+        # scraper = Scraper()
+        # total = len(products)
+        # for lap, _products in enumerate(scraper.chunks(products, 1000)):
+        #     logging.getLogger('log_three').info(f'PUBLICACIONES {(lap+1)*1000}/{total}')
+        #     scraper.update_products(_products)

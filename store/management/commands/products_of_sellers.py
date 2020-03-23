@@ -11,6 +11,6 @@ class Command(BaseCommand):
         sellers = Seller.objects.all()
 
         for index, seller in enumerate(sellers):
-            logging.info(f'Scrapeando al vendedor {index+1} de {len(sellers)}')
+            logging.getLogger('log_three').info(f'Scrapeando al vendedor {index+1} de {len(sellers)}')
             ids = Scraper().scan_seller(seller.id)
             Scraper().scan_product(ids)

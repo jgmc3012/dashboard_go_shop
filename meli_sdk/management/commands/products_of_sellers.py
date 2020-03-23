@@ -10,6 +10,6 @@ class Command(BaseCommand):
         categories = Category.objects.filter(leaf=True)
         total = len(categories)
         for index, category in enumerate(categories):
-            logging.info(f'Scrapeando categoria {index+1} de {total}')
+            logging.getLogger('log_three').info(f'Scrapeando categoria {index+1} de {total}')
             ids = Scraper().scan_for_category(category)
             Scraper().scan_product(ids)

@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
 from store.store import Store
-from store.products.models import Product
+from store.products.models import ProductForStore
 from meli_sdk.models import BulkCreateManager
 import logging
 from collections import defaultdict
@@ -10,17 +10,21 @@ from collections import defaultdict
 class Command(BaseCommand):
     help = 'Sincroniza los products de la tienda en linea con nuestra base de datos.'
 
+    def add_arguments(self, parser):
+        parser.add_argument('--seller_id', type=int)
+
     def handle(self, *args, **options):
-        store = Store()
+        seller_id = options['seller_id']
+        store = Store(seller_id=seller_id)
         product_pauser = list()
-        products = Product.objects.exclude(sku=None).exclude(modifiable=False)
+        products = ProductForStore.objects.exclude(sku=None)
         ids = products.values_list('sku',flat=True)
         params = [{
             'ids': _ids,
             'attributes': 'status,id'
         } for _ids in store.split_ids(ids)]
         path = 'items'
-        
+
         results = store.map_pool_get(
             [path]*len(params),
             params
@@ -39,30 +43,29 @@ class Command(BaseCommand):
                 elif product['body']['status'] == 'inactive':
                     posts['inactive'].append(product['body']['id'])
             else:
-                logging.info(product)
+                logging.getLogger('log_three').info(product)
 
-        logging.info(f"{len(posts['deleted'])} Productos eliminados recientemente.")
-        Product.objects.filter(sku__in=posts['deleted']).update(
-            status=Product.CLOSED,
-            modifiable=False
+        logging.getLogger('log_three').info(f"{len(posts['deleted'])} Productos eliminados recientemente.")
+        ProductForStore.objects.filter(sku__in=posts['deleted']).update(
+            status=Product.CLOSED
         )
 
-        logging.info(f"{len(posts['active'])} Productos activos.")
-        Product.objects.filter(sku__in=posts['active']).update(
+        logging.getLogger('log_three').info(f"{len(posts['active'])} Productos activos.")
+        ProductForStore.objects.filter(sku__in=posts['active']).update(
             status=Product.ACTIVE
         )
 
-        logging.info(f"{len(posts['paused'])} Productos pausados.")
-        Product.objects.filter(sku__in=posts['paused']).update(
+        logging.getLogger('log_three').info(f"{len(posts['paused'])} Productos pausados.")
+        ProductForStore.objects.filter(sku__in=posts['paused']).update(
             status=Product.PAUSED
         )
 
-        logging.info(f"{len(posts['under_review'])} Productos bajo revision de ML.")
-        Product.objects.filter(sku__in=posts['under_review']).update(
+        logging.getLogger('log_three').info(f"{len(posts['under_review'])} Productos bajo revision de ML.")
+        ProductForStore.objects.filter(sku__in=posts['under_review']).update(
             status=Product.UNDER_REVIEW
         )
 
-        logging.info(f"{len(posts['inactive'])} Productos inactivos por revision de ML.")
-        Product.objects.filter(sku__in=posts['inactive']).update(
+        logging.getLogger('log_three').info(f"{len(posts['inactive'])} Productos inactivos por revision de ML.")
+        ProductForStore.objects.filter(sku__in=posts['inactive']).update(
             status=Product.UNDER_REVIEW
         )

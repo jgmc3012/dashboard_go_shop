@@ -13,5 +13,5 @@ class Command(BaseCommand):
         categories = Category.objects.all()
         scraper = ScraperCategory()
         with ThreadPoolExecutor(max_workers=5) as executor:
-            logging.info('Scaneando categorias')
+            logging.getLogger('log_three').info('Scaneando categorias')
             executor.map(scraper.category_test_approved, categories)

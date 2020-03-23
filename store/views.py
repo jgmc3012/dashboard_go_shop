@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
 from store.store import Store
+from meli_sdk.sdk import meli
 from store.models import BadWord, Buyer
 import logging
 
@@ -26,6 +27,7 @@ def new_bad_word(word):
     word = word.strip().upper()
     BadWord.objects.get_or_create(word=word)
 
+#Esto hay que pasarlo a el modulo de MELI
 def get_or_create_buyer(buyer_id:int, buyer_draw=dict()):
     store = Store()
     buyer = Buyer.objects.filter(id=buyer_id).first()
@@ -70,6 +72,6 @@ def get_or_create_buyer(buyer_id:int, buyer_draw=dict()):
             buyer.last_name=buyer_draw.get('last_name')
             buyer.save()
 
-    logging.info(f'Comprador Actualizado/Registrado: {buyer}')
+    logging.getLogger('log_three').info(f'Comprador Actualizado/Registrado: {buyer}')
 
     return buyer

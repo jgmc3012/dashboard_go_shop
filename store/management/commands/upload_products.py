@@ -23,11 +23,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         seller_id = options['seller_id']
-        logging.info('Aplicando filtro de malas palabras a productos')
+        logging.getLogger('log_three').info('Aplicando filtro de malas palabras a productos')
         filter_bad_products(seller_id=seller_id)
 
         start = datetime.now()
-        logging.info('Consultando la base de datos')
+        logging.getLogger('log_three').info('Consultando la base de datos')
         store = Store(seller_id=seller_id)
         BM = BusinessModel.objects.get(pk=store.SELLER_ID)
 
@@ -36,7 +36,7 @@ class Command(BaseCommand):
             sku=None,
             product__available=True,
             product__quantity__gt=2).select_related('product')
-        logging.info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
+        logging.getLogger('log_three').info(f'Fin de la consulta, tiempo de ejecucion {datetime.now()-start}')
 
         slices = 100
         USD = History.objects.order_by('-datetime').first()
@@ -44,7 +44,7 @@ class Command(BaseCommand):
 
         limit_per_day = False
         for lap, _products in enumerate(chunks(products, slices)):
-            logging.info(f'PUBLICANDO {(lap)*100}-{(lap+1)*100}')
+            logging.getLogger('log_three').info(f'PUBLICANDO {(lap)*slices}-{(lap+1)*slices}')
             with ThreadPoolExecutor(max_workers=3) as executor:
                 response = executor.map(
                     store.publish,

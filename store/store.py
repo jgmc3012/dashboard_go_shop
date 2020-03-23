@@ -94,7 +94,7 @@ class Store(Meli):
         for i in range(total_of_requests):
             data = self.get(path,params)
             inventory += data.get('results')
-            logging.info(f'Productos cargados ({len(inventory)}/{total})')    
+            logging.getLogger('log_three').info(f'Productos cargados ({len(inventory)}/{total})')    
 
         return inventory
 
@@ -192,7 +192,7 @@ class Store(Meli):
         pictures = Picture.objects.filter(product=product)[:9]
         if not pictures:
             msg = f'El producto {product} no tiene imagenes asociadas'
-            logging.warning(msg)
+            logging.getLogger('log_three').warning(msg)
             return {
                 'ok' : False,
                 'msg': msg
@@ -245,8 +245,8 @@ class Store(Meli):
         if res.get('id'):
             product_store.sku = res.get('id')
             product_store.save()
-            logging.info(f'{product}. Agregado con exito a la tienda')
-            logging.debug(res)
+            logging.getLogger('log_three').info(f'{product}. Agregado con exito a la tienda')
+            logging.getLogger('log_three').debug(res)
             if paused:
                 body = {
                    'status':'paused'

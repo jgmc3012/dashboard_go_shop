@@ -44,8 +44,8 @@ class Command(BaseCommand):
             if exist:
                 break
             else:
-                logging.info(f'Nueva Pregunta de {question.buyer} en \
+                logging.getLogger('log_three').info(f'Nueva Pregunta de {question.buyer} en \
 {question.product.title} a las {question.date_created.strftime("%H:%M:%S")}')        
                 count +=1
 
-        logging.info(f'Nuevas Preguntas: {count}. Sin responder: {total}')
+        logging.getLogger('log_three').info(f'Nuevas Preguntas: {count}. Sin responder: {total}')

@@ -68,7 +68,7 @@ def filter_bad_products(seller_id:int):
             if match:
                 msg = f'{product.provider_sku}:{product}. Contiene palabras prohibidas. {match}'
         if msg:
-            logging.warning(msg)
+            logging.getLogger('log_three').warning(msg)
             product.available = False
             bulk_mgr.update(product, {'available'})
     
@@ -85,9 +85,9 @@ def filter_bad_products(seller_id:int):
         if product.get('status') == 'paused':
             posts_stop.append(product['id'])
         else:
-            logging.warning(f'Producto no actualizado: {product}')
+            logging.getLogger('log_three').warning(f'Producto no actualizado: {product}')
 
     ProductForStore.objects.filter(sku__in=posts_stop).update(
         status=ProductForStore.PAUSED
     )
-    logging.info(f"{len(posts_stop)} Productos pausados.")
+    logging.getLogger('log_three').info(f"{len(posts_stop)} Productos pausados.")
