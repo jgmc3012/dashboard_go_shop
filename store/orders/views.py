@@ -10,7 +10,7 @@ from meli_sdk.models import BulkCreateManager
 
 from store.store import Store
 from meli_sdk.sdk.scraper import Scraper
-from .models import Order, Buyer, ProductForStore, Pay, Invoice, New, FeedBack
+from store.orders.models import Order, Buyer, ProductForStore, Pay, Invoice, New, FeedBack
 from dollar_for_life.models import History
 
 from shipping.views import new_shipping, shipment_completed
@@ -32,13 +32,8 @@ def new_pay( request, order_id):
             'ok': False,
             'msg': f'{user_name} Haz ingresado un dato incorrecto, verifica e intenta de nuevo'
         })
-
-    store = Store()
-    params = {
-        'attributes': 'date_created,buyer,order_items'
-    }
     
-    order = Order.objects.filter(store_order_id=order_id).select_related('product').select_related('buyer').select_related('invoice').select_related('invoice__pay').first()
+    order = Order.objects.filter(store_order_id=order_id).select_related('product').select_related('product__store').select_related('buyer').select_related('invoice').select_related('invoice__pay').first()
     if order.state >= Order.PROCESSING:
         return JsonResponse({
             'ok': False,
@@ -57,6 +52,10 @@ def new_pay( request, order_id):
             'msg': f'{user_name} ya esta orden contine un pago relacionado'
         })
 
+    store = Store(seller_id=order.product.store.seller_id)
+    params = {
+        'attributes': 'date_created,buyer,order_items'
+    }
     path = f'/orders/{order_id}'
     result = store.get(path,params, auth=True)
     buyer = order.buyer
@@ -64,7 +63,7 @@ def new_pay( request, order_id):
     product = order.product
 
     USD = History.objects.order_by('-datetime').first()
-    if product.sale_price*USD.rate > product_api.get('unit_price'):
+    if product.sale_price*USD.country(store.country) > product_api.get('unit_price'):
         msg = f'El producto ha subido de precio.'
         New.objects.create(
             user=request.user,
@@ -76,17 +75,17 @@ def new_pay( request, order_id):
             'msg': f'{user_name}. {msg}, Contacta con tu supervisor.',
         })
 
-    res = store.verify_existence(product)
-    if not res.get('ok'):
-        New.objects.create(
-            user=request.user,
-            message=res.get("msg"),
-            order=order
-        )
-        return JsonResponse({
-            'ok': False,
-            'msg': f'{user_name}, {res.get("msg")}',
-        })
+    # res = store.verify_existence(product)
+    # if not res.get('ok'):
+    #     New.objects.create(
+    #         user=request.user,
+    #         message=res.get("msg"),
+    #         order=order
+    #     )
+    #     return JsonResponse({
+    #         'ok': False,
+    #         'msg': f'{user_name}, {res.get("msg")}',
+    #     })
 
     pay = Pay.objects.filter(reference=pay_reference).first()
     if pay:
@@ -325,7 +324,7 @@ def cancel_order(request):
     order_id = int(json_data['orderId'])
     reason = int(json_data['reason'])
     rating = int(json_data['rating'])
-    order = Order.objects.filter(store_order_id=order_id).first()
+    order = Order.objects.filter(store_order_id=order_id).select_related('product').select_related('product__store').first()
     if not order:
         return JsonResponse({
             'ok': False,
@@ -350,7 +349,7 @@ def cancel_order(request):
         'rating':'neutral',
     }
 
-    store = Store()
+    store = Store(seller_id=order.product.store.seller_id)
     res = store.post(
         path=f'/orders/{order_id}/feedback',
         body=body,

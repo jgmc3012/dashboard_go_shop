@@ -8,7 +8,7 @@ def bad_category(category, bad_categories=list()):
     category.bad_category= True
     category.save()
     bad_categories.append(category.id)
-    logging.info(f'Bad Category {category}')
+    logging.getLogger('log_three').info(f'Bad Category {category}')
     categories = Category.objects.filter(parent=category)
     for category in categories:
         bad_category(category, bad_categories)
@@ -28,4 +28,4 @@ class Command(BaseCommand):
         if category:
             bad_categories = bad_category(category)
             products = Product.objects.filter(category__in=bad_categories).update(available=False)
-            logging.info(f'{products} Productos prohibidos')
+            logging.getLogger('log_three').info(f'{products} Productos prohibidos')

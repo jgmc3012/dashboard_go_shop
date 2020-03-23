@@ -4,7 +4,14 @@ from django.utils import timezone
 from datetime import timedelta 
 import logging
 
-from store.orders.models import Order, Buyer, Product, Invoice, Pay, New
+from store.orders.models import (
+    Order,
+    Buyer,
+    ProductForStore,
+    Invoice,
+    Pay,
+    New
+)
 from store.store import Store
 from dollar_for_life.models import History
 from store.views import get_or_create_buyer
@@ -12,8 +19,12 @@ from store.views import get_or_create_buyer
 class Command(BaseCommand):
     help = 'Sincroniza los pedido ingresados en la ultima hora'
 
+    def add_arguments(self, parser):
+        parser.add_argument('--seller_id', type=int)
+
     def handle(self, *args, **options):
-        store = Store()
+        seller_id = options['seller_id']
+        store = Store(seller_id=seller_id)
         now = timezone.now()
         last_hour = now - timedelta(hours=1)
         params = {
@@ -41,27 +52,27 @@ class Command(BaseCommand):
             product_api = order_draw.get('order_items')[0]
             quantity = product_api['quantity']
             sku = product_api.get('item').get('id')
-            product = Product.objects.filter(sku=sku).first()
+            product = ProductForStore.objects.filter(sku=sku).first()
             if not product:
                 msg = f'El producto con sku={sku} no se encuentra en nuestra \
 base de datos y fue orfertado bajo el pedido {offer_id} del comprador {buyer_api}'
                 # LEVANTAR NOVEDAD
-                logging.warning(msg)
+                logging.getLogger('log_three').warning(msg)
                 continue
 
             USD = History.objects.order_by('-datetime').first()
-            if product.sale_price*USD.rate > product_api.get('unit_price'):
+            if product.sale_price*USD.country(store.country) > product_api.get('unit_price'):
                 # LEVANTAR NOVEDAD
                 msg = f'El precio acortado por el producto con sku={sku} no es rentable.'
                 news_draw.append(msg)
-                logging.warning(msg)
+                logging.getLogger('log_three').warning(msg)
 
             res = store.verify_existence(product)
             if not res.get('ok'):
                 # LEVANTAR NOVEDAD
                 msg =  f'El producto con sku={sku} esta agotado'
                 news_draw.append(msg)
-                logging.warning(msg)
+                logging.getLogger('log_three').warning(msg)
 
             order = Order.objects.filter(store_order_id=offer_id)
             if order:

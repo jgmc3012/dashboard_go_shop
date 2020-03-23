@@ -131,7 +131,7 @@ class Scraper(Meli):
             'attribute':'results'
         }for offset in range(limit,total,limit)]
 
-        logging.info(f'Scrapeando {total} productos')
+        logging.getLogger('log_three').info(f'Scrapeando {total} productos')
         products_api = self.map_pool_get(
             paths=[self.path]*len(list_params),
             params=list_params,
@@ -185,7 +185,7 @@ class Scraper(Meli):
 
     def new_product(self,id:str):
         id = id.replace('-','')
-        logging.info(f'Scrapeando un producto')
+        logging.getLogger('log_three').info(f'Scrapeando un producto')
         product_ = self.get(
             path=f'/items/{id}'
         )
@@ -258,16 +258,16 @@ class Scraper(Meli):
         for product in products:
             sku = product.provider_sku
             if not products_draw[sku].get('body'):
-                logging.warning(f'Error en la peticion de {product}. Res: {products_draw[sku]}')
+                logging.getLogger('log_three').warning(f'Error en la peticion de {product}. Res: {products_draw[sku]}')
                 continue
             elif not products_draw[sku]['body'].get('pictures'):
-                logging.warning(f'Al producto {product} no se le encontraron imagenes')
+                logging.getLogger('log_three').warning(f'Al producto {product} no se le encontraron imagenes')
                 continue
             elif products_draw[sku]['body']['sale_terms']:
                 for sale_term in products_draw[sku]['body']['sale_terms']:
                     timeout = (sale_term['id'] == 'MANUFACTURING_TIME')
                     if timeout:
-                        logging.warning(f"Producto {product} con terminos de entrega, {sale_term['value_name']}")
+                        logging.getLogger('log_three').warning(f"Producto {product} con terminos de entrega, {sale_term['value_name']}")
                         product.available=False
                         bulk_mgr.update(product,{'available'})
                         break
@@ -276,7 +276,7 @@ class Scraper(Meli):
 
             for image in products_draw[sku]['body']['pictures']:
                 if 'resources/frontend/statics/processing' in image['secure_url']:
-                    logging.warning('Imagen [Procesando por Meli]')
+                    logging.getLogger('log_three').warning('Imagen [Procesando por Meli]')
                     continue
                 picture = Picture(
                     src=image['secure_url'],
@@ -286,7 +286,7 @@ class Scraper(Meli):
         bulk_mgr.done()
 
     def update_products(self, list_ids):
-        logging.info(f'Actualizando {len(list_ids)} productos. \n')
+        logging.getLogger('log_three').info(f'Actualizando {len(list_ids)} productos. \n')
         products = Product.objects.filter(provider_sku__in=list_ids)
         path = '/items'
         params = [{
@@ -304,11 +304,11 @@ class Scraper(Meli):
             id = product.provider_sku
             if id in products_draw:
                 if not products_draw[id].get('initial_quantity'):
-                    logging.warning(f'Producto {id} NO ACTUALIZADO')
+                    logging.getLogger('log_three').warning(f'Producto {id} NO ACTUALIZADO')
                     continue
                 if not products_draw[id]['status'] == 'active':
                     products_draw[id]['initial_quantity']=0
-                logging.info(f"{product}: quantity: {product.quantity} \
+                logging.getLogger('log_three').info(f"{product}: quantity: {product.quantity} \
 -> {products_draw[id]['initial_quantity']}")
                 product.quantity = products_draw[id]['initial_quantity']
                 if products_draw[id]['currency_id'] == 'USD':
@@ -384,9 +384,9 @@ class ScraperCategory(Meli):
             elif not children_categories:
                 current_category.leaf=True
                 current_category.save()
-            logging.info(f'Padre {current_category} - {len(children_categories)} subcategorias - {result["total_items_in_this_category"]} Items')
+            logging.getLogger('log_three').info(f'Padre {current_category} - {len(children_categories)} subcategorias - {result["total_items_in_this_category"]} Items')
         else:
-            logging.warn(result)
+            logging.getLogger('log_three').warn(result)
         if children_categories:
             next_level = list()
             self._categories = dict()
@@ -412,14 +412,14 @@ class ScraperCategory(Meli):
                     _category.root= root
                     _category.leaf= leaf
                     self.bulk_mgr.update(_category,{'root','parent', 'leaf'})
-                logging.info(f'<{id}:{name}[{items} items]>')
+                logging.getLogger('log_three').info(f'<{id}:{name}[{items} items]>')
                 if not leaf:
                     next_level.append(category['id'])
 
             self.bulk_mgr.done()
 
             for category in next_level:
-                logging.info('-'*30)
+                logging.getLogger('log_three').info('-'*30)
                 self.scraping_path(category)
                 
 
@@ -440,7 +440,7 @@ class ScraperCategory(Meli):
         if result.get('id') and (result.get('name') == category.name):
             category.approved=True
             category.save()
-            logging.info(f'{category} Disponible en VZLA')
+            logging.getLogger('log_three').info(f'{category} Disponible en VZLA')
 
 class ScraperSeller(Meli):
     

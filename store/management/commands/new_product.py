@@ -11,12 +11,13 @@ class Command(BaseCommand):
         parser.add_argument('--mco', type=str)
 
     def handle(self, *args, **options):
-        MCO = options['mco']
-        if not MCO.upper()[:3] == 'MCO':
-            MCO = f'MCO{MCO}'
-        res = Scraper().new_product(MCO)
-        logging.info(res)
-        if res.sku:
-            logging.info('El producto ya existe en nuestra tienda')
-        else:
-            Store().publish(product=res, paused=False)
+        logging.getLogger('log_three').info('Este comando esta deshabilitado')
+        # MCO = options['mco']
+        # if not MCO.upper()[:3] == 'MCO':
+        #     MCO = f'MCO{MCO}'
+        # res = Scraper().new_product(MCO)
+        # logging.getLogger('log_three').info(res)
+        # if res.sku:
+        #     logging.getLogger('log_three').info('El producto ya existe en nuestra tienda')
+        # else:
+        #     Store().publish(product=res, paused=False)

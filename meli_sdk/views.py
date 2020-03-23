@@ -106,7 +106,7 @@ def data_push_ids(data):
     items_ids = data.get('results')
     push_items(items_ids)
     total= data.get('paging').get('total')
-    logging.info(f'({len(results)}/{total})')
+    logging.getLogger('log_three').info(f'({len(results)}/{total})')
 
 ######################## MCO DE MIS PUBLICACIONES ################################
 
@@ -132,7 +132,7 @@ def rq_products_by_id(path, ids, total):
             bad_products.append(id)
 
     current = len(product_items.keys())+len(bad_products)
-    logging.info(f'({current}/{total}) de las productos completados.')
+    logging.getLogger('log_three').info(f'({current}/{total}) de las productos completados.')
     
     if current>=total:
         event.set()
@@ -156,7 +156,7 @@ def get_prices_by_products(path, ids, total):
             product_items[id] = float(price)
     
     len_stack_prices += count
-    logging.info(f'({len_stack_prices}/{total}) de las productos completados.')
+    logging.getLogger('log_three').info(f'({len_stack_prices}/{total}) de las productos completados.')
     
     if len_stack_prices>=total:
         event.set()
@@ -181,7 +181,7 @@ def discard_items(data):
     
     push_items(mcos)
     bucle_n += 1
-    logging.info(f'Progreso ({bucle_n}/200)')
+    logging.getLogger('log_three').info(f'Progreso ({bucle_n}/200)')
     if (bucle_n == 200):
         event.set()
 
@@ -231,12 +231,12 @@ def update_publication(item_id, index, total, kwargs):
     response = requests.put(url, data=body, params=urlencode(params), headers=headers)
     
     if response.status_code == 200:
-        logging.info(f'Producto {item_id} actualizado. numero {index+1}')
+        logging.getLogger('log_three').info(f'Producto {item_id} actualizado. numero {index+1}')
         if (index+1) == total:
             event.set()
     else:
-        logging.error(response.status_code)
-        logging.error(response.message)
+        logging.getLogger('log_three').error(response.status_code)
+        logging.getLogger('log_three').error(response.message)
         raise f'Error in Request {response.status_code}'
     
 def update_produtcs(products:list):
