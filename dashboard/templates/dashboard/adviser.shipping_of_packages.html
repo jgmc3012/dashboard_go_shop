@@ -48,20 +48,20 @@
                 {% for order in orders %}
                 <li class="list-group-item mb-2 list-group-item-action"
                     api="product-item"
-                    title="{{ order.product.title }}"
+                    title="{{ order.product.product.title }}"
                     order_id="{{ order.store_order_id }}"
                 >
                     <div class='row'>
                         <!-- Aqui comienza cada item -->
                         <div class='col-8'>
                             <!-- Datos del Product -->
-                            <h5>{{ order.product.title }}</h5>
+                            <h5>{{ order.product.product.title }}</h5>
                             <div class="d-flex">
                                 <div class='flex-fill'>
                                     <img
                                         class="rounded"
-                                        src="{{ order.product.image }}"
-                                        alt="{{ order.product.title }}"
+                                        src="{{ order.product.product.image }}"
+                                        alt="{{ order.product.product.title }}"
                                     >
                                 </div>
                                 <div class="flex-grow-1">
@@ -81,7 +81,7 @@
                                         <span class="text-black">Publicacion del proveedor:</span>
                                         <a
                                             target="_blank"
-                                            href="{{ order.product.provider_link }}"
+                                            href="{{ order.product.product.provider_link }}"
                                         >Link</a>
                                     </div>
                                     <div class="row">

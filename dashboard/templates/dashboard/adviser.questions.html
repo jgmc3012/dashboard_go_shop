@@ -27,18 +27,18 @@
                         <div class="col-2 flex-fill">
                             <img
                                 class="img-profile rounded"
-                                src="{{ question.product.image }}"
-                                alt="link-> {{question.product.image}}"
+                                src="{{ question.product.product.image }}"
+                                alt="link-> {{question.product.product.image}}"
                             >
                         </div>
                         <div class="flex-fill d-flex flex-column">
                             <div>
-                                <a href="{{ question.product.provider_link }}" target="_blank">{{ question.product.title }}</a> - <strong>USD {{ question.product.sale_price }} </strong> - <a href="{{ question.product.store_link }}" target="_blank">Nuestra publicacion</a>
+                                <a href="{{ question.product.product.provider_link }}" target="_blank">{{ question.product.product.title }}</a> - <strong>USD {{ question.product.sale_price }} </strong> - <a href="{{ question.product.store_link }}" target="_blank">Nuestra publicacion</a>
                             </div>
                             <div>   
                                 
                             </div>
-                            <span>{{ question.product.quantity }} disponibles</span>
+                            <span>{{ question.product.product.quantity }} disponibles</span>
                         </div>
                     </div>
                     <div class='mb-2'>

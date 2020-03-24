@@ -92,3 +92,7 @@ class ProductForStore(models.Model):
     @property
     def store_link(self):
         return f'https://articulo.mercadolibre.com.ve/{self.sku[:3]}-{self.sku[3:]}-colchon-inflable-queen-coleman-bomba-inflador-de-pie-_JM'
+
+class FlatProduct(models.Model):
+    message = models.CharField(max_length=1000)
+    product = models.ForeignKey(ProductForStore, on_delete=models.CASCADE)

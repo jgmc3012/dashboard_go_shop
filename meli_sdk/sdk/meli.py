@@ -223,7 +223,12 @@ class Meli(object):
             uri, data=body, params=urlencode(params), headers=headers
         )
         if response.status_code >= 300:
-            logging.getLogger('log_three').warning(f'Status Code:{response.status_code} en {uri}. Response: {response.json()}')
+            logging.getLogger('log_three').warning(
+                f'''Status Code:{response.status_code} en {uri}.
+        RESPONSE: {response.json()}.
+        PARAMS: {params}
+        PAYLOAD: {body}'''
+            )
 
         return response.json()
 

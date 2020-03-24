@@ -29,10 +29,10 @@ class Command(BaseCommand):
         start = datetime.now()
         logging.getLogger('log_three').info('Consultando la base de datos')
         store = Store(seller_id=seller_id)
-        BM = BusinessModel.objects.get(pk=store.SELLER_ID)
+        business = BusinessModel.objects.get(pk=store.SELLER_ID)
 
         products = ProductForStore.objects.filter(
-            store=BM,
+            store=business,
             sku=None,
             product__available=True,
             product__quantity__gt=2).select_related('product')
@@ -40,12 +40,12 @@ class Command(BaseCommand):
 
         slices = 100
         USD = History.objects.order_by('-datetime').first()
-        price_usd = USD.country(BM.country) + BM.usd_variation
+        price_usd = USD.country(business.country) + business.usd_variation
 
         limit_per_day = False
-        for lap, _products in enumerate(chunks(products, slices)):
-            logging.getLogger('log_three').info(f'PUBLICANDO {(lap)*slices}-{(lap+1)*slices}')
-            with ThreadPoolExecutor(max_workers=3) as executor:
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            for lap, _products in enumerate(chunks(products, slices)):
+                logging.getLogger('log_three').info(f'PUBLICANDO {(lap)*slices}-{(lap+1)*slices}')
                 response = executor.map(
                     store.publish,
                     _products,
