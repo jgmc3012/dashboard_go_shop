@@ -356,7 +356,7 @@ class Scraper(Meli):
         params['scroll_id'] = data.get('scroll_id')
         total_of_requests = ceil(total/limit_per_request) - 1 #Menos 1 porque ya se realizo una peticion
         for i,_ in enumerate(range(total_of_requests)):
-            logging.getLogger('log_three').info('Pagina numero ', i,' de ', total_of_requests)
+            logging.getLogger('log_three').info(f'Pagina numero  {i} de  {total_of_requests}')
             data = self.get(path,params,auth=True)
             results += data.get('results')
 
