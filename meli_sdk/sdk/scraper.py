@@ -232,7 +232,7 @@ class Scraper(Meli):
                     quantity=0
                 )
                 for _attribute in _product_['attributes']:
-                    if _attribute['value_name'] and (350 < len(_attribute['value_name'])):
+                    if _attribute['value_name'] and (100 > len(_attribute['value_name'])):
                         bulk_mgr.add(Attribute(
                             id_meli=_attribute['id'],
                             value=_attribute['value_name'],
