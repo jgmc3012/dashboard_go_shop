@@ -203,6 +203,7 @@ class Scraper(Meli):
         bulk_mgr = BulkCreateManager(200)
         categories = ScraperCategory()
         count_products = 0
+        logging.getLogger('log_three').info(f'scaneando 20 productos')
         for _product in products:
             if not _product['body'].get('id'):
                 continue
@@ -228,7 +229,7 @@ class Scraper(Meli):
                 title=_product_['title'],
                 cost_price=0,
                 ship_price=0,
-                description=_product_['description'].get('id'),
+                description=_product_['descriptions'][0].get('id'),
                 provider_sku=sku,
                 provider_link=f"https://www.amazon.com/-/es/dp/{sku}?psc=1",
                 image=_product_['secure_thumbnail'],
@@ -245,8 +246,6 @@ class Scraper(Meli):
             )
             count_products += 1
             for _attribute in _product_['attributes']:
-                if attr.get('id') == 'SELLER_SKU':
-                    continue
                 if _attribute['value_name'] and (350 < len(_attribute['value_name'])):
                     bulk_mgr.add(Attribute(
                         id_meli=_attribute['id'],
@@ -265,7 +264,6 @@ class Scraper(Meli):
                 
         bulk_mgr.done()
         logging.getLogger('log_three').info(f'{count_products} Productos sincronizados')
-
 
     def scan_product(self, list_ids):
         path = '/items'
