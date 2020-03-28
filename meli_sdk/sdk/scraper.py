@@ -191,7 +191,7 @@ class Scraper(Meli):
         return self.scan_product(ids_products)
 
     def new_products(self,ids:list, business):
-        logging.getLogger('log_three').info(f'Iniciando peticiones')
+        logging.getLogger('log_three').info(f'Iniciando peticiones de 20 items')
         products = self.get(
             path=f'/items',
             params={
@@ -232,7 +232,7 @@ class Scraper(Meli):
                     image=_product_['secure_thumbnail'],
                     quantity=0
                 )
-                bulk.add(
+                bulk_mgr.add(
                     ProductForStore(
                         store = business,
                         product=product,
@@ -355,8 +355,8 @@ class Scraper(Meli):
         total = data['paging']['total']
         params['scroll_id'] = data.get('scroll_id')
         total_of_requests = ceil(total/limit_per_request) - 1 #Menos 1 porque ya se realizo una peticion
-        
-        for _ in range(total_of_requests):
+        for i,_ in enumerate(range(total_of_requests)):
+            logging.getLogger('log_three').info('Pagina numero ', i,' de ', total_of_requests)
             data = self.get(path,params,auth=True)
             results += data.get('results')
 

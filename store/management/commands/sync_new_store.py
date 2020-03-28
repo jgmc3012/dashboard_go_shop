@@ -21,6 +21,7 @@ class Command(BaseCommand):
         business = BusinessModel.objects.get(pk=seller_id)
         scraper = Scraper(seller_id)
 
+        logging.getLogger('log_three').info('Iniciando Scraper')
         products_sku = set(scraper.get_items_for_store_id(seller_id))
         products_exits = ProductForStore.objects.filter(sku__in=products_sku)
 
