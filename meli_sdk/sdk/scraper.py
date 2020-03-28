@@ -1,7 +1,7 @@
 from meli_sdk.sdk.meli import Meli
 from store.products.models import (
     Product,
-    ProductForStore
+    ProductForStore,
     Category,
     Attribute,
     Picture,
@@ -14,7 +14,7 @@ import logging
 
 from django.utils import timezone
 
-from dospiksigma.desing_patterns import singleton
+from dospiksigma.desing_patterns.singleton import singleton
 
 
 class Scraper(Meli):
