@@ -202,10 +202,11 @@ class Scraper(Meli):
         bulk_mgr = BulkCreateManager(200)
         categories = ScraperCategory()
         count_products = 0
-        for _product_ in products:
-            if not _product_['body'].get('id'):
+        for _product in products:
+            if not _product['body'].get('id'):
                 continue
 
+            _product_ = _product['body']
             sku = _product_.get('seller_custom_field')
             if not sku:
                 continue
