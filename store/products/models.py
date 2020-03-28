@@ -83,7 +83,7 @@ class ProductForStore(models.Model):
         default=PAUSED
     )
     store = models.ForeignKey(BusinessModel, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     no_problem = models.BooleanField(default=False)
     sale_price = models.FloatField()
     sku = models.CharField(max_length=20, unique=True, null=True)

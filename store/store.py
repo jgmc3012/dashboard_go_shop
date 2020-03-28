@@ -15,10 +15,6 @@ from store.models import BusinessModel
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
     URI_CALLBACK = config('MELI_URI_CALLBACK')
-    inventary = []
-    sales = []
-    pools = []
-    queues = []
 
     def __init__(self, seller_id=None):
         super().__init__(seller_id)
@@ -186,6 +182,10 @@ class Store(Meli):
                 'ok':True,
                 'msg': 'Todo okey!'
             }
+
+
+
+### ESto debe estar en MELI()
 
     def publish(self, product_store, price_usd, paused=True):
         product = product_store.product

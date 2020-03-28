@@ -16,7 +16,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         seller_id = options['seller_id']
         store = Store(seller_id=seller_id)
-        product_pauser = list()
         products = ProductForStore.objects.exclude(sku=None)
         ids = products.values_list('sku',flat=True)
         params = [{

@@ -310,8 +310,17 @@ class Meli(object):
         else:
             raise Exception('Debe Autentificarse manualmente en el portal')
 
-    def split_ids(self, items_id):
-        items_id = tuple(items_id)# Para hacerlos suscribible, ya que puede llegar cualquier iterable.
+    def split_ids(self, items_id)->list:
+        """
+        Recibe una lista de ids
+        Retorna una lista con los ids concatenados en un string separados por comas(,)
+        de 20 en 20.
+
+        >>> self.split_ids([1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0])
+        ['1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0', '1,2,3,4,5,6,7,8,9,0']
+        """
+        # Para hacerlos suscribible, ya que puede llegar cualquier iterable.
+        items_id = tuple(items_id)
 
         iters = math.ceil(len(items_id)/self.limit_ids_per_request)
         ids_list = list()
