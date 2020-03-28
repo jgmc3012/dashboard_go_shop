@@ -196,7 +196,8 @@ class Scraper(Meli):
             params={
                 'ids': ids,
                 'include_internal_attributes': True
-            }
+            },
+            auth=True
         )
 
         bulk_mgr = BulkCreateManager(200)
@@ -209,53 +210,59 @@ class Scraper(Meli):
             _product_ = _product['body']
             sku = _product_.get('seller_custom_field')
             if not sku:
+                logging.getLogger('log_three').info(f'No se encontro el sku')
                 continue
 
             product = Product.objects.filter(provider_sku=sku).first()
+            if product:
+                logging.getLogger('log_three').info(f'Producto {sku} Ya existente')
+                continue
 
             category_id = int(_product_['category_id'][3:])
             if (not category_id in categories.ids):
                 categories.update(_product_['category_id'])
-            if not product:
-                product = Product.objects.create(
-                    seller=None,
-                    title=_product_['title'],
-                    cost_price=0,
-                    ship_price=0,
-                    description=_product_['description'].get('id'),
-                    provider_sku=sku,
-                    provider_link=f"https://www.amazon.com/-/es/dp/{sku}?psc=1",
-                    image=_product_['secure_thumbnail'],
-                    quantity=0
+
+
+            product = Product.objects.create(
+                seller=None,
+                title=_product_['title'],
+                cost_price=0,
+                ship_price=0,
+                description=_product_['description'].get('id'),
+                provider_sku=sku,
+                provider_link=f"https://www.amazon.com/-/es/dp/{sku}?psc=1",
+                image=_product_['secure_thumbnail'],
+                quantity=0
+            )
+            bulk_mgr.add(
+                ProductForStore(
+                    store = business,
+                    product=product,
+                    sale_price = 0,
+                    sku=_product_['id'],
+                    category=categories.array[category_id]
                 )
-                bulk_mgr.add(
-                    ProductForStore(
-                        store = business,
+            )
+            count_products += 1
+            for _attribute in _product_['attributes']:
+                if attr.get('id') == 'SELLER_SKU':
+                    continue
+                if _attribute['value_name'] and (350 < len(_attribute['value_name'])):
+                    bulk_mgr.add(Attribute(
+                        id_meli=_attribute['id'],
+                        value=_attribute['value_name'],
+                        value_id=_attribute.get('value_id'),
                         product=product,
-                        sale_price = 0,
-                        sku=_product_['id'],
-                        category=categories.array[category_id]
-                    )
+                    ))
+            for image in _product_['pictures']:
+                if 'resources/frontend/statics/processing' in image['secure_url']:
+                    continue
+                picture = Picture(
+                    src=image['secure_url'],
+                    product=product
                 )
-                count_products += 1
-                for _attribute in _product_['attributes']:
-                    if attr.get('id') == 'SELLER_SKU':
-                        continue
-                    if _attribute['value_name'] and (350 < len(_attribute['value_name'])):
-                        bulk_mgr.add(Attribute(
-                            id_meli=_attribute['id'],
-                            value=_attribute['value_name'],
-                            value_id=_attribute.get('value_id'),
-                            product=product,
-                        ))
-                for image in _product_['pictures']:
-                    if 'resources/frontend/statics/processing' in image['secure_url']:
-                        continue
-                    picture = Picture(
-                        src=image['secure_url'],
-                        product=product
-                    )
-                    bulk_mgr.add(picture)
+                bulk_mgr.add(picture)
+                
         bulk_mgr.done()
         logging.getLogger('log_three').info(f'{count_products} Productos sincronizados')
 
