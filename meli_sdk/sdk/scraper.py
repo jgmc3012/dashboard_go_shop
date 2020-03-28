@@ -215,26 +215,41 @@ class Scraper(Meli):
                 continue
 
             product = Product.objects.filter(provider_sku=sku).first()
-            if product:
+            if not product:
+                category_id = int(_product_['category_id'][3:])
+                if (not category_id in categories.ids):
+                    categories.update(_product_['category_id'])
+
+                product = Product.objects.create(
+                    seller=None,
+                    title=_product_['title'],
+                    cost_price=0,
+                    ship_price=0,
+                    description=_product_['descriptions'][0].get('id'),
+                    provider_sku=sku,
+                    provider_link=f"https://www.amazon.com/-/es/dp/{sku}?psc=1",
+                    image=_product_['secure_thumbnail'],
+                    quantity=0
+                )
+                for _attribute in _product_['attributes']:
+                    if _attribute['value_name'] and (350 < len(_attribute['value_name'])):
+                        bulk_mgr.add(Attribute(
+                            id_meli=_attribute['id'],
+                            value=_attribute['value_name'],
+                            value_id=_attribute.get('value_id'),
+                            product=product,
+                        ))
+                for image in _product_['pictures']:
+                    if 'resources/frontend/statics/processing' in image['secure_url']:
+                        continue
+                    picture = Picture(
+                        src=image['secure_url'],
+                        product=product
+                    )
+                    bulk_mgr.add(picture)
+            else:
                 logging.getLogger('log_three').info(f'Producto {sku} Ya existente')
-                continue
 
-            category_id = int(_product_['category_id'][3:])
-            if (not category_id in categories.ids):
-                categories.update(_product_['category_id'])
-
-
-            product = Product.objects.create(
-                seller=None,
-                title=_product_['title'],
-                cost_price=0,
-                ship_price=0,
-                description=_product_['descriptions'][0].get('id'),
-                provider_sku=sku,
-                provider_link=f"https://www.amazon.com/-/es/dp/{sku}?psc=1",
-                image=_product_['secure_thumbnail'],
-                quantity=0
-            )
             bulk_mgr.add(
                 ProductForStore(
                     store = business,
@@ -245,23 +260,6 @@ class Scraper(Meli):
                 )
             )
             count_products += 1
-            for _attribute in _product_['attributes']:
-                if _attribute['value_name'] and (350 < len(_attribute['value_name'])):
-                    bulk_mgr.add(Attribute(
-                        id_meli=_attribute['id'],
-                        value=_attribute['value_name'],
-                        value_id=_attribute.get('value_id'),
-                        product=product,
-                    ))
-            for image in _product_['pictures']:
-                if 'resources/frontend/statics/processing' in image['secure_url']:
-                    continue
-                picture = Picture(
-                    src=image['secure_url'],
-                    product=product
-                )
-                bulk_mgr.add(picture)
-                
         bulk_mgr.done()
         logging.getLogger('log_three').info(f'{count_products} Productos sincronizados')
 
