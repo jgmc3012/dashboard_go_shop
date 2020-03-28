@@ -191,7 +191,6 @@ class Scraper(Meli):
         return self.scan_product(ids_products)
 
     def new_products(self,ids:list, business):
-        logging.getLogger('log_three').info(f'Iniciando peticiones de 20 items')
         products = self.get(
             path=f'/items',
             params={
@@ -202,16 +201,12 @@ class Scraper(Meli):
 
         bulk_mgr = BulkCreateManager(200)
         categories = ScraperCategory()
-
+        count_products = 0
         for _product_ in products:
             if not _product_['body'].get('id'):
                 continue
 
-            sku = None
-            for attr in _product_['attributes']:
-                if attr.get('id') == 'SELLER_SKU':
-                    sku = attr.get('value_name')
-                    break
+            sku = _product_.get('seller_custom_field')
             if not sku:
                 continue
 
@@ -241,6 +236,7 @@ class Scraper(Meli):
                         category=categories.array[category_id]
                     )
                 )
+                count_products += 1
                 for _attribute in _product_['attributes']:
                     if attr.get('id') == 'SELLER_SKU':
                         continue
@@ -259,7 +255,9 @@ class Scraper(Meli):
                         product=product
                     )
                     bulk_mgr.add(picture)
-            bulk_mgr.done()
+        bulk_mgr.done()
+        logging.getLogger('log_three').info(f'{count_products} Productos sincronizados')
+
 
     def scan_product(self, list_ids):
         path = '/items'
