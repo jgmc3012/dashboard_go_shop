@@ -46,25 +46,25 @@ class Command(BaseCommand):
 
         logging.getLogger('log_three').info(f"{len(posts['deleted'])} Productos eliminados recientemente.")
         ProductForStore.objects.filter(sku__in=posts['deleted']).update(
-            status=Product.CLOSED
+            status=ProductForStore.CLOSED
         )
 
         logging.getLogger('log_three').info(f"{len(posts['active'])} Productos activos.")
         ProductForStore.objects.filter(sku__in=posts['active']).update(
-            status=Product.ACTIVE
+            status=ProductForStore.ACTIVE
         )
 
         logging.getLogger('log_three').info(f"{len(posts['paused'])} Productos pausados.")
         ProductForStore.objects.filter(sku__in=posts['paused']).update(
-            status=Product.PAUSED
+            status=ProductForStore.PAUSED
         )
 
         logging.getLogger('log_three').info(f"{len(posts['under_review'])} Productos bajo revision de ML.")
         ProductForStore.objects.filter(sku__in=posts['under_review']).update(
-            status=Product.UNDER_REVIEW
+            status=ProductForStore.UNDER_REVIEW
         )
 
         logging.getLogger('log_three').info(f"{len(posts['inactive'])} Productos inactivos por revision de ML.")
         ProductForStore.objects.filter(sku__in=posts['inactive']).update(
-            status=Product.UNDER_REVIEW
+            status=ProductForStore.UNDER_REVIEW
         )
