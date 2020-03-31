@@ -18,13 +18,13 @@ class Command(BaseCommand):
         seller_id = options['seller_id']
         start = datetime.now()
         logging.getLogger('log_three').info('Aplicando filtro de malas palabras a productos')
-        filter_bad_products()
+        filter_bad_products(seller_id)
         logging.getLogger('log_three').info('Filtrado completado, tiempo de ejecucion {:.2f} seg'.format((datetime.now()-start).total_seconds()))
 
         store = Store(seller_id=seller_id)
         start = datetime.now()
         logging.getLogger('log_three').info('Consultando la base de datos')
-        products = Product.objects.exclude(sku=None).filter(
+        products = ProductForStore.objects.exclude(sku=None).filter(
             product__quantity__gt=0,
             product__available=True,
             status=ProductForStore.PAUSED,
