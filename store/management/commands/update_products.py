@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--seller_id', type=int)
         parser.add_argument('--fields', type=str, nargs='+', default=[''])
-        parser.add_argument('--only_actives', type=bool, default=False)
+        parser.add_argument('--only_actives', type=bool, default=True)
 
     def handle(self, *args, **options):
         seller_id = options['seller_id']
@@ -32,8 +32,10 @@ class Command(BaseCommand):
 
         if 'description' in fields:
             update_descriptions(products, bodys, store)
-
-        store.update_items(ids,bodys)
+        store.update_items(
+                list(bodys.keys()),
+                list(bodys.values())
+            )
 
 def update_stock(products:list, bodys:dict, store):
     """
