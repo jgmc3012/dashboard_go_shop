@@ -4,7 +4,7 @@ from store.products.models import ProductForStore
 import logging
 
 class Command(BaseCommand):
-    help = 'Se encarga de para jalar la data a nuestro de las tiendas nuestro vendedores nuevos'
+    help = 'Pausar todos los articulos de una tienda'
 
     def add_arguments(self, parser):
         parser.add_argument('--seller_id', type=int)
@@ -19,5 +19,5 @@ class Command(BaseCommand):
         ids = products.values_list('sku', flat=True)
         total = len(ids)
         store.update_items(ids, [{'status':'paused'}]*total)
-        products.update(status=Product.PAUSED)
+        products.update(status=ProductForStore.PAUSED)
         logging.getLogger('log_three').info(f'{total} Productos Pausados')

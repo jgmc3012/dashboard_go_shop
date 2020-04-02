@@ -49,6 +49,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+    
+    @property
+    def available_quantity(self):
+        return 5 if self.quantity > 5 else self.quantity
 
 class Picture(models.Model):
     src =  models.CharField(max_length=255)
