@@ -29,13 +29,17 @@ class Command(BaseCommand):
 
         if 'price' in fields:
             update_stock(products, bodys, store)
+            return store.update_items(
+                    list(bodys.keys()),
+                    list(bodys.values())
+                )
 
         if 'description' in fields:
             update_descriptions(products, bodys, store)
-        store.update_items(
-                list(bodys.keys()),
-                list(bodys.values())
-            )
+            return store.update_items(
+                    list(bodys.keys()),
+                    list(bodys.values())
+                )
 
 def update_stock(products:list, bodys:dict, store):
     """
@@ -54,6 +58,6 @@ def update_descriptions(products:list, bodys:dict, store, inner_description=Fals
         producto dentro de la descripcion de mercadolibre.
     """
     for product in products:
-        bodys[product.sku] = {
-            'descripcion': store.description
+        bodys[f'{product.sku}/description'] = {
+            'plain_text': store.description
         }
