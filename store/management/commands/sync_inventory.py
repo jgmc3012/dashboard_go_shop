@@ -29,7 +29,7 @@ class Command(BaseCommand):
             params
         )
         posts = defaultdict(list)
-        for product in results:
+        for product in [_ for _ in results if _]:
             if product['code'] == 200:
                 if product['body']['status'] == 'closed':
                     posts['deleted'].append(product['body']['id'])

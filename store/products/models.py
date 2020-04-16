@@ -33,6 +33,7 @@ class Product(models.Model):
     title = models.CharField(max_length=300)
     cost_price = models.FloatField(null=True)
     ship_price = models.FloatField(null=True)
+    currency = models.CharField(max_length=10, null=True)
     provider_sku = models.CharField(max_length=50, unique=True)
     provider_link = models.CharField(max_length=255, unique=True)
     image = models.CharField(max_length=255)
