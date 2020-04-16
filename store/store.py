@@ -8,50 +8,92 @@ import re
 from decouple import config
 
 from meli_sdk.sdk.meli import Meli
-from .products.models import Product, Picture, Attribute
+
+from .products.models import Product
+from .products.models import Picture
+from .products.models import Attribute
+
 from store.models import BusinessModel
 
+from dollar_for_life.models import History
 
 class Store(Meli):
     DIRECTION = config('STORE_DIRECTION')
     URI_CALLBACK = config('MELI_URI_CALLBACK')
-
+    _name_ = None
+    _business_model_ = None
+    _attentive_user_ = None
+    _description_ = None
+    _price_usd_ = None
+ 
     def __init__(self, seller_id=None):
         super().__init__(seller_id)
-        self._name_ = None
-        self._attentive_user = None
 
     def init_properties(self):
         """
-        Inicia los valores de la prodiedades que son obtenidas de la DB.
+        Inicia los valores de las propiedades que son obtenidas de la DB.
         """
-        BM = BusinessModel.objects.get(pk=self.SELLER_ID)
-        self._name_ = BM.name
-        self._country_ = BM.country
+        self._business_model_ = BusinessModel.objects.get(pk=self.SELLER_ID)
+
+    @property
+    def business_model(self):
+        if not self._business_model_:
+            self.init_properties()
+        return self._business_model_
 
     @property
     def currency(self):
-        if not self._country_:
-            self.init_properties()
-        return self.get_currency(self._country_)
+        return self.get_currency(self.country)
     
     @property
+    def usd_variation(self):
+        return self.business_model.usd_variation
+
+    @property
     def meli_code(self):
-        if not self._country_:
-            self.init_properties()
-        return self.get_meli_code(self._country_)
+        return self.get_meli_code(self.country)
 
     @property
     def name(self):
-        if not self._name_:
-            self.init_properties()
-        return self._name_
+        return self.business_model.name
     
     @property
     def country(self):
-        if not self._country_:
-            self.init_properties()
-        return self._country_
+        return self.business_model.country
+
+    @property
+    def attentive_user(self):
+        if not self._attentive_user_:
+            username = config('ATTENTIVE_USER_NICK')
+            password = config('ATTENTIVE_USER_PASS')
+            self._attentive_user_ = authenticate(username=username,password=password)
+        return self._attentive_user_
+
+    @property
+    def description(self):
+        if not self._description_:
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            with open(f'{dir_path}/templates/{self.name}.txt') as file:
+                self._description_= file.read()
+        return self._description_
+
+    @property
+    def price_usd_up(self):
+        """
+        Retorna el precio de 1 USD en moneda local mas un "colchon" impuesto por la tienda.
+        """
+        if not self._price_usd_:
+            USD = History.objects.order_by('-datetime').first()
+            self._price_usd_ = USD.country(self.country)
+        return self._price_usd_ + self.usd_variation
+
+
+
+    def local_price(self, price):
+        """
+        Retorna el precio en moneda local de una cierta candidad en USD
+        """
+        return
 
     def delete_numbers(self, string):
         """
@@ -59,14 +101,6 @@ class Store(Meli):
         """
         parent =  r'[\w/,]?\d+[\w/,]?'
         return re.sub(pattern,'', string)
-
-    @property
-    def attentive_user(self):
-        if not self._attentive_user:
-            username = config('ATTENTIVE_USER_NICK')
-            password = config('ATTENTIVE_USER_PASS')
-            self._attentive_user = authenticate(username=username,password=password)
-        return self._attentive_user
 
     def get_inventory_by_api(self)->list:
         """
@@ -187,7 +221,7 @@ class Store(Meli):
 
 ### ESto debe estar en MELI()
 
-    def publish(self, product_store, price_usd, paused=True):
+    def publish(self, product_store, price_usd, paused=True, inner_description=False):
         product = product_store.product
         pictures = Picture.objects.filter(product=product)[:9]
         if not pictures:
@@ -199,10 +233,6 @@ class Store(Meli):
             }
 
         attributes = Attribute.objects.filter(product=product)
-
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        with open(f'{dir_path}/templates/{self.name}.txt') as file:
-            description= file.read()
             
         category = self.predict_category(
             title=f'{product.title} {product.category_name}',
@@ -212,6 +242,11 @@ class Store(Meli):
         title = self.cut_title(product.title)
         if self.country == 've':
             title = self.delete_numbers(title)
+
+        if inner_description:
+            description = self.description.replace('product_description', product.description)
+        else:
+            description = self.description
 
         body = {
             "title": title,
@@ -223,7 +258,7 @@ class Store(Meli):
             "currency_id": self.currency,
             "listing_type_id": self.get_listing_type(self.country),
             "description":{
-                "plain_text": description.replace('product_description', product.description)
+                "plain_text": description
             },
             "pictures": [{"source": picture.src} for picture in pictures],
         }
